@@ -53,8 +53,12 @@ namespace NEA_Project_Oubliette
 
             using (StreamReader reader = new StreamReader(filePath))
             {
-                if(fileContent.ToString() != "") fileContent.Append('\n'); // This is to avoid adding a newline character to the end of the file
-                fileContent.Append(reader.ReadLine());
+                do
+                {
+                    if(fileContent.ToString() != "") fileContent.Append('\n'); // This is to avoid adding a newline character to the end of the file
+                    fileContent.Append(reader.ReadLine());
+                }
+                while (!reader.EndOfStream);
             }
 
             return fileContent.ToString();

@@ -10,6 +10,7 @@ namespace NEA_Project_Oubliette
         {
             FileHandler.Setup();
             Window.Setup();
+            Debug.Test();
             Console.ReadKey(true); // Temporary call to keep program from immediately ending
         }
     }

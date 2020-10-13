@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using System;
 
-namespace NEA_Project_Oubliette
+namespace NEA_Project_Oubliette.Maps
 {
     ///<summary>Container of tiles and entities</summary>
     internal sealed class Map
@@ -27,6 +27,8 @@ namespace NEA_Project_Oubliette
 
             for (int y = 0; y < lines.Length; y++)
                 maxWidth = Math.Max(maxWidth, lines[y].Length);
+
+            tiles = new Tile[maxHeight, maxWidth];
 
             Height = tiles.GetLength(0);
             Width = tiles.GetLength(1);
