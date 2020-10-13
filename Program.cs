@@ -8,7 +8,8 @@ namespace NEA_Project_Oubliette
         ///<summary>The method which is called when the program is run</summary>
         private static void Main(string[] args)
         {
-            
+            Window.Setup();
+            Console.ReadKey(true); // Temporary call to keep program from immediately ending
         }
     }
 }
