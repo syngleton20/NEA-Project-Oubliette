@@ -2,11 +2,13 @@
 
 namespace NEA_Project_Oubliette
 {
-    class Program
+    ///<summary>Controls the flow of the program</summary>
+    internal static class Program
     {
-        static void Main(string[] args)
+        ///<summary>The method which is called when the program is run</summary>
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
         }
     }
 }
