@@ -10,6 +10,7 @@ namespace NEA_Project_Oubliette.Maps
         private string name;
 
         private Tile[,] tiles;
+        private TileSet tileSet;
 
         public string Name => name;
 
@@ -18,9 +19,10 @@ namespace NEA_Project_Oubliette.Maps
 
         public const int AREA_SIZE = 4;
 
-        public Map(string name, string data)
+        public Map(string name, string data, TileSet tileSet)
         {
             this.name = name;
+            this.tileSet = tileSet;
 
             string[] lines = data.Split('\n');
             int maxWidth = 0, maxHeight = lines.Length;
@@ -35,7 +37,7 @@ namespace NEA_Project_Oubliette.Maps
 
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
-                    tiles[y, x] = new Tile(lines[y][x]);
+                    tiles[y, x] = new Tile(lines[y][x], tileSet);
         }
 
         ///<summary>Draws each tile to the screen</summary>
@@ -57,7 +59,7 @@ namespace NEA_Project_Oubliette.Maps
         public void AddArea(int directionX, int directionY, char fillCharacter = '.')
         {
             Tile[,] newTiles = new Tile[Height + (directionY * AREA_SIZE), Width + (directionX * AREA_SIZE)];
-            Tile emptyTile = new Tile('\0');
+            Tile emptyTile = new Tile('\0', tileSet);
 
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
@@ -66,7 +68,7 @@ namespace NEA_Project_Oubliette.Maps
             for (int y = 0; y < newTiles.GetLength(0); y++)
                 for (int x = 0; x < newTiles.GetLength(1); x++)
                     if(newTiles[y, x] == emptyTile)
-                        newTiles[y, x] = new Tile(fillCharacter);
+                        newTiles[y, x] = new Tile(fillCharacter, tileSet);
 
             tiles = newTiles;
 
