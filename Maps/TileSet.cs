@@ -8,6 +8,7 @@ namespace NEA_Project_Oubliette
     internal sealed class TileSet
     {
         private List<TileProfile> profiles = new List<TileProfile>();
+        private static TileSet defaultTileSet;
 
         ///<summary>Saves a tileset to a file in bin/Debug/netcoreapp3.1/data/</summary>
         public void Save(string fileName)
@@ -50,6 +51,20 @@ namespace NEA_Project_Oubliette
                 if(profile.Ascii == ascii) return profile;
 
             return null;
+        }
+
+        public static TileSet Default
+        {
+            get
+            {
+                if(defaultTileSet == null)
+                {
+                    defaultTileSet = new TileSet();
+                    defaultTileSet.Load("default.set");
+                }
+
+                return defaultTileSet;
+            }
         }
     }
 }

@@ -27,6 +27,12 @@ namespace NEA_Project_Oubliette
             if(!DirectoryExists("maps")) CreateDirectory("maps");
             if(!DirectoryExists("saves")) CreateDirectory("saves");
             if(!DirectoryExists("data")) CreateDirectory("data");
+
+            if(!FileExists("data/default.set"))
+            {
+                Debug.Warning("No default set was found!");
+                WriteToFile("data/default.set", "#,  \n.,░░\n^,▒▒");
+            }
         }
 
         ///<summary>Writes a file into the bin/Debug/netcoreapp3.1/ directory</summary>
@@ -34,7 +40,7 @@ namespace NEA_Project_Oubliette
         {
             string filePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
 
-            using (StreamWriter writer = new StreamWriter(fileName, appendFile))
+            using (StreamWriter writer = new StreamWriter(filePath, appendFile))
                 writer.Write(fileContent);
         }
 
