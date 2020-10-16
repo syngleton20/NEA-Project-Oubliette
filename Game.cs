@@ -36,6 +36,7 @@ namespace NEA_Project_Oubliette
             {
                 Console.SetCursorPosition(0, 0);
                 currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                currentMap.Collection.UpdateAll();
 
                 if(type == GameType.Game || type == GameType.Editor)
                 {

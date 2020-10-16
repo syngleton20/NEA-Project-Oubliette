@@ -12,11 +12,21 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Adds a non-existent entity to the collection</summary>
         public void Add(Entity entity) { if(!entities.Contains(entity)) entities.Add(entity); }
 
+        ///<summary>Adds non-existent entities to the collection</summary>
+        public void Add(params Entity[] entities) { foreach (Entity entity in entities) Add(entity); }
+
         ///<summary>Removes an existing entity from the collection</summary>
         public void Remove(Entity entity) { if(entities.Contains(entity)) entities.Remove(entity); }
 
         ///<summary>Clears the collection</summary>
         public void Clear() => entities.Clear();
+
+        ///<summary>Calls the Update() method on all entities in the collection</summary>
+        public void UpdateAll()
+        {
+            foreach (Entity entity in entities)
+                entity.Update();
+        }
 
         ///<summary>Attempts to return an entity at a position</summary>
         public bool TryGetEntity(int positionX, int positionY, out Entity output)

@@ -12,7 +12,7 @@ namespace NEA_Project_Oubliette
         {
             // Write test code here
             Game game = new Game(GameType.Game, "test.map");
-            game.CurrentMap.Collection.Add(new Player(1, 1));
+            game.CurrentMap.Collection.Add(new Player(1, 1), new Enemy(6, 6));
             game.Start();
         }
 

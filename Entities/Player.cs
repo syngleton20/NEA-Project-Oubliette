@@ -5,7 +5,7 @@ namespace NEA_Project_Oubliette.Entities
     {
         public static Player Instance { get; private set; }
 
-        public Player(int startX, int startY)
+        public Player(int startX, int startY) : base()
         {
             Instance = this;
             position = new Vector(startX, startY);
