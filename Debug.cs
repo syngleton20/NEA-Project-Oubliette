@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Maps;
 using System;
 
@@ -10,7 +11,9 @@ namespace NEA_Project_Oubliette
         public static void Test()
         {
             // Write test code here
-
+            Game game = new Game(GameType.Game, "test.map");
+            game.CurrentMap.Collection.Add(new Player(1, 1));
+            game.Start();
         }
 
         ///<summary>Logs a message to the debug.log file in /data/</summary>

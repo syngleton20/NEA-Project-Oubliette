@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Maps;
 using System;
 
@@ -15,10 +16,13 @@ namespace NEA_Project_Oubliette
 
         private Vector cameraPosition;
 
-        public Map CurrentMap;
+        public Map CurrentMap => currentMap;
+        public static Game Current { get; private set; } // This property is used for access within a singleton pattern
 
         public Game(GameType gameType, string mapName)
         {
+            Current = this; // Assigns to the singleton pattern, allowing access to this particular instance
+
             type = gameType;
             currentMap = new Map(mapName, FileHandler.ReadFile("maps/" + mapName), TileSet.Default);
         }
@@ -39,26 +43,28 @@ namespace NEA_Project_Oubliette
                     {
                         case ConsoleKey.UpArrow:
                         case ConsoleKey.W:
-                            // Move player up
+                            Player.Instance.Move(0, -1);
                             break;
 
                         case ConsoleKey.DownArrow:
                         case ConsoleKey.S:
-                            // Move player down
+                            Player.Instance.Move(0, 1);
                             break;
 
                         case ConsoleKey.LeftArrow:
                         case ConsoleKey.A:
-                            // Move player left
+                            Player.Instance.Move(-1, 0);
                             break;
 
                         case ConsoleKey.RightArrow:
                         case ConsoleKey.D:
-                            // Move player right
+                            Player.Instance.Move(1, 0);
                             break;
                     }
                 }
             }
         }
+
+        public void SetCameraPosition(int cameraX, int cameraY) => cameraPosition = new Vector(cameraX, cameraY);
     }
 }

@@ -12,6 +12,8 @@ namespace NEA_Project_Oubliette
         public static void Setup()
         {
             Console.Title = "Project Oubliette";
+            Console.CursorVisible = false;
+
             Console.ResetColor();
             Console.Clear();
 

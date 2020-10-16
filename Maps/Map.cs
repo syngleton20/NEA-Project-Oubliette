@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.Entities;
 using System.Collections.Generic;
 using System.Text;
 using System;
@@ -11,18 +12,22 @@ namespace NEA_Project_Oubliette.Maps
 
         private Tile[,] tiles;
         private TileSet tileSet;
+        private EntityCollection collection;
 
         public string Name => name;
+        public EntityCollection Collection => collection;
 
         public int Width { get; private set; }
         public int Height { get; private set; }
 
         public const int AREA_SIZE = 4;
 
-        public Map(string name, string data, TileSet tileSet)
+        public Map(string name, string data, TileSet tileSet, params Entity[] entities)
         {
             this.name = name;
             this.tileSet = tileSet;
+
+            collection = new EntityCollection(entities);
 
             string[] lines = data.Split('\n');
             int maxWidth = 0, maxHeight = lines.Length;
@@ -49,7 +54,10 @@ namespace NEA_Project_Oubliette.Maps
             for (int y = drawY; y < drawY + AREA_SIZE; y++)
             {
                 for (int x = drawX; x < drawX + AREA_SIZE; x++)
-                    tiles[y, x].Draw();
+                {
+                    if(Collection.TryGetEntity(x, y, out Entity entity)) entity.Draw();
+                    else tiles[y, x].Draw();
+                }
 
                 Console.WriteLine();
             }
@@ -79,8 +87,18 @@ namespace NEA_Project_Oubliette.Maps
         ///<summary>Assigns to a tile at a location (to be used for level editing)</summary>
         public void SetTile(int tileX, int tileY, Tile tile) => tiles[tileY, tileX] = tile;
 
-        ///<summary>Returns a tile at a location</summary>
-        public Tile GetTile(int tileX, int tileY) => tiles[tileY, tileX];
+        ///<summary>Attempts to return a tile from a location</summary>
+        public bool TryGetTile(int tileX, int tileY, out Tile output)
+        {
+            if(tileX >= 0 && tileX < Width && tileY >= 0 && tileY < Height)
+            {
+                output = tiles[tileY, tileX];
+                return true;
+            }
+
+            output = null;
+            return false;
+        }
 
         ///<summary>Returns all neighbouring tiles at a location</summary>
         public Tile[] GetNeighbouringTiles(int tileX, int tileY)
