@@ -66,6 +66,17 @@ namespace NEA_Project_Oubliette
             }
         }
 
+        public void GameOver()
+        {
+            isPlaying = false;
+            currentMap.Collection.Clear();
+            currentMap = null;
+
+            Console.Clear();
+            Console.WriteLine("  Game Over!");
+        }
+
+        ///<summary>Moves the camera to a specified location, so only that part of the map is drawn to the screen</summary>
         public void SetCameraPosition(int cameraX, int cameraY) => cameraPosition = new Vector(cameraX, cameraY);
     }
 }
