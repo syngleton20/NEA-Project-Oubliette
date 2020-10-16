@@ -31,7 +31,7 @@ namespace NEA_Project_Oubliette
             if(!FileExists("data/default.set"))
             {
                 Debug.Warning("No default set was found!");
-                WriteToFile("data/default.set", "#,  \n.,░░\n^,▒▒");
+                WriteToFile("data/default.set", "#,  ,0\n.,░░,1\n^,▒▒,0");
             }
         }
 

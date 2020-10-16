@@ -7,12 +7,14 @@ namespace NEA_Project_Oubliette
     {
         private char ascii;
         private string unicode;
+        private bool isWalkable;
 
         private ConsoleColor backgroundColour;
         private ConsoleColor foregroundColour;
 
         public char Ascii => ascii;
         public string Unicode => unicode;
+        public bool IsWalkable => isWalkable;
 
         public ConsoleColor BackgroundColour => backgroundColour;
         public ConsoleColor ForegroundColour => foregroundColour;
@@ -23,8 +25,9 @@ namespace NEA_Project_Oubliette
 
             ascii = parts[0][0];
             unicode = parts[1];
+            isWalkable = int.Parse(parts[2]) > 0;
 
-            if(parts.Length > 2)
+            if(parts.Length > 3)
             {
                 backgroundColour = (ConsoleColor)int.Parse(parts[2]);
                 foregroundColour = (ConsoleColor)int.Parse(parts[3]);

@@ -10,17 +10,22 @@ namespace NEA_Project_Oubliette.Entities
 
         public Vector Position => position;
 
-        public Entity()
-        {
-            if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile tile))
-                tile.Occupy(this);
-        }
+        public Entity() { }
 
         ///<summary>Moves the entity on the X and Y axes</summary>
         public virtual void Move(int deltaX, int deltaY)
         {
             if(Game.Current.CurrentMap.TryGetTile(position.X + deltaX, position.Y + deltaY, out Tile tile))
-                if(tile.Ascii == '.') position += new Vector(deltaX, deltaY);
+            {
+                if(tile.IsWalkable)
+                {
+                    if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile oldTile))
+                        oldTile.Vacate();
+
+                    position += new Vector(deltaX, deltaY);
+                    tile.Occupy(this);
+                }
+            }
         }
 
         ///<summary>Draws the visual representation of the entity</summary>

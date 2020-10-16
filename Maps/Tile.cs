@@ -23,7 +23,7 @@ namespace NEA_Project_Oubliette.Maps
             this.ascii = ascii;
 
             profile = tileSet.GetProfileFromAscii(ascii);
-            isWalkable = true;
+            isWalkable = profile.IsWalkable;
         }
 
         ///<summary>Draws the tile in Unicode form</summary>

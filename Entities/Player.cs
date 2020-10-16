@@ -1,3 +1,5 @@
+using NEA_Project_Oubliette.Maps;
+
 namespace NEA_Project_Oubliette.Entities
 {
     ///<summary>Entity representing the player character</summary>
@@ -9,6 +11,9 @@ namespace NEA_Project_Oubliette.Entities
         {
             Instance = this;
             position = new Vector(startX, startY);
+
+            if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile tile))
+                tile.Occupy(this);
         }
 
         public override void Move(int deltaX, int deltaY)
