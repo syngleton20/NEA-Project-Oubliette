@@ -129,10 +129,10 @@ namespace NEA_Project_Oubliette.Maps
 
             for (int y = 0; y < Height; y++)
             {
+                if(y > 0) mapData.Append('\\');
+
                 for (int x = 0; x < Width; x++)
                     mapData.Append(tiles[y, x].Ascii);
-
-                mapData.Append('\\');
             }
 
             return mapData.ToString();

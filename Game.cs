@@ -24,7 +24,7 @@ namespace NEA_Project_Oubliette
             Current = this; // Assigns to the singleton pattern, allowing access to this particular instance
 
             type = gameType;
-            currentMap = new Map(mapName, FileHandler.ReadFile("maps/" + mapName), TileSet.Default);
+            currentMap = MapFormatter.Deserialize(FileHandler.ReadFile("maps/" + mapName));
         }
 
         ///<summary>Begins the game loop, handling drawing maps and receiving user input</summary>

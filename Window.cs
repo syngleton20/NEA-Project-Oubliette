@@ -23,8 +23,11 @@ namespace NEA_Project_Oubliette
         ///<summary>Changes the width and height of the game window</summary>
         public static void ResizeWindow(int width, int height)
         {
-            Console.SetWindowSize(width, height);
-            Console.SetBufferSize(width, height);
+            if(Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                Console.SetWindowSize(width, height);
+                Console.SetBufferSize(width, height);
+            }
         }
 
         ///<summary>Clears the output buffer and resets all necessary values</summary>
