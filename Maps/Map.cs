@@ -48,6 +48,8 @@ namespace NEA_Project_Oubliette.Maps
         ///<summary>Draws each tile to the screen</summary>
         public void Draw(int drawX, int drawY)
         {
+            Console.SetCursorPosition(2, 2); // This is temporary
+
             drawX *= AREA_SIZE;
             drawY *= AREA_SIZE;
 
@@ -59,7 +61,7 @@ namespace NEA_Project_Oubliette.Maps
                     else tiles[y, x].Draw();
                 }
 
-                Console.WriteLine();
+                Display.WriteLine();
             }
         }
 

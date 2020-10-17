@@ -44,7 +44,7 @@ namespace NEA_Project_Oubliette
         {
             Console.BackgroundColor = backgroundColour;
             Console.ForegroundColor = foregroundColour;
-            Console.Write(unicode);
+            Display.Write(unicode);
         }
     }
 }

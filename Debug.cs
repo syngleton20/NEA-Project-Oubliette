@@ -13,7 +13,41 @@ namespace NEA_Project_Oubliette
             // Write test code here
             Game game = new Game(GameType.Game, "test.map");
             game.CurrentMap.Collection.Add(new Player(1, 1), new Enemy(6, 6));
-            game.Start();
+
+            GUI.Title("Main Menu");
+
+            while (true)
+            {
+                switch (GUI.VerticalMenu("New Game", "Continue (Coming Soon)", "Level Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
+                {
+                    case 0:
+                        game.Start();
+                        break;
+
+                    case 1:
+                        game.Start(); // change later
+                        break;
+
+                    case 2:
+                        Console.Clear();
+                        Debug.Warning("This feature is still in development. Sorry :(");
+                        break;
+
+                    case 3:
+                        Console.Clear();
+                        Debug.Warning("This feature is still in development. Sorry :(");
+                        break;
+
+                    case 4:
+                        Console.Clear();
+                        Debug.Warning("This feature is still in development. Sorry :(");
+                        break;
+
+                    case 5:
+                        Environment.Exit(0);
+                        break;
+                }
+            }
         }
 
         ///<summary>Logs a message to the debug.log file in /data/</summary>
