@@ -15,6 +15,8 @@ namespace NEA_Project_Oubliette.Maps
         private EntityCollection collection;
 
         public string Name => name;
+
+        public TileSet TileSet => tileSet;
         public EntityCollection Collection => collection;
 
         public int Width { get; private set; }
@@ -43,6 +45,11 @@ namespace NEA_Project_Oubliette.Maps
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
                     tiles[y, x] = new Tile(lines[y][x], tileSet);
+
+            if(entities.Length > 0)
+                for (int i = 0; i < entities.Length; i++)
+                    if(TryGetTile(entities[i].Position, out Tile tile))
+                        tile.Occupy(entities[i]);
         }
 
         ///<summary>Draws each tile to the screen</summary>
@@ -95,6 +102,19 @@ namespace NEA_Project_Oubliette.Maps
             if(tileX >= 0 && tileX < Width && tileY >= 0 && tileY < Height)
             {
                 output = tiles[tileY, tileX];
+                return true;
+            }
+
+            output = null;
+            return false;
+        }
+
+        ///<summary>Attempts to return a tile from a location</summary>
+        public bool TryGetTile(Vector tileLocation, out Tile output)
+        {
+            if(tileLocation.X >= 0 && tileLocation.X < Width && tileLocation.Y >= 0 && tileLocation.Y < Height)
+            {
+                output = tiles[tileLocation.Y, tileLocation.X];
                 return true;
             }
 

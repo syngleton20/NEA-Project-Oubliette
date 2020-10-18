@@ -7,6 +7,8 @@ namespace NEA_Project_Oubliette.Entities
     {
         private List<Entity> entities = new List<Entity>();
 
+        public Entity[] Array => entities.ToArray();
+
         public EntityCollection(params Entity[] initialEntities) => entities.AddRange(initialEntities);
 
         ///<summary>Adds a non-existent entity to the collection</summary>
@@ -26,6 +28,20 @@ namespace NEA_Project_Oubliette.Entities
         {
             foreach (Entity entity in entities)
                 entity.Update();
+        }
+
+        ///<summary>Returns a unique id for a new entity</summary>
+        public int AssignId()
+        {
+            int previousId = 0;
+
+            for (int i = 1; i < entities.Count; i++)
+            {
+                if(entities[i - 1].Id == previousId) previousId++;
+                else return previousId;
+            }
+
+            return previousId + 1;
         }
 
         ///<summary>Attempts to return an entity at a position</summary>

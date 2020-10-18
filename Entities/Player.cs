@@ -15,9 +15,12 @@ namespace NEA_Project_Oubliette.Entities
         {
             Instance = this;
             position = new Vector(startX, startY);
+        }
 
-            if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile tile))
-                tile.Occupy(this);
+        public Player(string data) : base(data)
+        {
+            Instance = this;
+            Load(data);
         }
 
         public override void Move(int deltaX, int deltaY)
@@ -46,5 +49,15 @@ namespace NEA_Project_Oubliette.Entities
                 Game.Current.GameOver();
             }
         }
+
+        public override void Load(string data)
+        {
+            string[] parts = data.Split(' ');
+            id = parts[1].ToInt();
+            position = parts[2].ToVector();
+            Health = int.Parse(parts[3]);
+        }
+
+        public override string Save() => $"P {id} {position.ToString()} {Health}";
     }
 }

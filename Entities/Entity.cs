@@ -6,11 +6,14 @@ namespace NEA_Project_Oubliette.Entities
     ///<summary>Base class for all mobile objects within a map</summary>
     internal abstract class Entity
     {
+        protected int id;
         protected Vector position;
 
+        public int Id => id;
         public Vector Position => position;
 
         public Entity() { }
+        public Entity(string data) => Load(data);
 
         ///<summary>Moves the entity on the X and Y axes</summary>
         public virtual void Move(int deltaX, int deltaY)
@@ -37,5 +40,11 @@ namespace NEA_Project_Oubliette.Entities
 
         ///<summary>Performs entity-specific action after receiving player input</summary>
         public virtual void Update() { }
+
+        ///<summary>Sets entity-specific information after loading from a file</summary>
+        public abstract void Load(string data);
+
+        ///<summary>Provides save data in string format for saving to a file</summary>
+        public abstract string Save();
     }
 }

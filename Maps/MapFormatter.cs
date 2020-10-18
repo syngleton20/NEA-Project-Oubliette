@@ -1,3 +1,5 @@
+using NEA_Project_Oubliette.Entities;
+using System.Collections.Generic;
 using System.Text;
 
 namespace NEA_Project_Oubliette.Maps
@@ -8,7 +10,7 @@ namespace NEA_Project_Oubliette.Maps
         ///<summary>Compresses a map into a run-length encoded string</summary>
         public static string Serialize(Map map)
         {
-            StringBuilder serialized = new StringBuilder();
+            StringBuilder serialized = new StringBuilder(), entities = new StringBuilder();
             string data = map.GetRawData();
 
             char previousCharacter = data[0];
@@ -26,29 +28,63 @@ namespace NEA_Project_Oubliette.Maps
                 charCount++;
             }
 
+            if(map.Collection.Array.Length > 0)
+            {
+                entities.Append('\n');
+
+                for (int i = 0; i < map.Collection.Array.Length; i++)
+                {
+                    if(i > 0) entities.Append('\\');
+                    entities.Append(map.Collection.Array[i].Save());
+                }
+            }
+
             serialized.Append(charCount > 1 ? $"{charCount}{previousCharacter}" : previousCharacter.ToString());
-            return serialized.ToString();
+            return map.Name + '\n' + serialized.ToString() + '\n' + map.TileSet.Name + entities.ToString();
         }
 
         ///<summary>Decompresses a map from a run-length encoded string</summary>
         public static Map Deserialize(string data)
         {
+            List<Entity> entities = new List<Entity>();
+
             StringBuilder numberString = new StringBuilder();
             StringBuilder mapData = new StringBuilder();
 
-            for (int i = 0; i < data.Length; i++)
+            string[] lines = data.Split('\n');
+
+            for (int i = 0; i < lines[1].Length; i++)
             {
-                if(char.IsNumber(data[i])) numberString.Append(data[i]);
+                if(char.IsNumber(lines[1][i])) numberString.Append(lines[1][i]);
                 else
                 {
-                    if(numberString.Length > 0) mapData.Append(new string(data[i], int.Parse(numberString.ToString())));
-                    else mapData.Append(data[i] != '\\' ? data[i] : '\n');
+                    if(numberString.Length > 0) mapData.Append(new string(lines[1][i], int.Parse(numberString.ToString())));
+                    else mapData.Append(lines[1][i] != '\\' ? lines[1][i] : '\n');
 
                     numberString.Clear();
                 }
             }
 
-            return new Map("", mapData.ToString(), TileSet.Default);
+            if(lines.Length > 3)
+            {
+                string[] entityStrings = lines[3].Split('\\');
+
+                for (int i = 0; i < entityStrings.Length; i++)
+                {
+                    switch (entityStrings[i].Split(' ')[0])
+                    {
+                        case "P":
+                            entities.Add(new Player(entityStrings[i]));
+                            break;
+
+                        case "E":
+                            entities.Add(new Enemy(entityStrings[i]));
+                            break;
+                    }
+                }
+            }
+
+            return new Map(lines[0], mapData.ToString(), new TileSet(lines[2] + ".set"), entities.ToArray());
         }
     }
 }

@@ -8,10 +8,9 @@ namespace NEA_Project_Oubliette.Entities
         public Enemy(int startX, int startY)
         {
             position = new Vector(startX, startY);
-
-            if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile tile))
-                tile.Occupy(this);
         }
+
+        public Enemy(string data) : base(data) => Load(data);
 
         public int Health { get; private set; } = 100;
         public int MaxHealth { get; private set; } = 100;
@@ -50,5 +49,15 @@ namespace NEA_Project_Oubliette.Entities
             IsDead = true;
             Game.Current.CurrentMap.Collection.Remove(this);
         }
+
+        public override void Load(string data)
+        {
+            string[] parts = data.Split(' ');
+            id = parts[1].ToInt();
+            position = parts[2].ToVector();
+            Health = int.Parse(parts[3]);
+        }
+
+        public override string Save() => $"E {id} {position.ToString()} {Health}";
     }
 }

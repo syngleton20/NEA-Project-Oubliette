@@ -11,13 +11,13 @@ namespace NEA_Project_Oubliette
         public static void Test()
         {
             // Write test code here
-            Game game = new Game(GameType.Game, "test.map");
-            game.CurrentMap.Collection.Add(new Player(1, 1), new Enemy(6, 6));
-
-            GUI.Title("Main Menu");
+            Game game = new Game(GameType.Game, "test2.map");
+            Debug.Warning(game.CurrentMap.Collection.Array.Length);
 
             while (true)
             {
+                GUI.Title("Main Menu");
+
                 switch (GUI.VerticalMenu("New Game", "Continue (Coming Soon)", "Level Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
                 {
                     case 0:

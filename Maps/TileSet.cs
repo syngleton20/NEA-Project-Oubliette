@@ -10,6 +10,10 @@ namespace NEA_Project_Oubliette
         private List<TileProfile> profiles = new List<TileProfile>();
         private static TileSet defaultTileSet;
 
+        public string Name { get; private set; }
+
+        public TileSet(string filePath) => Load(filePath);
+
         ///<summary>Saves a tileset to a file in bin/Debug/netcoreapp3.1/data/</summary>
         public void Save(string fileName)
         {
@@ -40,6 +44,8 @@ namespace NEA_Project_Oubliette
             string profileString = FileHandler.ReadFile("data/" + fileName);
             string[] lines = profileString.Split('\n');
 
+            Name = fileName.Split('.')[0];
+
             for (int i = 0; i < lines.Length; i++)
                 profiles.Add(new TileProfile(lines[i]));
         }
@@ -59,7 +65,7 @@ namespace NEA_Project_Oubliette
             {
                 if(defaultTileSet == null)
                 {
-                    defaultTileSet = new TileSet();
+                    defaultTileSet = new TileSet("default");
                     defaultTileSet.Load("default.set");
                 }
 
