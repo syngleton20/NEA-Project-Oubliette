@@ -15,18 +15,22 @@ namespace NEA_Project_Oubliette.Entities
         {
             Instance = this;
             position = new Vector(startX, startY);
+
+            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
         }
 
         public Player(string data) : base(data)
         {
             Instance = this;
             Load(data);
+
+            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
         }
 
         public override void Move(int deltaX, int deltaY)
         {
             base.Move(deltaX, deltaY);
-            Game.Current.SetCameraPosition(position.X / Maps.Map.AREA_SIZE, position.Y / Maps.Map.AREA_SIZE);
+            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
         }
 
         public void Heal(int amount = 1)

@@ -133,5 +133,23 @@ namespace NEA_Project_Oubliette
             Console.Clear();
             return choiceIndex;
         }
+
+        public static bool YesOrNo(string question)
+        {
+            Console.ResetColor();
+
+            if(question.Contains('\n'))
+            {
+                string[] lines = question.Split('\n');
+
+                for (int i = 0; i < lines.Length; i++)
+                    Display.WriteAtCentre(lines[i]);
+            }
+            else Display.WriteAtCentre(question);
+
+            Console.WriteLine();
+
+            return VerticalMenu("YES", "NO") == 0;
+        }
     }
 }

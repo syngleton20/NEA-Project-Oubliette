@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.Maps;
 using System.Collections.Generic;
 
 namespace NEA_Project_Oubliette.Entities
@@ -12,7 +13,16 @@ namespace NEA_Project_Oubliette.Entities
         public EntityCollection(params Entity[] initialEntities) => entities.AddRange(initialEntities);
 
         ///<summary>Adds a non-existent entity to the collection</summary>
-        public void Add(Entity entity) { if(!entities.Contains(entity)) entities.Add(entity); }
+        public void Add(Entity entity)
+        {
+            if(!entities.Contains(entity))
+            {
+                entities.Add(entity);
+
+                if(Game.Current.CurrentMap.TryGetTile(entity.Position, out Tile tile))
+                    tile.Occupy(entity);
+            }
+        }
 
         ///<summary>Adds non-existent entities to the collection</summary>
         public void Add(params Entity[] entities) { foreach (Entity entity in entities) Add(entity); }
@@ -21,7 +31,14 @@ namespace NEA_Project_Oubliette.Entities
         public void Remove(Entity entity) { if(entities.Contains(entity)) entities.Remove(entity); }
 
         ///<summary>Clears the collection</summary>
-        public void Clear() => entities.Clear();
+        public void Clear()
+        {
+            foreach (Entity entity in entities)
+                if(Game.Current.CurrentMap.TryGetTile(entity.Position, out Tile tile))
+                    tile.Vacate();
+
+            entities.Clear();
+        }
 
         ///<summary>Calls the Update() method on all entities in the collection</summary>
         public void UpdateAll()

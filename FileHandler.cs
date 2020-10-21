@@ -44,6 +44,13 @@ namespace NEA_Project_Oubliette
                 writer.Write(fileContent);
         }
 
+        ///<summary>Returns the number of files in a directory</summary>
+        public static int GetNumberOfFilesInDirectory(string directoryName)
+        {
+            string directoryPath = AppDomain.CurrentDomain.BaseDirectory + directoryName;
+            return new DirectoryInfo(directoryPath).GetFiles().Length;
+        }
+
         ///<summary>Checks if a file exists inside the bin/Debug/netcoreapp3.1/ directory</summary>
         public static bool FileExists(string fileName)
         {
@@ -68,6 +75,13 @@ namespace NEA_Project_Oubliette
             }
 
             return fileContent.ToString();
+        }
+
+        ///<summary>Returns an array of files from a directory</summary>
+        public static FileInfo[] GetFilesInDirectory(string directoryName)
+        {
+            string directoryPath = AppDomain.CurrentDomain.BaseDirectory + directoryName;
+            return new DirectoryInfo(directoryPath).GetFiles();
         }
     }
 }

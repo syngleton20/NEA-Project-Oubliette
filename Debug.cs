@@ -11,21 +11,26 @@ namespace NEA_Project_Oubliette
         public static void Test()
         {
             // Write test code here
-            Game game = new Game(GameType.Game, "test2.map");
-            Debug.Warning(game.CurrentMap.Collection.Array.Length);
+            Game game = new Game(GameType.Game, "test.map");
 
             while (true)
             {
                 GUI.Title("Main Menu");
 
-                switch (GUI.VerticalMenu("New Game", "Continue (Coming Soon)", "Level Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
+                switch (GUI.VerticalMenu("New Game", "Continue", "Level Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
                 {
                     case 0:
                         game.Start();
                         break;
 
                     case 1:
-                        game.Start(); // change later
+                        GUI.Title("Load from Save File");
+
+                        int saveIndex = SaveManager.ChooseSlotToLoad();
+                        if(saveIndex < 0) break;
+
+                        SaveManager.Load(saveIndex);
+                        game.Start();
                         break;
 
                     case 2:
@@ -61,7 +66,7 @@ namespace NEA_Project_Oubliette
             Console.Write("Press any key to continue... ");
             Console.ReadKey(true);
 
-            if(clear) Window.Clear();
+            if(clear) Display.Clear();
         }
 
         ///<summary>Prints a warning message on the screen, then clears the screen</summary>
@@ -72,7 +77,7 @@ namespace NEA_Project_Oubliette
             Console.Write("Press any key to continue... ");
             Console.ReadKey(true);
 
-            if(clear) Window.Clear();
+            if(clear) Display.Clear();
         }
 
         ///<summary>Prints an error message on the screen, then exits the program</summary>

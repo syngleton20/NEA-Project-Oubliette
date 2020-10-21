@@ -29,13 +29,5 @@ namespace NEA_Project_Oubliette
                 Console.SetBufferSize(width, height);
             }
         }
-
-        ///<summary>Clears the output buffer and resets all necessary values</summary>
-        public static void Clear()
-        {
-            Console.Clear();
-            Console.ResetColor();
-            Console.SetCursorPosition(0, 0);
-        }
     }
 }

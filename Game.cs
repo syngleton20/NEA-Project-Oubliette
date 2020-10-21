@@ -38,42 +38,95 @@ namespace NEA_Project_Oubliette
                 currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                 currentMap.Collection.UpdateAll();
 
+                // Temporary
+                Console.ResetColor();
+                Console.WriteLine();
+                Console.Write("  Health:    ");
+                Console.CursorLeft -= 3;
+                Console.Write(Player.Instance.Health.ToString());
+
                 if(type == GameType.Game || type == GameType.Editor)
                 {
-                    switch (Input.GetKeyDown())
+                    ConsoleKey key = Input.GetKeyDown();
+
+                    if(!Input.IsControlKeyDown)
                     {
-                        case ConsoleKey.UpArrow:
-                        case ConsoleKey.W:
-                            Player.Instance.Move(0, -1);
-                            break;
+                        switch (key)
+                        {
+                            case ConsoleKey.UpArrow:
+                            case ConsoleKey.W:
+                                Player.Instance.Move(0, -1);
+                                break;
 
-                        case ConsoleKey.DownArrow:
-                        case ConsoleKey.S:
-                            Player.Instance.Move(0, 1);
-                            break;
+                            case ConsoleKey.DownArrow:
+                            case ConsoleKey.S:
+                                Player.Instance.Move(0, 1);
+                                break;
 
-                        case ConsoleKey.LeftArrow:
-                        case ConsoleKey.A:
-                            Player.Instance.Move(-1, 0);
-                            break;
+                            case ConsoleKey.LeftArrow:
+                            case ConsoleKey.A:
+                                Player.Instance.Move(-1, 0);
+                                break;
 
-                        case ConsoleKey.RightArrow:
-                        case ConsoleKey.D:
-                            Player.Instance.Move(1, 0);
-                            break;
+                            case ConsoleKey.RightArrow:
+                            case ConsoleKey.D:
+                                Player.Instance.Move(1, 0);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        int slotIndex = 0;
+
+                        switch (key)
+                        {
+                            case ConsoleKey.S:
+                                slotIndex = SaveManager.ChooseSlotToSave();
+                                if(slotIndex < 0) break;
+
+                                SaveManager.Save(slotIndex);
+                                break;
+
+                            case ConsoleKey.O:
+                                slotIndex = SaveManager.ChooseSlotToLoad();
+                                if(slotIndex < 0) break;
+
+                                SaveManager.Load(slotIndex);
+                                break;
+                        }
                     }
                 }
             }
         }
 
+        ///<summary>Assigns to the current map</summary>
+        public void LoadMap(Map map) => currentMap = map;
+
+        ///<summary>Displays a Game Over screen then ends this game</summary>
         public void GameOver()
         {
             isPlaying = false;
             currentMap.Collection.Clear();
             currentMap = null;
 
-            Console.Clear();
-            Console.WriteLine("  Game Over!");
+            Display.Clear();
+            GUI.Title("Game Over");
+
+            switch(GUI.VerticalMenu("Load", "Main Menu", "Quit"))
+            {
+                case 0:
+                    SaveManager.Load(SaveManager.ChooseSlotToLoad());
+                    Start();
+                    break;
+
+                case 1:
+                    Debug.Test(); // this is temporary
+                    break;
+
+                case 2:
+                    Environment.Exit(0); // this is also temporary
+                    break;
+            }
         }
 
         ///<summary>Moves the camera to a specified location, so only that part of the map is drawn to the screen</summary>
