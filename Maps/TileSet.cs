@@ -65,8 +65,7 @@ namespace NEA_Project_Oubliette
             {
                 if(defaultTileSet == null)
                 {
-                    defaultTileSet = new TileSet("default");
-                    defaultTileSet.Load("default.set");
+                    defaultTileSet = new TileSet("default.set");
                 }
 
                 return defaultTileSet;

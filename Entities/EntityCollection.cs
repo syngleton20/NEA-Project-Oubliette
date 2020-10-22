@@ -33,9 +33,14 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Clears the collection</summary>
         public void Clear()
         {
-            foreach (Entity entity in entities)
-                if(Game.Current.CurrentMap.TryGetTile(entity.Position, out Tile tile))
+            for (int i = 0; i < entities.Count; i++)
+            {
+                if(Game.Current.CurrentMap.TryGetTile(entities[i].Position, out Tile tile))
+                {
                     tile.Vacate();
+                    entities[i] = null;
+                }
+            }
 
             entities.Clear();
         }

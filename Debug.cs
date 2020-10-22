@@ -11,48 +11,7 @@ namespace NEA_Project_Oubliette
         public static void Test()
         {
             // Write test code here
-            Game game = new Game(GameType.Game, "test.map");
 
-            while (true)
-            {
-                GUI.Title("Main Menu");
-
-                switch (GUI.VerticalMenu("New Game", "Continue", "Level Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
-                {
-                    case 0:
-                        game.Start();
-                        break;
-
-                    case 1:
-                        GUI.Title("Load from Save File");
-
-                        int saveIndex = SaveManager.ChooseSlotToLoad();
-                        if(saveIndex < 0) break;
-
-                        SaveManager.Load(saveIndex);
-                        game.Start();
-                        break;
-
-                    case 2:
-                        Console.Clear();
-                        Debug.Warning("This feature is still in development. Sorry :(");
-                        break;
-
-                    case 3:
-                        Console.Clear();
-                        Debug.Warning("This feature is still in development. Sorry :(");
-                        break;
-
-                    case 4:
-                        Console.Clear();
-                        Debug.Warning("This feature is still in development. Sorry :(");
-                        break;
-
-                    case 5:
-                        Environment.Exit(0);
-                        break;
-                }
-            }
         }
 
         ///<summary>Logs a message to the debug.log file in /data/</summary>

@@ -7,8 +7,9 @@ namespace NEA_Project_Oubliette
     public enum GameType { Game, Editor, Test }
 
     ///<summary>Contains information on the game in progress</summary>
-    internal sealed class Game
+    internal sealed class Game : IDisposable
     {
+        private int frame;
         private bool isPlaying;
 
         private GameType type;
@@ -16,8 +17,20 @@ namespace NEA_Project_Oubliette
 
         private Vector cameraPosition;
 
+        public int Frame => frame;
         public Map CurrentMap => currentMap;
-        public static Game Current { get; private set; } // This property is used for access within a singleton pattern
+
+        private static Game current;
+
+        public static Game Current
+        {
+            get => current;
+            set
+            {
+                if(current != null) current.Stop();
+                current = value;
+            }
+        }
 
         public Game(GameType gameType, string mapName)
         {
@@ -34,70 +47,17 @@ namespace NEA_Project_Oubliette
 
             while (isPlaying)
             {
+                frame++;
+
                 Console.SetCursorPosition(0, 0);
                 currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                 currentMap.Collection.UpdateAll();
 
-                // Temporary
-                Console.ResetColor();
-                Console.WriteLine();
-                Console.Write("  Health:    ");
-                Console.CursorLeft -= 3;
-                Console.Write(Player.Instance.Health.ToString());
-
-                if(type == GameType.Game || type == GameType.Editor)
-                {
-                    ConsoleKey key = Input.GetKeyDown();
-
-                    if(!Input.IsControlKeyDown)
-                    {
-                        switch (key)
-                        {
-                            case ConsoleKey.UpArrow:
-                            case ConsoleKey.W:
-                                Player.Instance.Move(0, -1);
-                                break;
-
-                            case ConsoleKey.DownArrow:
-                            case ConsoleKey.S:
-                                Player.Instance.Move(0, 1);
-                                break;
-
-                            case ConsoleKey.LeftArrow:
-                            case ConsoleKey.A:
-                                Player.Instance.Move(-1, 0);
-                                break;
-
-                            case ConsoleKey.RightArrow:
-                            case ConsoleKey.D:
-                                Player.Instance.Move(1, 0);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        int slotIndex = 0;
-
-                        switch (key)
-                        {
-                            case ConsoleKey.S:
-                                slotIndex = SaveManager.ChooseSlotToSave();
-                                if(slotIndex < 0) break;
-
-                                SaveManager.Save(slotIndex);
-                                break;
-
-                            case ConsoleKey.O:
-                                slotIndex = SaveManager.ChooseSlotToLoad();
-                                if(slotIndex < 0) break;
-
-                                SaveManager.Load(slotIndex);
-                                break;
-                        }
-                    }
-                }
+                Input.GetPlayerInput();
             }
         }
+
+        public void Stop() => isPlaying = false;
 
         ///<summary>Assigns to the current map</summary>
         public void LoadMap(Map map) => currentMap = map;
@@ -131,5 +91,11 @@ namespace NEA_Project_Oubliette
 
         ///<summary>Moves the camera to a specified location, so only that part of the map is drawn to the screen</summary>
         public void SetCameraPosition(int cameraX, int cameraY) => cameraPosition = new Vector(cameraX, cameraY);
+
+        public void Dispose()
+        {
+            currentMap.Collection.Clear();
+            currentMap = null;
+        }
     }
 }

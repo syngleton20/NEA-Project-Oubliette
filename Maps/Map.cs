@@ -22,7 +22,7 @@ namespace NEA_Project_Oubliette.Maps
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public const int AREA_SIZE = 4;
+        public const int AREA_SIZE = 20;
 
         public Map(string name, string data, TileSet tileSet, params Entity[] entities)
         {

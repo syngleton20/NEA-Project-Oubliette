@@ -3,6 +3,7 @@ using NEA_Project_Oubliette.Maps;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System;
 
 namespace NEA_Project_Oubliette
 {
@@ -26,35 +27,32 @@ namespace NEA_Project_Oubliette
         }
 
         ///<summary>Loads entity data into a map from a file</summary>
-        public static void Load(int index)
+        public static Game Load(int index)
         {
-            if(!FileHandler.FileExists("saves/save_" + index.ToString() + ".sav")) return;
-
-            List<Entity> entities = new List<Entity>();
+            if(!FileHandler.FileExists("saves/save_" + index.ToString() + ".sav")) return null;
 
             string saveData = FileHandler.ReadFile("saves/save_" + index.ToString() + ".sav");
             string[] lines = saveData.Split('\n');
             string[] entityStrings = lines[1].Split('\\');
 
-            Game.Current.LoadMap(MapFormatter.Deserialize(FileHandler.ReadFile("maps/" + lines[0] + ".map")));
-            Game.Current.CurrentMap.Collection.Clear();
+            Game game = new Game(GameType.Game, lines[0] + ".map");
+            game.CurrentMap.Collection.Clear();
 
             for (int i = 0; i < entityStrings.Length; i++)
             {
                 switch (entityStrings[i].Split(' ')[0])
                 {
                     case "P":
-                        entities.Add(new Player(entityStrings[i]));
+                        game.CurrentMap.Collection.Add(new Player(entityStrings[i]));
                         break;
 
                     case "E":
-                        entities.Add(new Enemy(entityStrings[i]));
+                        game.CurrentMap.Collection.Add(new Enemy(entityStrings[i]));
                         break;
                 }
             }
 
-            foreach (Entity entity in entities)
-                Game.Current.CurrentMap.Collection.Add(entity);
+            return game;
         }
 
         ///<summary>Allows users to choose which save slot to save to by providing them with a vertical menu</summary>
@@ -76,6 +74,7 @@ namespace NEA_Project_Oubliette
             }
 
             int choice = GUI.VerticalMenu(choices) - 1;
+            if(choice < 0) return -1;
 
             if(FileHandler.FileExists("saves/save_" + choice + ".sav"))
             {
@@ -94,12 +93,21 @@ namespace NEA_Project_Oubliette
             FileInfo[] files = FileHandler.GetFilesInDirectory("saves");
             int numberOfSaveFiles = 0;
 
-            for (int i = 0; i < files.Length; i++)
-                if(files[i].Extension == ".sav")
-                    numberOfSaveFiles++;
+            if(files.Length > 0)
+                for (int i = 0; i < files.Length; i++)
+                    if(files[i].Extension == ".sav")
+                        numberOfSaveFiles++;
 
-            if(numberOfSaveFiles <= 0) return -1;
             GUI.Title("Choose Slot to Load");
+
+            if(files.Length <= 0 || numberOfSaveFiles <= 0)
+            {
+                Console.WriteLine();
+                Display.WriteAtCentre("No save slots available!");
+                Console.ReadKey(true);
+                Display.Clear();
+                return -1;
+            }
 
             string[] choices = new string[numberOfSaveFiles + 1];
             choices[0] = "Back";
