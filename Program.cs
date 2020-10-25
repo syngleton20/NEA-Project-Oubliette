@@ -15,10 +15,10 @@ namespace NEA_Project_Oubliette
             {
                 GUI.Title("Main Menu");
 
-                switch (GUI.VerticalMenu("New Game", "Continue", "Level Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
+                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
                 {
                     case 0:
-                        Game.Current = new Game(GameType.Game, "start.map");
+                        Game.Current = new Game(GameType.Game, "test.map");
                         Game.Current.Start();
                         break;
 

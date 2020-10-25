@@ -12,8 +12,8 @@ namespace NEA_Project_Oubliette.Entities
 
         public Enemy(string data) : base(data) => Load(data);
 
-        public int Health { get; private set; } = 100;
-        public int MaxHealth { get; private set; } = 100;
+        public int Health { get; private set; } = 20;
+        public int MaxHealth { get; private set; } = 20;
         public bool IsDead { get; private set; }
 
 

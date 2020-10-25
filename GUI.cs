@@ -27,6 +27,22 @@ namespace NEA_Project_Oubliette
             Console.WriteLine('─');
         }
 
+        public static void HorizontalBar(int currentValue, int maxValue, string label, ConsoleColor colour = ConsoleColor.DarkRed)
+        {
+            Console.WriteLine("  " + label);
+            Console.Write("  ");
+
+            Console.ForegroundColor = colour;
+
+            for (int i = 0; i < currentValue; i++)
+                Console.Write('█');
+
+            for (int i = currentValue; i < maxValue; i++)
+                Console.Write('░');
+
+            Console.ResetColor();
+        }
+
         ///<summary>Draws a vertical list menu which returns the selected index</summary>
         public static int VerticalMenu(params string[] choices)
         {

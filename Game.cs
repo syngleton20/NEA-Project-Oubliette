@@ -51,6 +51,13 @@ namespace NEA_Project_Oubliette
 
                 Console.SetCursorPosition(0, 0);
                 currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                Console.ResetColor();
+
+                Console.WriteLine();
+                Console.WriteLine();
+
+                GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
+
                 currentMap.Collection.UpdateAll();
 
                 Input.GetPlayerInput();
@@ -75,16 +82,18 @@ namespace NEA_Project_Oubliette
             switch(GUI.VerticalMenu("Load", "Main Menu", "Quit"))
             {
                 case 0:
-                    SaveManager.Load(SaveManager.ChooseSlotToLoad());
+                    int slotIndex = SaveManager.ChooseSlotToLoad();
+                    if(slotIndex < 0) break;
+
+                    SaveManager.Load(slotIndex);
                     Start();
                     break;
 
                 case 1:
-                    Debug.Test(); // this is temporary
                     break;
 
                 case 2:
-                    Environment.Exit(0); // this is also temporary
+                    Environment.Exit(0); // this is temporary
                     break;
             }
         }
