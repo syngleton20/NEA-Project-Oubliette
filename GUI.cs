@@ -150,6 +150,7 @@ namespace NEA_Project_Oubliette
             return choiceIndex;
         }
 
+        ///<summary>Displays a vertical menu containing 'YES' and 'NO', and returns a boolean value based on user input</summary>
         public static bool YesOrNo(string question)
         {
             Console.ResetColor();

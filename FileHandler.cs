@@ -28,11 +28,8 @@ namespace NEA_Project_Oubliette
             if(!DirectoryExists("saves")) CreateDirectory("saves");
             if(!DirectoryExists("data")) CreateDirectory("data");
 
-            if(!FileExists("data/default.set"))
-            {
-                Debug.Warning("No default set was found!");
-                WriteToFile("data/default.set", "#,  ,0\n.,░░,1\n^,▒▒,0");
-            }
+            if(!FileExists("data/default.set")) WriteToFile("data/default.set", "#,  ,0\n.,░░,1\n^,▒▒,0");
+            if(!FileExists("maps/start.map")) WriteToFile("maps/start.map", "start\n20#\\#18^#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\20#\ndefault\nP 0 2,3 20");
         }
 
         ///<summary>Writes a file into the bin/Debug/netcoreapp3.1/ directory</summary>

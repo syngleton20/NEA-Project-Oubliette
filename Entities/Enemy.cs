@@ -3,19 +3,15 @@ using NEA_Project_Oubliette.Maps;
 
 namespace NEA_Project_Oubliette.Entities
 {
+    ///<summary>Base class for all hostile entities which will follow and attack the player entity</summary>
     internal class Enemy : Entity, IDamageable
     {
-        public Enemy(int startX, int startY)
-        {
-            position = new Vector(startX, startY);
-        }
-
+        public Enemy(int startX, int startY) => position = new Vector(startX, startY);
         public Enemy(string data) : base(data) => Load(data);
 
         public int Health { get; private set; } = 20;
         public int MaxHealth { get; private set; } = 20;
         public bool IsDead { get; private set; }
-
 
         public override void Draw()
         {
