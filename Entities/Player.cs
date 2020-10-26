@@ -5,11 +5,11 @@ namespace NEA_Project_Oubliette.Entities
     ///<summary>Entity representing the player character</summary>
     internal sealed class Player : Entity, IDamageable
     {
-        public static Player Instance { get; private set; }
-
         public int Health { get; private set; } = 20;
         public int MaxHealth { get; private set; } = 20;
         public bool IsDead { get; private set; }
+
+        public static Player Instance { get; private set; }
 
         public Player(int startX, int startY) : base()
         {

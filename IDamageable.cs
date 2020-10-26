@@ -2,6 +2,7 @@ using System;
 
 namespace NEA_Project_Oubliette
 {
+    ///<summary>Allows entities to deal and receive damage – and die</summary>
     internal interface IDamageable
     {
         ///<summary>The amount of health remaining before this entity dies</summary>
