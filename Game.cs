@@ -101,7 +101,6 @@ namespace NEA_Project_Oubliette
         ///<summary>Moves the camera to a specified location, so only that part of the map is drawn to the screen</summary>
         public void SetCameraPosition(int cameraX, int cameraY) => cameraPosition = new Vector(cameraX, cameraY);
 
-        ///<summary>Safely disposes of this game instance, disposing of its map and all its entities</summary>
         public void Dispose()
         {
             currentMap.Collection.Clear();

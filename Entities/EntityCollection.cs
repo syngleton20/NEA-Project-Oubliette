@@ -48,8 +48,8 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Calls the Update() method on all entities in the collection</summary>
         public void UpdateAll()
         {
-            for (int i = 0; i < entities.Count; i++)
-                entities[i]?.Update();
+            foreach (Entity entity in entities)
+                entity.Update();
         }
 
         ///<summary>Returns a unique id for a new entity</summary>

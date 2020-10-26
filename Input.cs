@@ -19,29 +19,28 @@ namespace NEA_Project_Oubliette
             return lastInput.Key;
         }
 
-        ///<summary>Gets user input to control the player entity</summary>
         public static void GetPlayerInput()
         {
             switch (Input.GetKeyDown())
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
-                    Player.Instance?.Move(0, -1);
+                    Player.Instance.Move(0, -1);
                     break;
 
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
-                    Player.Instance?.Move(0, 1);
+                    Player.Instance.Move(0, 1);
                     break;
 
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:
-                    Player.Instance?.Move(-1, 0);
+                    Player.Instance.Move(-1, 0);
                     break;
 
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.D:
-                    Player.Instance?.Move(1, 0);
+                    Player.Instance.Move(1, 0);
                     break;
 
                 case ConsoleKey.Escape:

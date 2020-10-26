@@ -1,4 +1,6 @@
 using NEA_Project_Oubliette.Entities;
+using NEA_Project_Oubliette.Maps;
+using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System;
