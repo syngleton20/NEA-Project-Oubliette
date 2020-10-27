@@ -21,7 +21,7 @@ namespace NEA_Project_Oubliette
 
         public TileProfile(string rawProfile)
         {
-            string[] parts = rawProfile.Split(',');
+            string[] parts = rawProfile.Split(':');
 
             ascii = parts[0][0];
             unicode = parts[1];
@@ -29,8 +29,8 @@ namespace NEA_Project_Oubliette
 
             if(parts.Length > 3)
             {
-                backgroundColour = (ConsoleColor)int.Parse(parts[2]);
-                foregroundColour = (ConsoleColor)int.Parse(parts[3]);
+                backgroundColour = (ConsoleColor)int.Parse(parts[3]);
+                foregroundColour = (ConsoleColor)int.Parse(parts[4]);
             }
             else
             {

@@ -21,7 +21,7 @@ namespace NEA_Project_Oubliette
         {
             Console.Write("  ");
 
-            for (int i = 2; i < Console.BufferWidth - 1; i++)
+            for (int i = 2; i < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth - 1 : Console.BufferWidth - 3); i++)
                 Console.Write('─');
 
             Console.WriteLine('─');
@@ -66,8 +66,10 @@ namespace NEA_Project_Oubliette
 
                     Console.Write(choices[i]);
 
-                    for (int j = Console.CursorLeft; j < Console.BufferWidth; j++)
+                    for (int j = Console.CursorLeft; j < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth : Console.BufferWidth - 2); j++)
                         Console.Write(' ');
+
+                    Console.WriteLine();
                 }
 
                 Console.ResetColor();

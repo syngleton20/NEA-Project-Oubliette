@@ -50,7 +50,7 @@ namespace NEA_Project_Oubliette
             splitString.Append(leftPart);
             splitString.Append(' ');
 
-            for (int i = splitString.Length; i < (Console.BufferWidth - rightPart.Length) - 4; i++)
+            for (int i = splitString.Length; i < (Console.BufferWidth - rightPart.Length) - (Environment.OSVersion.Platform == PlatformID.Win32NT ? 4 : 5); i++)
                 splitString.Append('.');
 
             splitString.Append(' ');

@@ -10,44 +10,36 @@ namespace NEA_Project_Oubliette
         private List<TileProfile> profiles = new List<TileProfile>();
         private static TileSet defaultTileSet;
 
-        public string Name { get; private set; }
-
-        public TileSet(string filePath) => Load(filePath);
-
-        ///<summary>Saves a tileset to a file in bin/Debug/netcoreapp3.1/data/</summary>
-        public void Save(string fileName)
+        public TileSet(string tileSetData)
         {
-            StringBuilder profileString = new StringBuilder();
-
-            foreach (TileProfile profile in profiles)
-            {
-                if(profileString.ToString() != "") profileString.Append('\n');
-
-                profileString.Append(profile.Ascii);
-                profileString.Append(',');
-                profileString.Append(profile.Unicode);
-
-                if(profile.BackgroundColour != ConsoleColor.Black || profile.ForegroundColour != ConsoleColor.Gray)
-                {
-                    profileString.Append(',');
-                    profileString.Append((int)profile.BackgroundColour);
-                    profileString.Append((int)profile.ForegroundColour);
-                }
-            }
-
-            FileHandler.WriteToFile("data/" + fileName, profileString.ToString());
-        }
-
-        ///<summary>Loads a tileset from a file in bin/Debug/netcoreapp3.1/data/</summary>
-        public void Load(string fileName)
-        {
-            string profileString = FileHandler.ReadFile("data/" + fileName);
-            string[] lines = profileString.Split('\n');
-
-            Name = fileName.Split('.')[0];
+            string[] lines = tileSetData.Split('\\');
 
             for (int i = 0; i < lines.Length; i++)
                 profiles.Add(new TileProfile(lines[i]));
+        }
+
+        ///<summary>Saves a tileset to a file in bin/Debug/netcoreapp3.1/data/</summary>
+        public string Save()
+        {
+            StringBuilder tileSetData = new StringBuilder();
+
+            foreach (TileProfile profile in profiles)
+            {
+                if(tileSetData.ToString() != "") tileSetData.Append('\\');
+
+                tileSetData.Append(profile.Ascii);
+                tileSetData.Append(':');
+                tileSetData.Append(profile.Unicode);
+
+                if(profile.BackgroundColour != ConsoleColor.Black || profile.ForegroundColour != ConsoleColor.Gray)
+                {
+                    tileSetData.Append(':');
+                    tileSetData.Append((int)profile.BackgroundColour);
+                    tileSetData.Append((int)profile.ForegroundColour);
+                }
+            }
+
+            return tileSetData.ToString();
         }
 
         ///<summary>Returns a tile profile from an ascii character</summary>
@@ -59,17 +51,6 @@ namespace NEA_Project_Oubliette
             return null;
         }
 
-        public static TileSet Default
-        {
-            get
-            {
-                if(defaultTileSet == null)
-                {
-                    defaultTileSet = new TileSet("default.set");
-                }
-
-                return defaultTileSet;
-            }
-        }
+        public static TileSet Default => new TileSet("#:  :0\\.:░░:1\\^:▒▒:0");
     }
 }

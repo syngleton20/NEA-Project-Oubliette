@@ -40,7 +40,7 @@ namespace NEA_Project_Oubliette.Maps
             }
 
             serialized.Append(charCount > 1 ? $"{charCount}{previousCharacter}" : previousCharacter.ToString());
-            return map.Name + '\n' + serialized.ToString() + '\n' + map.TileSet.Name + entities.ToString();
+            return map.Name + '\n' + serialized.ToString() + '\n' + map.TileSet.Save() + '\n' + entities.ToString();
         }
 
         ///<summary>Decompresses a map from a run-length encoded string</summary>
@@ -84,7 +84,7 @@ namespace NEA_Project_Oubliette.Maps
                 }
             }
 
-            return new Map(lines[0], mapData.ToString(), new TileSet(lines[2] + ".set"), entities.ToArray());
+            return new Map(lines[0], mapData.ToString(), new TileSet(lines[2]), entities.ToArray());
         }
     }
 }

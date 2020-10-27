@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System;
 
 namespace NEA_Project_Oubliette
@@ -5,6 +6,9 @@ namespace NEA_Project_Oubliette
     ///<summary>Controls the size and style of the game window</summary>
     internal static class Window
     {
+        [DllImport("libc")]
+        private static extern int system (string exec);
+
         public const int DEFAULT_WIDTH = 54;
         public const int DEFAULT_HEIGHT = 28;
 
@@ -28,6 +32,7 @@ namespace NEA_Project_Oubliette
                 Console.SetWindowSize(width, height);
                 Console.SetBufferSize(width, height);
             }
+            else system($@"printf '\e[8;{height};{width}t'");
         }
     }
 }

@@ -1,4 +1,5 @@
 using NEA_Project_Oubliette.Maps;
+using System;
 
 namespace NEA_Project_Oubliette.Entities
 {
@@ -25,6 +26,13 @@ namespace NEA_Project_Oubliette.Entities
             Load(data);
 
             Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
+        }
+
+        public override void Draw()
+        {
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.White;
+            base.Draw();
         }
 
         public override void Move(int deltaX, int deltaY)
