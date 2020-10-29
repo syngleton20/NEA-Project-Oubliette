@@ -8,7 +8,6 @@ namespace NEA_Project_Oubliette
     internal sealed class TileSet
     {
         private List<TileProfile> profiles = new List<TileProfile>();
-        private static TileSet defaultTileSet;
 
         public TileSet(string tileSetData)
         {

@@ -25,6 +25,7 @@ namespace NEA_Project_Oubliette
                 Console.Write('─');
 
             Console.WriteLine('─');
+            if(Environment.OSVersion.Platform == PlatformID.Unix) Console.WriteLine();
         }
 
         public static void HorizontalBar(int currentValue, int maxValue, string label, ConsoleColor colour = ConsoleColor.DarkRed)
@@ -68,6 +69,8 @@ namespace NEA_Project_Oubliette
 
                     for (int j = Console.CursorLeft; j < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth : Console.BufferWidth - 2); j++)
                         Console.Write(' ');
+
+                    if(Environment.OSVersion.Platform == PlatformID.Unix) Console.WriteLine();
                 }
 
                 Console.ResetColor();
