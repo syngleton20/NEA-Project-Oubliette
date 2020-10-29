@@ -68,8 +68,6 @@ namespace NEA_Project_Oubliette
 
                     for (int j = Console.CursorLeft; j < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth : Console.BufferWidth - 2); j++)
                         Console.Write(' ');
-
-                    Console.WriteLine();
                 }
 
                 Console.ResetColor();
