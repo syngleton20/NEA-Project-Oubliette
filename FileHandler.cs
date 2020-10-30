@@ -26,10 +26,9 @@ namespace NEA_Project_Oubliette
         {
             if(!DirectoryExists("maps")) CreateDirectory("maps");
             if(!DirectoryExists("saves")) CreateDirectory("saves");
-            if(!DirectoryExists("data")) CreateDirectory("data");
 
-            if(!FileExists("data/default.set")) WriteToFile("data/default.set", "#,  ,0\n.,░░,1\n^,▒▒,0");
             if(!FileExists("maps/start.map")) WriteToFile("maps/start.map", "start\n20#\\#12^#5^#\\#12.#5.#\\9#4.#5.#\\#7^#4.#5.#\\#7.^4.3#2.2#\\#12.3^2.^#\\#7.#10.#\\9#10.#\\#8^10.#\\#13.6#\\#5.2#6.#4^#\\#5.2^6.^4.#\\#18.#\\#13.#4.#\\#2.3#2.3#3.6#\\#2.#2^2.2^#3.5^#\\#2.#6.#8.#\\#2.#6.#4.2#2.#\\20#\n#:  :0\\.:░░:1:8:0\\^:░░:0:0:8\nP 0 1,2 20");
+            if(!FileExists("maps/Untitled.map")) WriteToFile("maps/Untitled.map", "Untitled\n20#\\#18^#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\20#\n#:  :0\\.:░░:1:8:0\\^:░░:0:0:8");
         }
 
         ///<summary>Writes a file into the bin/Debug/netcoreapp3.1/ directory</summary>

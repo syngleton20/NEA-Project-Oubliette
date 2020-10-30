@@ -10,6 +10,12 @@ namespace NEA_Project_Oubliette.Entities
 
         public Entity[] Array => entities.ToArray();
 
+        public static Dictionary<char, string> Names = new Dictionary<char, string>()
+        {
+            { 'P', "Player" },
+            { 'E', "Enemy" }
+        };
+
         public EntityCollection(params Entity[] initialEntities) => entities.AddRange(initialEntities);
 
         ///<summary>Adds a non-existent entity to the collection</summary>
@@ -55,15 +61,19 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Returns a unique id for a new entity</summary>
         public int AssignId()
         {
-            int previousId = 0;
+            int nextFreeId = 0;
 
-            for (int i = 1; i < entities.Count; i++)
+            if(entities.Count <= 0) return nextFreeId;
+
+            for (int i = 0; i < entities.Count; i++)
             {
-                if(entities[i - 1].Id == previousId) previousId++;
-                else return previousId;
+                if(!TryGetEntityById(nextFreeId, out Entity entity))
+                    return nextFreeId;
+
+                nextFreeId++;
             }
 
-            return previousId + 1;
+            return nextFreeId;
         }
 
         ///<summary>Attempts to return an entity at a position</summary>
@@ -90,6 +100,22 @@ namespace NEA_Project_Oubliette.Entities
             foreach (Entity entity in entities)
             {
                 if(entity.Position == position)
+                {
+                    output = entity;
+                    return true;
+                }
+            }
+
+            output = null;
+            return false;
+        }
+
+        ///<summary>Attempts to return an entity with an id</summary>
+        public bool TryGetEntityById(int id, out Entity output)
+        {
+            foreach (Entity entity in entities)
+            {
+                if(entity.Id == id)
                 {
                     output = entity;
                     return true;

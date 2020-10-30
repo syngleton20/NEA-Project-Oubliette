@@ -12,6 +12,9 @@ namespace NEA_Project_Oubliette
             return defaultValue;
         }
 
+        ///<summary>Returns either one or zero depending on a boolean value</summary>
+        public static int BoolToInt(this bool source) => source ? 1 : 0;
+
         ///<summary>Converts a string (either '0' or '1') to a boolean</summary>
         public static bool ToBool(this string source, bool defaultValue = false)
         {

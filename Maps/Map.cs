@@ -14,13 +14,19 @@ namespace NEA_Project_Oubliette.Maps
         private TileSet tileSet;
         private EntityCollection collection;
 
-        public string Name => name;
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         public TileSet TileSet => tileSet;
         public EntityCollection Collection => collection;
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public Vector Size => new Vector(Width / AREA_SIZE, Height / AREA_SIZE);
 
         public const int AREA_SIZE = 20;
 
@@ -55,8 +61,6 @@ namespace NEA_Project_Oubliette.Maps
         ///<summary>Draws each tile to the screen</summary>
         public void Draw(int drawX, int drawY)
         {
-            Console.SetCursorPosition(2, 2); // This is temporary
-
             drawX *= AREA_SIZE;
             drawY *= AREA_SIZE;
 
@@ -76,7 +80,6 @@ namespace NEA_Project_Oubliette.Maps
         public void AddArea(int directionX, int directionY, char fillCharacter = '.')
         {
             Tile[,] newTiles = new Tile[Height + (directionY * AREA_SIZE), Width + (directionX * AREA_SIZE)];
-            Tile emptyTile = new Tile('\0', tileSet);
 
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
@@ -84,7 +87,7 @@ namespace NEA_Project_Oubliette.Maps
 
             for (int y = 0; y < newTiles.GetLength(0); y++)
                 for (int x = 0; x < newTiles.GetLength(1); x++)
-                    if(newTiles[y, x] == emptyTile)
+                    if(newTiles[y, x] == null)
                         newTiles[y, x] = new Tile(fillCharacter, tileSet);
 
             tiles = newTiles;

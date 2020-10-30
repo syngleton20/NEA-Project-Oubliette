@@ -1,4 +1,5 @@
 ﻿using System;
+using NEA_Project_Oubliette.Editing;
 
 namespace NEA_Project_Oubliette
 {
@@ -15,7 +16,7 @@ namespace NEA_Project_Oubliette
             {
                 GUI.Title("Main Menu");
 
-                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor (Coming Soon)", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
+                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))
                 {
                     case 0:
                         Game.Current = new Game(GameType.Game, "start.map");
@@ -34,7 +35,7 @@ namespace NEA_Project_Oubliette
 
                     case 2:
                         Console.Clear();
-                        Debug.Warning("This feature is still in development. Sorry :(");
+                        MapEditor.New();
                         break;
 
                     case 3:

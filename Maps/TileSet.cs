@@ -29,16 +29,35 @@ namespace NEA_Project_Oubliette
                 tileSetData.Append(profile.Ascii);
                 tileSetData.Append(':');
                 tileSetData.Append(profile.Unicode);
+                tileSetData.Append(':');
+                tileSetData.Append(profile.IsWalkable.BoolToInt());
 
                 if(profile.BackgroundColour != ConsoleColor.Black || profile.ForegroundColour != ConsoleColor.Gray)
                 {
                     tileSetData.Append(':');
                     tileSetData.Append((int)profile.BackgroundColour);
+                    tileSetData.Append(':');
                     tileSetData.Append((int)profile.ForegroundColour);
                 }
             }
 
             return tileSetData.ToString();
+        }
+
+        ///<summary>Returns a boolean depending on whether or not a tile profile was found</summary>
+        public bool TryGetProfileFromAscii(char ascii, out TileProfile output)
+        {
+            foreach (TileProfile profile in profiles)
+            {
+                if(profile.Ascii == ascii)
+                {
+                    output = profile;
+                    return true;
+                }
+            }
+
+            output = null;
+            return false;
         }
 
         ///<summary>Returns a tile profile from an ascii character</summary>
@@ -50,6 +69,6 @@ namespace NEA_Project_Oubliette
             return null;
         }
 
-        public static TileSet Default => new TileSet("#:  :0\\.:░░:1\\^:▒▒:0");
+        public static TileSet Default => new TileSet("#:  :0\\.:░░:1:8:0\\^:░░:0:0:8");
     }
 }

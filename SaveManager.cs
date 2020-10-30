@@ -102,7 +102,8 @@ namespace NEA_Project_Oubliette
             {
                 Console.WriteLine();
                 Display.WriteAtCentre("No save slots available!");
-                Console.ReadKey(true);
+                Display.WriteAtCentre("Press any key to continue...");
+                Input.GetKeyDown();
                 Display.Clear();
                 return -1;
             }

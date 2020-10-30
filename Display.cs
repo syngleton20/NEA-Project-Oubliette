@@ -20,6 +20,18 @@ namespace NEA_Project_Oubliette
             Console.CursorVisible = false;
         }
 
+        ///<summary>Clears a line in the console of any characters</summary>
+        public static void ClearLine()
+        {
+            Console.ResetColor();
+            Console.CursorLeft = 0;
+
+            for (int i = 0; i < Console.BufferWidth; i++)
+                Console.Write(' ');
+
+            Console.CursorTop--;
+        }
+
         ///<summary>Writes to the console, keeping a reference to the cursor's X coordinate if necessary</summary>
         public static void Write(object text = null)
         {

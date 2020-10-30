@@ -30,8 +30,6 @@ namespace NEA_Project_Oubliette.Maps
 
             if(map.Collection.Array.Length > 0)
             {
-                entities.Append('\n');
-
                 for (int i = 0; i < map.Collection.Array.Length; i++)
                 {
                     if(i > 0) entities.Append('\\');
@@ -40,7 +38,11 @@ namespace NEA_Project_Oubliette.Maps
             }
 
             serialized.Append(charCount > 1 ? $"{charCount}{previousCharacter}" : previousCharacter.ToString());
-            return map.Name + '\n' + serialized.ToString() + '\n' + map.TileSet.Save() + '\n' + entities.ToString();
+
+            string finalData = map.Name + '\n' + serialized.ToString() + '\n' + map.TileSet.Save();
+            if(entities.Length > 0) finalData += '\n' + entities.ToString();
+
+            return finalData;
         }
 
         ///<summary>Decompresses a map from a run-length encoded string</summary>

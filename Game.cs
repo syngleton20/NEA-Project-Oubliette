@@ -1,10 +1,11 @@
+using NEA_Project_Oubliette.Editing;
 using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Maps;
 using System;
 
 namespace NEA_Project_Oubliette
 {
-    public enum GameType { Game, Editor, Test }
+    public enum GameType { Game, Editor }
 
     ///<summary>Contains information on the game in progress</summary>
     internal sealed class Game : IDisposable
@@ -49,18 +50,38 @@ namespace NEA_Project_Oubliette
             {
                 frame++;
 
-                Console.SetCursorPosition(0, 0);
-                currentMap.Draw(cameraPosition.X, cameraPosition.Y);
-                Console.ResetColor();
+                if(type == GameType.Game)
+                {
+                    Console.SetCursorPosition(0, 0);
+                    currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                    Console.ResetColor();
 
-                Console.WriteLine();
-                Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
 
-                GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
+                    GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
-                currentMap.Collection.UpdateAll();
+                    currentMap.Collection.UpdateAll();
 
-                Input.GetPlayerInput();
+                    Input.GetPlayerInput();
+                }
+                else
+                {
+                    Console.SetCursorPosition(0, 1);
+                    Display.WriteAtCentre(Game.Current.CurrentMap.Name + (MapEditor.HasSaved ? '\0' : '*'));
+                    GUI.HorizontalSeparator();
+
+                    currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                    Console.ResetColor();
+
+                    Placement.Draw();
+
+                    Console.SetCursorPosition(1, Map.AREA_SIZE + 5);
+                    Console.Write($"{(Placement.Type == PlacementType.Entity ? $"Entity: {Placement.Entity.ToString()}" : $"  Tile: {Placement.Tile.ToString()}")}");
+                    Console.Write($"  Pos: {Placement.Position.ToString()}  Size: {Game.Current.CurrentMap.Size.ToString()}");
+
+                    Input.GetEditorInput();
+                }
             }
         }
 

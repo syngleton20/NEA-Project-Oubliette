@@ -1,3 +1,4 @@
+using System.Text;
 using System;
 
 namespace NEA_Project_Oubliette
@@ -28,6 +29,7 @@ namespace NEA_Project_Oubliette
             if(Environment.OSVersion.Platform == PlatformID.Unix) Console.WriteLine();
         }
 
+        ///<summary>Displays a value with a minimum and maximum value in gauge format</summary>
         public static void HorizontalBar(int currentValue, int maxValue, string label, ConsoleColor colour = ConsoleColor.DarkRed)
         {
             Console.WriteLine("  " + label);
@@ -42,6 +44,34 @@ namespace NEA_Project_Oubliette
                 Console.Write('░');
 
             Console.ResetColor();
+        }
+
+        ///<summary>Shows a large number of items in a vertical scroll view</summary>
+        public static void VerticalScrollView(string[] items)
+        {
+            int startX = Console.CursorLeft, startY = Console.CursorTop;
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                Console.WriteLine("  " + items[i]);
+
+                if(Console.CursorTop >= (Console.BufferHeight - 4))
+                {
+                    Console.WriteLine();
+                    Display.WriteAtCentre("Press any key to continue... ");
+                    Input.GetKeyDown();
+
+                    Console.SetCursorPosition(startX, startY);
+
+                    for (int j = 0; j < Console.CursorTop; j++)
+                    {
+                        Display.ClearLine();
+                        Console.WriteLine();
+                    }
+
+                    Console.SetCursorPosition(startX, startY);
+                }
+            }
         }
 
         ///<summary>Draws a vertical list menu which returns the selected index</summary>
@@ -170,6 +200,101 @@ namespace NEA_Project_Oubliette
             Console.WriteLine();
 
             return VerticalMenu("YES", "NO") == 0;
+        }
+
+        public static string TextField(string label, int maxLength, string defaultValue = "")
+        {
+            int startX = Console.CursorLeft, startY = Console.CursorTop, cursorPosition = defaultValue.Length;
+            bool hasFinished = false;
+
+            StringBuilder text = new StringBuilder();
+
+            do
+            {
+                Display.ClearLine();
+                Console.CursorVisible = true;
+
+                Console.Write("  " + label);
+                Console.Write(text.ToString());
+
+                Console.CursorLeft -= text.Length;
+                Console.CursorLeft += cursorPosition;
+
+                switch (Input.GetKeyDown())
+                {
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.UpArrow:
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+                        if(cursorPosition > 0) cursorPosition--;
+                        break;
+
+                    case ConsoleKey.RightArrow:
+                        if(cursorPosition < (text.Length - 1)) cursorPosition++;
+                        break;
+
+                    case ConsoleKey.Escape:
+                        Console.CursorVisible = false;
+                        Display.Clear();
+                        return "";
+
+                    case ConsoleKey.Enter:
+                        hasFinished = true;
+                        break;
+
+                    case ConsoleKey.Backspace:
+                        if(text.Length <= 1){
+                            text.Clear();
+                            cursorPosition = 0;
+                            break;
+                        }
+
+                        if(cursorPosition > 0 && cursorPosition < (text.Length - 1)) text.Remove(cursorPosition, 1);
+                        else
+                        {
+                            if(cursorPosition <= 0)
+                            {
+                                text.Remove(0, 1);
+                                cursorPosition = 0;
+                            }
+
+                            if(cursorPosition >= (text.Length - 1)) text.Remove(text.Length - 1, 1);
+                        }
+
+                        if(cursorPosition > 0) cursorPosition--;
+                        break;
+
+                    default:
+                        if(text.Length >= maxLength) break;
+
+                        if(text.Length <= 0)
+                        {
+                            text.Append(Input.KeyChar);
+                            cursorPosition++;
+                            break;
+                        }
+
+                        if(cursorPosition > 0 && cursorPosition < (text.Length - 1)) text.Insert(cursorPosition, Input.KeyChar);
+                        else
+                        {
+                            if(cursorPosition <= 0) text.Insert(0, Input.KeyChar);
+                            if(cursorPosition >= (text.Length - 1)) text.Append(Input.KeyChar);
+                        }
+
+                        cursorPosition++;
+                        break;
+                }
+
+                Console.CursorVisible = false;
+                Console.SetCursorPosition(startX, startY);
+            }
+            while(!hasFinished);
+
+            Console.CursorVisible = false;
+            Display.Clear();
+
+            return text.ToString();
         }
     }
 }
