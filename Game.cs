@@ -5,7 +5,7 @@ using System;
 
 namespace NEA_Project_Oubliette
 {
-    public enum GameType { Game, Editor }
+    public enum GameType { Game, Editor, Test }
 
     ///<summary>Contains information on the game in progress</summary>
     internal sealed class Game : IDisposable
@@ -65,7 +65,7 @@ namespace NEA_Project_Oubliette
 
                     Input.GetPlayerInput();
                 }
-                else
+                else if(type == GameType.Editor)
                 {
                     Console.SetCursorPosition(0, 1);
                     Display.WriteAtCentre(Game.Current.CurrentMap.Name + (MapEditor.HasSaved ? '\0' : '*'));
@@ -77,14 +77,34 @@ namespace NEA_Project_Oubliette
                     Placement.Draw();
 
                     Console.SetCursorPosition(1, Map.AREA_SIZE + 5);
+                    Display.ClearLine();
+
                     Console.Write($"{(Placement.Type == PlacementType.Entity ? $"Entity: {Placement.Entity.ToString()}" : $"  Tile: {Placement.Tile.ToString()}")}");
-                    Console.Write($"  Pos: {Placement.Position.ToString()}  Size: {Game.Current.CurrentMap.Size.ToString()}");
+                    Console.Write($"  Pos: {Placement.Position.ToString()}  Stamp: {(Placement.UseStamp ? "On " : "Off")}  Size: {Game.Current.CurrentMap.Size.ToString()}");
+
+                    if(currentMap.Collection.TryGetEntity(Placement.Position, out Entity entity)) Console.Write("  " + entity.Id);
+                    else Console.Write("     ");
 
                     Input.GetEditorInput();
+                }
+                else
+                {
+                    Console.SetCursorPosition(0, 0);
+                    currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                    Console.ResetColor();
+
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+                    GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
+
+                    currentMap.Collection.UpdateAll();
+                    Input.GetTestInput();
                 }
             }
         }
 
+        ///<summary>Assigns the isPlaying field to false</summary>
         public void Stop() => isPlaying = false;
 
         ///<summary>Assigns to the current map</summary>
@@ -100,14 +120,14 @@ namespace NEA_Project_Oubliette
             Display.Clear();
             GUI.Title("Game Over");
 
-            switch(GUI.VerticalMenu("Load", "Main Menu", "Quit"))
+            switch(GUI.VerticalMenu("Load from Save Slot", "Main Menu", "Quit"))
             {
                 case 0:
                     int slotIndex = SaveManager.ChooseSlotToLoad();
                     if(slotIndex < 0) break;
 
-                    SaveManager.Load(slotIndex);
-                    Start();
+                    Current = SaveManager.Load(slotIndex);
+                    Current.Start();
                     break;
 
                 case 1:

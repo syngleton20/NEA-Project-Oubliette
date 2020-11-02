@@ -14,6 +14,7 @@ namespace NEA_Project_Oubliette
 
             while (true)
             {
+                if(FileHandler.FileExists("maps/.temp.map")) FileHandler.DeleteFile("maps/.temp.map");
                 GUI.Title("Main Menu");
 
                 switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps (Coming Soon)", "Log In (Coming Soon)", "Quit"))

@@ -6,6 +6,14 @@ namespace NEA_Project_Oubliette
     ///<summary>Controls the size and style of the game window</summary>
     internal static class Window
     {
+        /*
+
+        I found out about and implemented the macOS native system() function from here:
+        https://stackoverflow.com/questions/31522500/mono-resize-terminal-on-mac-os-x.
+        I have modified the system() function call in ResizeWindow() to suit my needs.
+
+        */
+
         [DllImport("libc")]
         private static extern int system (string exec);
 

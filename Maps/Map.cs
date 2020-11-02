@@ -76,6 +76,16 @@ namespace NEA_Project_Oubliette.Maps
             }
         }
 
+        public void Fill(int areaX, int areaY, char fillCharacter)
+        {
+            areaX *= AREA_SIZE;
+            areaY *= AREA_SIZE;
+
+            for (int y = areaY; y < areaY + AREA_SIZE; y++)
+                for (int x = areaX; x < areaX + AREA_SIZE; x++)
+                    tiles[y, x] = new Tile(fillCharacter, tileSet);
+        }
+
         ///<summary>Adds an empty area to the grid (to be used for level editing)</summary>
         public void AddArea(int directionX, int directionY, char fillCharacter = '.')
         {
@@ -98,6 +108,9 @@ namespace NEA_Project_Oubliette.Maps
 
         ///<summary>Assigns to a tile at a location (to be used for level editing)</summary>
         public void SetTile(int tileX, int tileY, Tile tile) => tiles[tileY, tileX] = tile;
+
+        ///<summary>Assigns to a tile at a location (to be used for level editing)</summary>
+        public void SetTile(Vector tilePosition, Tile tile) => tiles[tilePosition.Y, tilePosition.X] = tile;
 
         ///<summary>Attempts to return a tile from a location</summary>
         public bool TryGetTile(int tileX, int tileY, out Tile output)

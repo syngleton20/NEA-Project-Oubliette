@@ -40,6 +40,13 @@ namespace NEA_Project_Oubliette
                 writer.Write(fileContent);
         }
 
+        ///<summary>Deletes a file in bin/Debug/netcoreapp3.1/ directory</summary>
+        public static void DeleteFile(string fileName)
+        {
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
+            File.Delete(filePath);
+        }
+
         ///<summary>Returns the number of files in a directory</summary>
         public static int GetNumberOfFilesInDirectory(string directoryName)
         {

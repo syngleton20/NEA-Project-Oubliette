@@ -57,7 +57,14 @@ namespace NEA_Project_Oubliette.Editing
         ///<summary>Moves this placement by an amount on the X and Y axes</summary>
         public static void Move(int deltaX, int deltaY)
         {
-            position += new Vector(deltaX, deltaY);
+            if(position.Y + deltaY <= 0) position = new Vector(position.X, 0);
+            else if((position.Y + deltaY) >= (Game.Current.CurrentMap.Height - 1)) position = new Vector(position.X, Game.Current.CurrentMap.Height - 1);
+            else position += new Vector(0, deltaY);
+
+            if(position.X + deltaX <= 0) position = new Vector(0, position.Y);
+            else if((position.X + deltaX) >= (Game.Current.CurrentMap.Width - 1)) position = new Vector(Game.Current.CurrentMap.Width - 1, position.Y);
+            else position += new Vector(deltaX, 0);
+
             if(useStamp && type == PlacementType.Tile) Place();
 
             Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
@@ -80,7 +87,9 @@ namespace NEA_Project_Oubliette.Editing
             {
                 if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile output))
                 {
-                    Game.Current.CurrentMap.SetTile(position.X, position.Y, new Tile(tile, Game.Current.CurrentMap.TileSet));
+                    if(output.Ascii == tile) return;
+
+                    Game.Current.CurrentMap.SetTile(position, new Tile(tile, Game.Current.CurrentMap.TileSet));
                     MapEditor.MakeChange();
                 }
             }

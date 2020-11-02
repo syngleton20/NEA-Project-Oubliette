@@ -24,7 +24,7 @@ namespace NEA_Project_Oubliette.Entities
             foreach (Tile tile in Game.Current.CurrentMap.GetNeighbouringTiles(position.X, position.Y))
             {
                 if(tile.Occupant == Player.Instance)
-                    Player.Instance.TakeDamage(10);
+                    Player.Instance.TakeDamage(1);
             }
         }
 

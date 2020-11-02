@@ -1,8 +1,7 @@
 using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Editing;
-using System.Collections.Generic;
-using System.Linq;
 using System;
+using NEA_Project_Oubliette.Maps;
 
 namespace NEA_Project_Oubliette
 {
@@ -95,32 +94,32 @@ namespace NEA_Project_Oubliette
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
-                    if(Placement.Position.Y > 0) Placement.Move(0, -1);
+                    if(Placement.Position.Y > 0) Placement.Move(0, -1 * (Input.IsShiftKeyDown ? 4 : 1));
                     break;
 
                 case ConsoleKey.DownArrow:
                     if(Placement.Position.Y >= (Game.Current.CurrentMap.Height - 1)) Game.Current.CurrentMap.AddArea(0, 1);
-                    Placement.Move(0, 1);
+                    Placement.Move(0, 1 * (Input.IsShiftKeyDown ? 4 : 1));
                     break;
 
                 case ConsoleKey.S:
                     if(!IsControlKeyDown)
                     {
                         if(Placement.Position.Y >= (Game.Current.CurrentMap.Height - 1)) Game.Current.CurrentMap.AddArea(0, 1);
-                        Placement.Move(0, 1);
+                        Placement.Move(0, 1 * (Input.IsShiftKeyDown ? 4 : 1));
                     }
                     else MapEditor.Save();
                     break;
 
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:
-                    if(Placement.Position.X > 0) Placement.Move(-1, 0);
+                    if(Placement.Position.X > 0) Placement.Move(-1 * (Input.IsShiftKeyDown ? 4 : 1), 0);
                     break;
 
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.D:
                     if(Placement.Position.X >= (Game.Current.CurrentMap.Width - 1)) Game.Current.CurrentMap.AddArea(1, 0);
-                    Placement.Move(1, 0);
+                    Placement.Move(1 * (Input.IsShiftKeyDown ? 4 : 1), 0);
                     break;
 
                 case ConsoleKey.N:
@@ -131,12 +130,20 @@ namespace NEA_Project_Oubliette
                     if(IsControlKeyDown) MapEditor.Open();
                     break;
 
+                case ConsoleKey.F:
+                    if(IsControlKeyDown) MapEditor.Fill();
+                    break;
+
                 case ConsoleKey.Q:
                     Placement.ToggleStamp();
                     break;
 
                 case ConsoleKey.Spacebar:
                     Placement.Place();
+                    break;
+
+                case ConsoleKey.Enter:
+                    MapEditor.EnterPlayMode();
                     break;
 
                 case ConsoleKey.Backspace:
@@ -160,39 +167,7 @@ namespace NEA_Project_Oubliette
                             break;
 
                         case 1:
-                            Display.Clear();
-                            GUI.Title("Debugging");
-
-                            switch (GUI.VerticalMenu("Back", "Show Entity List"))
-                            {
-                                case 0:
-                                    Display.Clear();
-                                    break;
-
-                                case 1:
-                                    Entity[] entities = Game.Current.CurrentMap.Collection.Array;
-                                    IEnumerable<Entity> orderedEntities = from entity in entities orderby entity.Id select entity;
-
-                                    string[] entityStrings = new string[entities.Length];
-                                    entities = orderedEntities.ToArray();
-
-                                    Display.Clear();
-                                    GUI.Title("Entity List");
-
-                                    if(entities.Length > 0)
-                                    {
-                                        for (int i = 0; i < entities.Length; i++)
-                                            entityStrings[i] = Display.SplitStringOverBufferWidth(EntityCollection.Names[entities[i].Save()[0]], entities[i].Save());
-
-                                        GUI.VerticalScrollView(entityStrings);
-                                    }
-                                    else Display.WriteAtCentre("No entities in map!");
-
-                                    Display.WriteAtCentre("Press any key to continue...");
-                                    GetKeyDown();
-                                    Display.Clear();
-                                    break;
-                            }
+                            MapEditor.DebuggingMenu();
                             break;
 
                         case 2:
@@ -212,6 +187,15 @@ namespace NEA_Project_Oubliette
                             break;
 
                         case 6:
+                            GUI.Title("Exit to Main Menu");
+
+                            if(!GUI.YesOrNo("Are you sure you want to leave without saving?\nYour changes will not be saved."))
+                            {
+                                Display.Clear();
+                                return;
+                            }
+
+                            MapEditor.Reset();
                             Game.Current.Stop();
                             break;
 
@@ -232,6 +216,36 @@ namespace NEA_Project_Oubliette
                         if(EntityCollection.Names.ContainsKey(lastInput.KeyChar))
                             Placement.Entity = lastInput.KeyChar;
                     }
+                    break;
+            }
+        }
+
+        public static void GetTestInput()
+        {
+            switch (GetKeyDown())
+            {
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.W:
+                    Player.Instance?.Move(0, -1);
+                    break;
+
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
+                    Player.Instance?.Move(0, 1);
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.A:
+                    Player.Instance?.Move(-1, 0);
+                    break;
+
+                case ConsoleKey.RightArrow:
+                case ConsoleKey.D:
+                    Player.Instance?.Move(1, 0);
+                    break;
+
+                case ConsoleKey.Escape:
+                    MapEditor.ExitPlayMode();
                     break;
             }
         }
