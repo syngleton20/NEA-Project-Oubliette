@@ -39,7 +39,7 @@ namespace NEA_Project_Oubliette.Maps
 
             serialized.Append(charCount > 1 ? $"{charCount}{previousCharacter}" : previousCharacter.ToString());
 
-            string finalData = map.Name + '\n' + serialized.ToString() + '\n' + map.TileSet.Save();
+            string finalData = map.Name + '\n' + serialized.ToString();
             if(entities.Length > 0) finalData += '\n' + entities.ToString();
 
             return finalData;
@@ -67,9 +67,9 @@ namespace NEA_Project_Oubliette.Maps
                 }
             }
 
-            if(lines.Length > 3)
+            if(lines.Length > 2)
             {
-                string[] entityStrings = lines[3].Split('\\');
+                string[] entityStrings = lines[2].Split('\\');
 
                 for (int i = 0; i < entityStrings.Length; i++)
                 {
@@ -86,7 +86,7 @@ namespace NEA_Project_Oubliette.Maps
                 }
             }
 
-            return new Map(lines[0], mapData.ToString(), new TileSet(lines[2]), entities.ToArray());
+            return new Map(lines[0], mapData.ToString(), entities.ToArray());
         }
     }
 }

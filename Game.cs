@@ -52,18 +52,20 @@ namespace NEA_Project_Oubliette
 
                 if(type == GameType.Game)
                 {
-                    Console.SetCursorPosition(0, 0);
+                    Console.SetCursorPosition(0, 1);
+                    Display.WriteAtCentre(Game.Current.CurrentMap.Name);
+                    GUI.HorizontalSeparator();
+
                     currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Console.WriteLine();
                     Console.WriteLine();
 
-                    GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
-
-                    currentMap.Collection.UpdateAll();
+                    if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
                     Input.GetPlayerInput();
+                    currentMap.Collection.UpdateAll();
                 }
                 else if(type == GameType.Editor)
                 {
@@ -89,14 +91,17 @@ namespace NEA_Project_Oubliette
                 }
                 else
                 {
-                    Console.SetCursorPosition(0, 0);
+                    Console.SetCursorPosition(0, 1);
+                    Display.WriteAtCentre("▶ " + Game.Current.CurrentMap.Name);
+                    GUI.HorizontalSeparator();
+
                     currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Console.WriteLine();
                     Console.WriteLine();
 
-                    GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
+                    if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
                     currentMap.Collection.UpdateAll();
                     Input.GetTestInput();

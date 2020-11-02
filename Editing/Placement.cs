@@ -85,11 +85,16 @@ namespace NEA_Project_Oubliette.Editing
         {
             if(type == PlacementType.Tile)
             {
-                if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile output))
+                if(Game.Current.CurrentMap.TryGetTile(position, out Tile output))
                 {
+                    if(tile == '#')
+                        if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y + 1, out Tile tileBelow))
+                            if(tileBelow.Ascii != '#') Game.Current.CurrentMap.SetTile(position + Vector.Up, new Tile('^'));
+
+
                     if(output.Ascii == tile) return;
 
-                    Game.Current.CurrentMap.SetTile(position, new Tile(tile, Game.Current.CurrentMap.TileSet));
+                    Game.Current.CurrentMap.SetTile(position, new Tile(tile));
                     MapEditor.MakeChange();
                 }
             }
@@ -100,6 +105,17 @@ namespace NEA_Project_Oubliette.Editing
                 switch (entity)
                 {
                     case 'P':
+                        Entity[] entities = Game.Current.CurrentMap.Collection.Array;
+
+                        for (int i = 0; i < entities.Length; i++)
+                        {
+                            if(entities[i].GetType() == typeof(Player))
+                            {
+                                Game.Current.CurrentMap.Collection.Remove(entities[i]);
+                                break;
+                            }
+                        }
+
                         newEntity = new Player($"P {Game.Current.CurrentMap.Collection.AssignId()} {position.ToString()} 20");
                         break;
 

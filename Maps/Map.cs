@@ -11,7 +11,6 @@ namespace NEA_Project_Oubliette.Maps
         private string name;
 
         private Tile[,] tiles;
-        private TileSet tileSet;
         private EntityCollection collection;
 
         public string Name
@@ -23,18 +22,15 @@ namespace NEA_Project_Oubliette.Maps
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public TileSet TileSet => tileSet;
         public EntityCollection Collection => collection;
 
         public Vector Size => new Vector(Width / AREA_SIZE, Height / AREA_SIZE);
 
         public const int AREA_SIZE = 20;
 
-        public Map(string name, string data, TileSet tileSet, params Entity[] entities)
+        public Map(string name, string data, params Entity[] entities)
         {
             this.name = name;
-            this.tileSet = tileSet;
-
             collection = new EntityCollection(entities);
 
             string[] lines = data.Split('\n');
@@ -50,7 +46,7 @@ namespace NEA_Project_Oubliette.Maps
 
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
-                    tiles[y, x] = new Tile(lines[y][x], tileSet);
+                    tiles[y, x] = new Tile(lines[y][x]);
 
             if(entities.Length > 0)
                 for (int i = 0; i < entities.Length; i++)
@@ -83,7 +79,7 @@ namespace NEA_Project_Oubliette.Maps
 
             for (int y = areaY; y < areaY + AREA_SIZE; y++)
                 for (int x = areaX; x < areaX + AREA_SIZE; x++)
-                    tiles[y, x] = new Tile(fillCharacter, tileSet);
+                    tiles[y, x] = new Tile(fillCharacter);
         }
 
         ///<summary>Adds an empty area to the grid (to be used for level editing)</summary>
@@ -98,7 +94,7 @@ namespace NEA_Project_Oubliette.Maps
             for (int y = 0; y < newTiles.GetLength(0); y++)
                 for (int x = 0; x < newTiles.GetLength(1); x++)
                     if(newTiles[y, x] == null)
-                        newTiles[y, x] = new Tile(fillCharacter, tileSet);
+                        newTiles[y, x] = new Tile(fillCharacter);
 
             tiles = newTiles;
 

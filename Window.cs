@@ -17,8 +17,8 @@ namespace NEA_Project_Oubliette
         [DllImport("libc")]
         private static extern int system (string exec);
 
-        public const int DEFAULT_WIDTH = 54;
-        public const int DEFAULT_HEIGHT = 28;
+        public const int DEFAULT_WIDTH = 68;
+        public const int DEFAULT_HEIGHT = 36;
 
         ///<summary>Called from the Main() method in the Program class</summary>
         public static void Setup()

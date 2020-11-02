@@ -19,24 +19,23 @@ namespace NEA_Project_Oubliette
         public ConsoleColor BackgroundColour => backgroundColour;
         public ConsoleColor ForegroundColour => foregroundColour;
 
-        public TileProfile(string rawProfile)
+        public TileProfile(char ascii, string unicode, bool isWalkable)
         {
-            string[] parts = rawProfile.Split(':');
+            this.ascii = ascii;
+            this.unicode = unicode;
+            this.isWalkable = isWalkable;
 
-            ascii = parts[0][0];
-            unicode = parts[1];
-            isWalkable = int.Parse(parts[2]) > 0;
+            this.backgroundColour = ConsoleColor.Black;
+            this.foregroundColour = ConsoleColor.DarkGray;
+        }
 
-            if(parts.Length > 3)
-            {
-                backgroundColour = (ConsoleColor)int.Parse(parts[3]);
-                foregroundColour = (ConsoleColor)int.Parse(parts[4]);
-            }
-            else
-            {
-                backgroundColour = ConsoleColor.Black;
-                foregroundColour = ConsoleColor.Gray;
-            }
+        public TileProfile(char ascii, string unicode, bool isWalkable, ConsoleColor backgroundColour, ConsoleColor foregroundColour)
+        {
+            this.ascii = ascii;
+            this.unicode = unicode;
+            this.isWalkable = isWalkable;
+            this.backgroundColour = backgroundColour;
+            this.foregroundColour = foregroundColour;
         }
 
         ///<summary>Draws a tile in Unicode form with the correct Background and Foreground colours</summary>
@@ -44,6 +43,7 @@ namespace NEA_Project_Oubliette
         {
             Console.BackgroundColor = backgroundColour;
             Console.ForegroundColor = foregroundColour;
+
             Display.Write(unicode);
         }
     }

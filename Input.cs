@@ -208,7 +208,7 @@ namespace NEA_Project_Oubliette
                 default:
                     if(Placement.Type == PlacementType.Tile)
                     {
-                        if(Game.Current.CurrentMap.TileSet.TryGetProfileFromAscii(lastInput.KeyChar, out TileProfile profile))
+                        if(TileSet.TryGetProfileFromAscii(lastInput.KeyChar, out TileProfile profile))
                             Placement.Tile = lastInput.KeyChar;
                     }
                     else

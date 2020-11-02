@@ -10,7 +10,7 @@ namespace NEA_Project_Oubliette.Editing
     ///<summary>Provides methods and data allowing authors to easily edit maps</summary>
     internal static class MapEditor
     {
-        private static bool hasSaved, hasEverSaved;
+        private static bool hasSaved = true, hasEverSaved;
         private static string currentMapName;
 
         public static bool HasSaved => hasSaved;
@@ -31,7 +31,7 @@ namespace NEA_Project_Oubliette.Editing
 
             Reset();
 
-            Game.Current = new Game(GameType.Editor, "Untitled.map");
+            Game.Current = new Game(GameType.Editor, ".hidden/Untitled.map");
             Game.Current.Start();
         }
 
@@ -43,7 +43,7 @@ namespace NEA_Project_Oubliette.Editing
                 if(hasSaved) return;
 
                 Game.Current.CurrentMap.Name = currentMapName;
-                FileHandler.WriteToFile("maps/" + currentMapName + ".map", MapFormatter.Serialize(Game.Current.CurrentMap));
+                FileHandler.WriteToFile("maps/custom/" + currentMapName + ".map", MapFormatter.Serialize(Game.Current.CurrentMap));
 
                 hasSaved = true;
                 Display.Clear();
@@ -89,7 +89,7 @@ namespace NEA_Project_Oubliette.Editing
             while(!isValidMapName);
 
             Game.Current.CurrentMap.Name = currentMapName;
-            FileHandler.WriteToFile("maps/" + currentMapName + ".map", MapFormatter.Serialize(Game.Current.CurrentMap));
+            FileHandler.WriteToFile("maps/custom/" + currentMapName + ".map", MapFormatter.Serialize(Game.Current.CurrentMap));
 
             hasEverSaved = hasSaved = true;
             Display.Clear();
@@ -98,7 +98,7 @@ namespace NEA_Project_Oubliette.Editing
         ///<summary>Displays a menu for loading custom maps</summary>
         public static void Open()
         {
-            FileInfo[] files = FileHandler.GetFilesInDirectory("maps");
+            FileInfo[] files = FileHandler.GetFilesInDirectory("maps/custom");
             List<string> choices = new List<string>();
 
             Display.Clear();
@@ -130,7 +130,7 @@ namespace NEA_Project_Oubliette.Editing
                     currentMapName = choices[choiceIndex];
                     hasEverSaved = hasSaved = true;
 
-                    Game.Current = new Game(GameType.Editor, currentMapName + ".map");
+                    Game.Current = new Game(GameType.Editor, "custom/" + currentMapName + ".map");
                     Game.Current.Start();
                 }
             }
@@ -138,6 +138,7 @@ namespace NEA_Project_Oubliette.Editing
             {
                 Display.WriteAtCentre("No maps available!");
                 Display.WriteAtCentre("Press any key to continue...");
+                Input.GetKeyDown();
             }
 
             Display.Clear();
@@ -158,9 +159,9 @@ namespace NEA_Project_Oubliette.Editing
             Placement.Reset();
             Display.Clear();
 
-            FileHandler.WriteToFile("maps/.temp.map", MapFormatter.Serialize(Game.Current.CurrentMap));
+            FileHandler.WriteToFile("maps/.hidden/.temp.map", MapFormatter.Serialize(Game.Current.CurrentMap));
 
-            Game.Current = new Game(GameType.Test, ".temp.map");
+            Game.Current = new Game(GameType.Test, ".hidden/.temp.map");
             Game.Current.Start();
         }
 
@@ -169,7 +170,7 @@ namespace NEA_Project_Oubliette.Editing
         {
             Display.Clear();
 
-            Game.Current = new Game(GameType.Editor, FileHandler.FileExists("maps/.temp.map") ? ".temp.map" : currentMapName + ".map");
+            Game.Current = new Game(GameType.Editor, FileHandler.FileExists("maps/.hidden/.temp.map") ? ".hidden/.temp.map" : currentMapName + ".map");
             Game.Current.Start();
         }
 
@@ -227,7 +228,7 @@ namespace NEA_Project_Oubliette.Editing
                 if(string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input)) break;
 
                 fillCharacter = input[0];
-                if(!Game.Current.CurrentMap.TileSet.TryGetProfileFromAscii(fillCharacter, out TileProfile profile)) isValid = false;
+                if(!TileSet.TryGetProfileFromAscii(fillCharacter, out TileProfile profile)) isValid = false;
             }
             while(!isValid);
 

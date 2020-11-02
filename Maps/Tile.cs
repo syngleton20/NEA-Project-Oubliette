@@ -18,11 +18,11 @@ namespace NEA_Project_Oubliette.Maps
 
         public Entity Occupant => occupant;
 
-        public Tile(char ascii, TileSet tileSet)
+        public Tile(char ascii)
         {
             this.ascii = ascii;
 
-            profile = tileSet.GetProfileFromAscii(ascii);
+            profile = TileSet.GetProfileFromAscii(ascii);
             isWalkable = profile.IsWalkable;
         }
 
