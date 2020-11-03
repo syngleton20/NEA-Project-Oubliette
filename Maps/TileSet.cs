@@ -11,7 +11,7 @@ namespace NEA_Project_Oubliette
             new TileProfile('.', "░░", true, ConsoleColor.DarkGray, ConsoleColor.Black),
             new TileProfile('^', "░░", false, ConsoleColor.Black, ConsoleColor.DarkGray),
             new TileProfile('`', "░░", true, ConsoleColor.DarkGreen, ConsoleColor.Black),
-            new TileProfile('%', "▒▒", false, ConsoleColor.DarkGreen, ConsoleColor.Black)
+            new TileProfile('%', "▓▓", false, ConsoleColor.DarkGreen, ConsoleColor.Black)
         };
 
         ///<summary>Returns a boolean depending on whether or not a tile profile was found</summary>

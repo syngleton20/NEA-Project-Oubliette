@@ -34,5 +34,7 @@ namespace NEA_Project_Oubliette.Maps
 
         ///<summary>Removes the occupant entity from this tile</summary>
         public void Vacate() => occupant = null;
+
+        public override string ToString() => profile.Unicode;
     }
 }

@@ -34,7 +34,14 @@ namespace NEA_Project_Oubliette.Entities
         public void Add(params Entity[] entities) { foreach (Entity entity in entities) Add(entity); }
 
         ///<summary>Removes an existing entity from the collection</summary>
-        public void Remove(Entity entity) { if(entities.Contains(entity)) entities.Remove(entity); }
+        public void Remove(Entity entity)
+        {
+            if(entities.Contains(entity))
+            {
+                entity.OnDestroy();
+                entities.Remove(entity);
+            }
+        }
 
         ///<summary>Clears the collection</summary>
         public void Clear()

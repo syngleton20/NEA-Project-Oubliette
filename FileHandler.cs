@@ -31,6 +31,8 @@ namespace NEA_Project_Oubliette
 
             if(!FileExists("maps/start.map")) WriteToFile("maps/start.map", "start\n20#\\#12^#5^#\\#12.#5.#\\9#4.#5.#\\#7^#4.#5.#\\#7.^4.3#2.2#\\#12.3^2.^#\\#7.#10.#\\9#10.#\\#8^10.#\\#13.6#\\#5.2#6.#4^#\\#5.2^6.^4.#\\#18.#\\#13.#4.#\\#2.3#2.3#3.6#\\#2.#2^2.2^#3.5^#\\#2.#6.#8.#\\#2.#6.#4.2#2.#\\20#\nP 0 1,2 20");
             if(!FileExists("maps/.hidden/Untitled.map")) WriteToFile("maps/.hidden/Untitled.map", "Untitled\n20#\\#18^#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\#18.#\\20#");
+
+            if(FileExists("maps/.hidden/.temp.map")) DeleteFile("maps/.hidden/.temp.map");
         }
 
         ///<summary>Writes a file into the bin/Debug/netcoreapp3.1/ directory</summary>

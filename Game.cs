@@ -1,6 +1,8 @@
 using NEA_Project_Oubliette.Editing;
 using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Maps;
+using System.Threading;
+using System.Text;
 using System;
 
 namespace NEA_Project_Oubliette
@@ -46,6 +48,8 @@ namespace NEA_Project_Oubliette
         {
             isPlaying = true;
 
+            if(type == GameType.Editor) Placement.Reset();
+
             while (isPlaying)
             {
                 frame++;
@@ -56,7 +60,8 @@ namespace NEA_Project_Oubliette
                     Display.WriteAtCentre(Game.Current.CurrentMap.Name);
                     GUI.HorizontalSeparator();
 
-                    currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                    Display.DrawMap(currentMap, cameraPosition.X, cameraPosition.Y);
+                    // currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Console.WriteLine();
@@ -65,7 +70,7 @@ namespace NEA_Project_Oubliette
                     if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
                     Input.GetPlayerInput();
-                    currentMap.Collection.UpdateAll();
+                    currentMap?.Collection.UpdateAll();
                 }
                 else if(type == GameType.Editor)
                 {
@@ -73,19 +78,31 @@ namespace NEA_Project_Oubliette
                     Display.WriteAtCentre(Game.Current.CurrentMap.Name + (MapEditor.HasSaved ? '\0' : '*'));
                     GUI.HorizontalSeparator();
 
-                    currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                    Display.DrawMap(currentMap, cameraPosition.X, cameraPosition.Y);
+                    // currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Placement.Draw();
 
-                    Console.SetCursorPosition(1, Map.AREA_SIZE + 5);
+                    Console.SetCursorPosition(0, Map.AREA_SIZE + 5);
+                    GUI.HorizontalSeparator();
+
+                    Display.ClearLine();
+                    Console.WriteLine();
                     Display.ClearLine();
 
-                    Console.Write($"{(Placement.Type == PlacementType.Entity ? $"Entity: {Placement.Entity.ToString()}" : $"  Tile: {Placement.Tile.ToString()}")}");
-                    Console.Write($"  Pos: {Placement.Position.ToString()}  Stamp: {(Placement.UseStamp ? "On " : "Off")}  Size: {Game.Current.CurrentMap.Size.ToString()}");
+                    Console.CursorTop--;
+                    StringBuilder editorInformation = new StringBuilder();
 
-                    if(currentMap.Collection.TryGetEntity(Placement.Position, out Entity entity)) Console.Write("  " + entity.Id);
-                    else Console.Write("     ");
+                    editorInformation.Append($"{(Placement.Type == PlacementType.Entity ? $"Entity: {Placement.Entity.ToString()}" : $"Tile: {Placement.Tile.ToString()}")}");
+                    editorInformation.Append($"  Pos: {Placement.Position.ToString()}  Stamp: {(Placement.UseStamp ? "On " : "Off")}  Size: {Game.Current.CurrentMap.Size.ToString()}");
+                    editorInformation.Append($"  Area: {(Placement.Position / Map.AREA_SIZE).ToString()}");
+
+                    if(currentMap.Collection.TryGetEntity(Placement.Position, out Entity entity))
+                        editorInformation.Append("  Id: " + entity.Id);
+
+                    Display.WriteAtCentre(editorInformation.ToString());
+                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, SPACE - Place, Q - Stamp, ^F - Fill Area");
 
                     Input.GetEditorInput();
                 }
@@ -95,7 +112,8 @@ namespace NEA_Project_Oubliette
                     Display.WriteAtCentre("▶ " + Game.Current.CurrentMap.Name);
                     GUI.HorizontalSeparator();
 
-                    currentMap.Draw(cameraPosition.X, cameraPosition.Y);
+                    Display.DrawMap(currentMap, cameraPosition.X, cameraPosition.Y);
+                    // currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Console.WriteLine();
@@ -103,8 +121,8 @@ namespace NEA_Project_Oubliette
 
                     if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
-                    currentMap.Collection.UpdateAll();
                     Input.GetTestInput();
+                    currentMap.Collection.UpdateAll();
                 }
             }
         }
@@ -119,10 +137,21 @@ namespace NEA_Project_Oubliette
         public void GameOver()
         {
             isPlaying = false;
+
+            Display.ShowRibbonMessage("G A M E    O V E R");
+            Thread.Sleep(2000);
+
             currentMap.Collection.Clear();
             currentMap = null;
 
             Display.Clear();
+
+            if(type == GameType.Test)
+            {
+                MapEditor.ExitPlayMode();
+                return;
+            }
+
             GUI.Title("Game Over");
 
             switch(GUI.VerticalMenu("Load from Save Slot", "Main Menu", "Quit"))

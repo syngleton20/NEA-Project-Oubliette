@@ -125,8 +125,6 @@ namespace NEA_Project_Oubliette.Editing
                             return;
                     }
 
-                    Placement.Reset();
-
                     currentMapName = choices[choiceIndex];
                     hasEverSaved = hasSaved = true;
 

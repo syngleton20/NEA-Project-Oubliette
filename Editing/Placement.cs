@@ -50,8 +50,8 @@ namespace NEA_Project_Oubliette.Editing
             entity = 'P';
             useStamp = false;
 
-            position = Vector.Zero;
-            type = PlacementType.Tile;
+            position = Player.Instance != null ? Player.Instance.Position : Vector.Zero;
+            Type = PlacementType.Tile;
         }
 
         ///<summary>Moves this placement by an amount on the X and Y axes</summary>
@@ -75,8 +75,8 @@ namespace NEA_Project_Oubliette.Editing
         {
             Console.BackgroundColor = colour;
 
-            Console.SetCursorPosition((position.X * 2) % (Map.AREA_SIZE * 2), 4 + (position.Y % Map.AREA_SIZE));
-            Console.Write("  ");
+            Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
+            Console.Write(Game.Current.CurrentMap.TryGetTile(position, out Tile tile) ? tile.ToString() : "  ");
             Console.ResetColor();
         }
 

@@ -32,8 +32,9 @@ namespace NEA_Project_Oubliette
         ///<summary>Displays a value with a minimum and maximum value in gauge format</summary>
         public static void HorizontalBar(int currentValue, int maxValue, string label, ConsoleColor colour = ConsoleColor.DarkRed)
         {
-            Console.WriteLine("  " + label);
-            Console.Write("  ");
+            Console.SetCursorPosition(Display.Offset.X, Console.CursorTop);
+            Console.WriteLine(label);
+            Console.SetCursorPosition(Display.Offset.X, Console.CursorTop);
 
             Console.ForegroundColor = colour;
 

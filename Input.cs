@@ -48,6 +48,10 @@ namespace NEA_Project_Oubliette
                     Player.Instance?.Move(1, 0);
                     break;
 
+                case ConsoleKey.H:
+                    if(IsShiftKeyDown) Player.Instance?.TakeDamage();
+                    break;
+
                 case ConsoleKey.Escape:
                     int slotIndex = 0;
 
@@ -246,6 +250,10 @@ namespace NEA_Project_Oubliette
 
                 case ConsoleKey.Escape:
                     MapEditor.ExitPlayMode();
+                    break;
+
+                case ConsoleKey.H:
+                    Player.Instance?.TakeDamage();
                     break;
             }
         }

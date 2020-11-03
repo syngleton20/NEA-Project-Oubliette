@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Text;
 using System;
 
 namespace NEA_Project_Oubliette
@@ -23,7 +24,10 @@ namespace NEA_Project_Oubliette
         ///<summary>Called from the Main() method in the Program class</summary>
         public static void Setup()
         {
+            Console.OutputEncoding = Encoding.UTF8;
             Console.Title = "Project Oubliette";
+
+            Console.TreatControlCAsInput = true;
             Console.CursorVisible = false;
 
             Console.ResetColor();

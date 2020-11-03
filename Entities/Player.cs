@@ -70,6 +70,7 @@ namespace NEA_Project_Oubliette.Entities
             Health = int.Parse(parts[3]);
         }
 
+        public override void OnDestroy() => Instance = null;
         public override string Save() => $"P {id} {position.ToString()} {Health}";
     }
 }
