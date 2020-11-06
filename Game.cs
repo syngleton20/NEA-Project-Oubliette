@@ -61,7 +61,6 @@ namespace NEA_Project_Oubliette
                     GUI.HorizontalSeparator();
 
                     Display.DrawMap(currentMap, cameraPosition.X, cameraPosition.Y);
-                    // currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Console.WriteLine();
@@ -79,7 +78,6 @@ namespace NEA_Project_Oubliette
                     GUI.HorizontalSeparator();
 
                     Display.DrawMap(currentMap, cameraPosition.X, cameraPosition.Y);
-                    // currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Placement.Draw();
@@ -113,7 +111,6 @@ namespace NEA_Project_Oubliette
                     GUI.HorizontalSeparator();
 
                     Display.DrawMap(currentMap, cameraPosition.X, cameraPosition.Y);
-                    // currentMap.Draw(cameraPosition.X, cameraPosition.Y);
                     Console.ResetColor();
 
                     Console.WriteLine();

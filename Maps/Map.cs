@@ -1,4 +1,5 @@
 using NEA_Project_Oubliette.Entities;
+using NEA_Project_Oubliette.AStar;
 using System.Collections.Generic;
 using System.Text;
 using System;
@@ -23,6 +24,7 @@ namespace NEA_Project_Oubliette.Maps
         public int Height { get; private set; }
 
         public EntityCollection Collection => collection;
+        public Grid Grid { get; private set; }
 
         public Vector Size => new Vector(Width / AREA_SIZE, Height / AREA_SIZE);
 
@@ -46,7 +48,9 @@ namespace NEA_Project_Oubliette.Maps
 
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
-                    tiles[y, x] = new Tile(lines[y][x]);
+                    tiles[y, x] = new Tile(x, y, lines[y][x]);
+
+            Grid = new Grid(this, tiles);
 
             if(entities.Length > 0)
                 for (int i = 0; i < entities.Length; i++)
@@ -79,7 +83,7 @@ namespace NEA_Project_Oubliette.Maps
 
             for (int y = areaY; y < areaY + AREA_SIZE; y++)
                 for (int x = areaX; x < areaX + AREA_SIZE; x++)
-                    tiles[y, x] = new Tile(fillCharacter);
+                    tiles[y, x] = new Tile(x, y, fillCharacter);
         }
 
         ///<summary>Adds an empty area to the grid (to be used for level editing)</summary>
@@ -94,7 +98,7 @@ namespace NEA_Project_Oubliette.Maps
             for (int y = 0; y < newTiles.GetLength(0); y++)
                 for (int x = 0; x < newTiles.GetLength(1); x++)
                     if(newTiles[y, x] == null)
-                        newTiles[y, x] = new Tile(fillCharacter);
+                        newTiles[y, x] = new Tile(x, y, fillCharacter);
 
             tiles = newTiles;
 

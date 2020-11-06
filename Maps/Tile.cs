@@ -1,5 +1,5 @@
 using NEA_Project_Oubliette.Entities;
-using System;
+using NEA_Project_Oubliette.AStar;
 
 namespace NEA_Project_Oubliette.Maps
 {
@@ -10,13 +10,17 @@ namespace NEA_Project_Oubliette.Maps
         private char ascii;
 
         private TileProfile profile;
+        private Vector position;
         private Entity occupant;
 
         public bool IsWalkable => isWalkable && !IsOccupied;
         public bool IsOccupied => occupant != null;
         public char Ascii => ascii;
 
+        public Vector Position => position;
         public Entity Occupant => occupant;
+
+        public Node Node { get; set; }
 
         public Tile(char ascii)
         {
@@ -24,6 +28,26 @@ namespace NEA_Project_Oubliette.Maps
 
             profile = TileSet.GetProfileFromAscii(ascii);
             isWalkable = profile.IsWalkable;
+        }
+
+        public Tile(int x, int y, char ascii)
+        {
+            this.ascii = ascii;
+
+            profile = TileSet.GetProfileFromAscii(ascii);
+            isWalkable = profile.IsWalkable;
+            position = new Vector(x, y);
+            Node = new Node(isWalkable, position);
+        }
+
+        public Tile(Vector location, char ascii)
+        {
+            this.ascii = ascii;
+
+            profile = TileSet.GetProfileFromAscii(ascii);
+            isWalkable = profile.IsWalkable;
+            position = location;
+            Node = new Node(isWalkable, position);
         }
 
         ///<summary>Draws the tile in Unicode form</summary>

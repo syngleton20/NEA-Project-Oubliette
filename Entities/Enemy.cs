@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.AStar;
 using NEA_Project_Oubliette.Maps;
 using System;
 
@@ -6,6 +7,11 @@ namespace NEA_Project_Oubliette.Entities
     ///<summary>Base class for all hostile entities which will follow and attack the player entity</summary>
     internal class Enemy : Entity, IDamageable
     {
+        private int currentNodeIndex;
+
+        private Vector lastPlayerPosition;
+        private Node[] currentPath = new Node[0];
+
         public Enemy(int startX, int startY) => position = new Vector(startX, startY);
         public Enemy(string data) : base(data) => Load(data);
 
@@ -21,11 +27,31 @@ namespace NEA_Project_Oubliette.Entities
 
         public override void Update()
         {
+            if(currentPath.Length <= 0 || Player.Instance.Position != lastPlayerPosition)
+            {
+                lastPlayerPosition = Player.Instance.Position;
+                currentPath = Pathfinder.FindPath(position, Player.Instance.Position, Game.Current.CurrentMap.Grid);
+                currentNodeIndex = 0;
+            }
+
+            if(currentPath.Length > 0)
+            {
+                if(currentNodeIndex < (currentPath.Length - 1))
+                {
+                    position = currentPath[currentNodeIndex].Position;
+                    currentNodeIndex++;
+                }
+            }
+
+            /*
+
             foreach (Tile tile in Game.Current.CurrentMap.GetNeighbouringTiles(position.X, position.Y))
             {
                 if(tile.Occupant == Player.Instance)
                     Player.Instance.TakeDamage(1);
             }
+
+            */
         }
 
         public void Heal(int amount = 1)
