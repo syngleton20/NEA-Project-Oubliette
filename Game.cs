@@ -56,6 +56,7 @@ namespace NEA_Project_Oubliette
 
                 if(type == GameType.Game)
                 {
+
                     Console.SetCursorPosition(0, 1);
                     Display.WriteAtCentre(Game.Current.CurrentMap.Name);
                     GUI.HorizontalSeparator();
@@ -68,8 +69,12 @@ namespace NEA_Project_Oubliette
 
                     if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
-                    Input.GetPlayerInput();
-                    currentMap?.Collection.UpdateAll();
+                    if(Player.Instance.IsDead) GameOver();
+                    else
+                    {
+                        Input.GetPlayerInput();
+                        currentMap?.Collection.UpdateAll();
+                    }
                 }
                 else if(type == GameType.Editor)
                 {
@@ -118,8 +123,14 @@ namespace NEA_Project_Oubliette
 
                     if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
-                    Input.GetTestInput();
-                    currentMap.Collection.UpdateAll();
+                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Return to Editor");
+
+                    if(Player.Instance.IsDead) GameOver();
+                    else
+                    {
+                        Input.GetTestInput();
+                        currentMap.Collection.UpdateAll();
+                    }
                 }
             }
         }

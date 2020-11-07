@@ -1,4 +1,5 @@
 using NEA_Project_Oubliette.Maps;
+using System.Threading;
 using System;
 
 namespace NEA_Project_Oubliette.Entities
@@ -6,6 +7,9 @@ namespace NEA_Project_Oubliette.Entities
     ///<summary>Entity representing the player character</summary>
     internal sealed class Player : Entity, IDamageable
     {
+        private int strength = 4;
+        private bool takingDamage;
+
         public int Health { get; private set; } = 20;
         public int MaxHealth { get; private set; } = 20;
         public bool IsDead { get; private set; }
@@ -30,14 +34,32 @@ namespace NEA_Project_Oubliette.Entities
 
         public override void Draw()
         {
-            Console.ResetColor();
-            Console.ForegroundColor = ConsoleColor.White;
+            if(!takingDamage) Console.ForegroundColor = ConsoleColor.White;
             base.Draw();
         }
 
         public override void Move(int deltaX, int deltaY)
         {
-            base.Move(deltaX, deltaY);
+            if(Game.Current.CurrentMap.TryGetTile(position.X + deltaX, position.Y + deltaY, out Tile tile))
+            {
+                if(tile.IsWalkable)
+                {
+                    if(tile.IsOccupied)
+                    {
+                        if(tile.Occupant.GetType() == typeof(Enemy))
+                            (tile.Occupant as Enemy).TakeDamage(strength);
+                    }
+                    else
+                    {
+                        if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile oldTile))
+                            oldTile.Vacate();
+
+                        position += new Vector(deltaX, deltaY);
+                        tile.Occupy(this);
+                    }
+                }
+            }
+
             Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
         }
 
@@ -51,16 +73,24 @@ namespace NEA_Project_Oubliette.Entities
         {
             Health -= amount;
             if(Health <= 0 && !IsDead) Die();
-        }
-
-        public void Die()
-        {
-            if(!IsDead)
+            else
             {
-                IsDead = true;
-                Game.Current.GameOver();
+                takingDamage = true;
+
+                Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
+                Console.ForegroundColor = ConsoleColor.Red;
+                Draw();
+
+                Thread.Sleep(100);
+                takingDamage = false;
+
+                Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
+                Console.ForegroundColor = ConsoleColor.White;
+                Draw();
             }
         }
+
+        public void Die() => IsDead = true;
 
         public override void Load(string data)
         {

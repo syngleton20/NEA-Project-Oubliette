@@ -1,5 +1,6 @@
 using NEA_Project_Oubliette.AStar;
 using NEA_Project_Oubliette.Maps;
+using System.Threading;
 using System;
 
 namespace NEA_Project_Oubliette.Entities
@@ -7,8 +8,8 @@ namespace NEA_Project_Oubliette.Entities
     ///<summary>Base class for all hostile entities which will follow and attack the player entity</summary>
     internal class Enemy : Entity, IDamageable
     {
-        private int currentNodeIndex;
-        private bool hasSeenPlayer;
+        private int strength = 1, currentNodeIndex;
+        private bool hasSeenPlayer, takingDamage;
 
         private Vector lastPlayerPosition;
         private Node[] currentPath = new Node[0];
@@ -22,7 +23,7 @@ namespace NEA_Project_Oubliette.Entities
 
         public override void Draw()
         {
-            Console.ForegroundColor = hasSeenPlayer ? ConsoleColor.Red : ConsoleColor.DarkRed;
+            if(!takingDamage) Console.ForegroundColor = hasSeenPlayer ? ConsoleColor.Red : ConsoleColor.DarkRed;
             base.Draw();
         }
 
@@ -30,6 +31,11 @@ namespace NEA_Project_Oubliette.Entities
         {
             if(hasSeenPlayer)
             {
+                foreach (Tile tile in Game.Current.CurrentMap.GetNeighbouringTiles(position))
+                    if(tile.IsOccupied)
+                        if(tile.Occupant.GetType() == typeof(Player))
+                            Player.Instance.TakeDamage(strength);
+
                 if(currentPath.Length <= 0 || Player.Instance.Position != lastPlayerPosition)
                 {
                     lastPlayerPosition = Player.Instance.Position;
@@ -62,11 +68,30 @@ namespace NEA_Project_Oubliette.Entities
         {
             Health -= amount;
             if(Health <= 0 && !IsDead) Die();
+            else
+            {
+                takingDamage = true;
+
+                Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
+                Console.ForegroundColor = ConsoleColor.White;
+                Draw();
+
+                Thread.Sleep(100);
+                takingDamage = false;
+
+                Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
+                Console.ForegroundColor = ConsoleColor.Red;
+                Draw();
+            }
         }
 
         public void Die()
         {
             IsDead = true;
+
+            if(Game.Current.CurrentMap.TryGetTile(position, out Tile tile))
+                tile.Vacate();
+
             Game.Current.CurrentMap.Collection.Remove(this);
         }
 

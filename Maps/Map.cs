@@ -147,10 +147,32 @@ namespace NEA_Project_Oubliette.Maps
             {
                 for (int neighbourX = -1; neighbourX <= 1; neighbourX++)
                 {
-                    if(neighbourX == 0 && neighbourY == 0) continue;
+                    if((neighbourX == 0 && neighbourY == 0) || (Math.Abs(tileX) == Math.Abs(tileY))) continue;
 
                     int checkX = tileX + neighbourX;
                     int checkY = tileY + neighbourY;
+
+                    if(checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height)
+                        neighbours.Add(tiles[checkY, checkX]);
+                }
+            }
+
+            return neighbours.ToArray();
+        }
+
+        ///<summary>Returns all neighbouring tiles at a location</summary>
+        public Tile[] GetNeighbouringTiles(Vector tilePosition)
+        {
+            List<Tile> neighbours = new List<Tile>();
+
+            for (int neighbourY = -1; neighbourY <= 1; neighbourY++)
+            {
+                for (int neighbourX = -1; neighbourX <= 1; neighbourX++)
+                {
+                    if((neighbourX == 0 && neighbourY == 0) || (Math.Abs(tilePosition.X) == Math.Abs(tilePosition.Y))) continue;
+
+                    int checkX = tilePosition.X + neighbourX;
+                    int checkY = tilePosition.Y + neighbourY;
 
                     if(checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height)
                         neighbours.Add(tiles[checkY, checkX]);
