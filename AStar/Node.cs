@@ -1,24 +1,25 @@
+using NEA_Project_Oubliette.Maps;
+
 namespace NEA_Project_Oubliette.AStar
 {
+    ///<summary>Provides pathfinding information linked to a single tile</summary>
     internal sealed class Node
     {
-        private bool isWalkable;
-        private Vector position;
+        private readonly Tile TILE;
 
-        public int GCost { get; set; }
-        public int HCost { get; set; }
+        public int GCost;
+        public int HCost;
 
         public int FCost => GCost + HCost;
+        public bool IsWalkable => TILE.IsWalkable;
 
-        public bool IsWalkable => isWalkable;
+        public Node Parent;
+        public readonly Vector POSITION;
 
-        public Vector Position => position;
-        public Node Parent { get; set; }
-
-        public Node(bool isWalkable, Vector position)
+        public Node(Tile tile)
         {
-            this.isWalkable = isWalkable;
-            this.position = position;
+            TILE = tile;
+            POSITION = TILE.Position;
         }
     }
 }

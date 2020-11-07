@@ -8,6 +8,7 @@ namespace NEA_Project_Oubliette.Entities
     internal class Enemy : Entity, IDamageable
     {
         private int currentNodeIndex;
+        private bool hasSeenPlayer;
 
         private Vector lastPlayerPosition;
         private Node[] currentPath = new Node[0];
@@ -21,37 +22,34 @@ namespace NEA_Project_Oubliette.Entities
 
         public override void Draw()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = hasSeenPlayer ? ConsoleColor.Red : ConsoleColor.DarkRed;
             base.Draw();
         }
 
         public override void Update()
         {
-            if(currentPath.Length <= 0 || Player.Instance.Position != lastPlayerPosition)
+            if(hasSeenPlayer)
             {
-                lastPlayerPosition = Player.Instance.Position;
-                currentPath = Pathfinder.FindPath(position, Player.Instance.Position, Game.Current.CurrentMap.Grid);
-                currentNodeIndex = 0;
-            }
-
-            if(currentPath.Length > 0)
-            {
-                if(currentNodeIndex < (currentPath.Length - 1))
+                if(currentPath.Length <= 0 || Player.Instance.Position != lastPlayerPosition)
                 {
-                    position = currentPath[currentNodeIndex].Position;
-                    currentNodeIndex++;
+                    lastPlayerPosition = Player.Instance.Position;
+                    currentPath = Pathfinder.FindPath(position, Player.Instance.Position, Game.Current.CurrentMap.Grid);
+                    currentNodeIndex = 0;
+                }
+
+                if(currentPath.Length > 0)
+                {
+                    if(currentNodeIndex < (currentPath.Length - 1))
+                    {
+                        Vector movement = (currentPath[currentNodeIndex].POSITION - position).Normalise();
+                        Move(movement.X, movement.Y);
+
+                        if(position == currentPath[currentNodeIndex].POSITION) currentNodeIndex++;
+                    }
                 }
             }
-
-            /*
-
-            foreach (Tile tile in Game.Current.CurrentMap.GetNeighbouringTiles(position.X, position.Y))
-            {
-                if(tile.Occupant == Player.Instance)
-                    Player.Instance.TakeDamage(1);
-            }
-
-            */
+            else if((Player.Instance.Position / Map.AREA_SIZE) == (Position / Map.AREA_SIZE))
+                hasSeenPlayer = true;
         }
 
         public void Heal(int amount = 1)
@@ -78,8 +76,10 @@ namespace NEA_Project_Oubliette.Entities
             id = parts[1].ToInt();
             position = parts[2].ToVector();
             Health = int.Parse(parts[3]);
+
+            if(parts.Length > 4) hasSeenPlayer = parts[4].ToBool();
         }
 
-        public override string Save() => $"E {id} {position.ToString()} {Health}";
+        public override string Save() => $"E {id} {position.ToString()} {Health} {hasSeenPlayer.BoolToInt()}";
     }
 }

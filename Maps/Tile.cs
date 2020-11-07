@@ -13,7 +13,7 @@ namespace NEA_Project_Oubliette.Maps
         private Vector position;
         private Entity occupant;
 
-        public bool IsWalkable => isWalkable && !IsOccupied;
+        public bool IsWalkable => isWalkable;
         public bool IsOccupied => occupant != null;
         public char Ascii => ascii;
 
@@ -37,7 +37,8 @@ namespace NEA_Project_Oubliette.Maps
             profile = TileSet.GetProfileFromAscii(ascii);
             isWalkable = profile.IsWalkable;
             position = new Vector(x, y);
-            Node = new Node(isWalkable, position);
+
+            Node = new Node(this);
         }
 
         public Tile(Vector location, char ascii)
@@ -47,7 +48,8 @@ namespace NEA_Project_Oubliette.Maps
             profile = TileSet.GetProfileFromAscii(ascii);
             isWalkable = profile.IsWalkable;
             position = location;
-            Node = new Node(isWalkable, position);
+
+            Node = new Node(this);
         }
 
         ///<summary>Draws the tile in Unicode form</summary>

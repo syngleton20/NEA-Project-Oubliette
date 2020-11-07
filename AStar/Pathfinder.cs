@@ -3,14 +3,16 @@ using System;
 
 namespace NEA_Project_Oubliette.AStar
 {
+    ///<summary>Provides the shortest path from one point to another using the A* pathfinding algorithm</summary>
     internal static class Pathfinder
     {
         private static Grid currentGrid;
 
+        ///<summary>Returns the absolute distance from one node to another</summary>
         private static int GetDistance(Node nodeA, Node nodeB)
         {
-            int distanceX = Math.Abs(nodeA.Position.X - nodeB.Position.X);
-            int distanceY = Math.Abs(nodeA.Position.Y - nodeB.Position.Y);
+            int distanceX = Math.Abs(nodeA.POSITION.X - nodeB.POSITION.X);
+            int distanceY = Math.Abs(nodeA.POSITION.Y - nodeB.POSITION.Y);
 
             if(distanceX > distanceY)
                 return 14 * distanceY + 10 * (distanceX - distanceY);
@@ -18,6 +20,7 @@ namespace NEA_Project_Oubliette.AStar
             return 14 * distanceX + 10 * (distanceY - distanceX);
         }
 
+        ///<summary>Retraces a path backwards then reverses and returns an array as a result</summary>
         private static Node[] RetracePath(Node startNode, Node targetNode)
         {
             List<Node> path = new List<Node>();
@@ -33,6 +36,7 @@ namespace NEA_Project_Oubliette.AStar
             return path.ToArray();
         }
 
+        ///<summary>Calculates the shortest path from one position to another</summary>
         public static Node[] FindPath(Vector start, Vector target, Grid grid)
         {
             currentGrid = grid;
@@ -75,6 +79,7 @@ namespace NEA_Project_Oubliette.AStar
                 }
             }
 
+            Debug.Warning("No path found!");
             return new Node[0];
         }
     }

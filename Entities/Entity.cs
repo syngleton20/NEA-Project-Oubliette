@@ -20,7 +20,7 @@ namespace NEA_Project_Oubliette.Entities
         {
             if(Game.Current.CurrentMap.TryGetTile(position.X + deltaX, position.Y + deltaY, out Tile tile))
             {
-                if(tile.IsWalkable)
+                if(tile.IsWalkable && !tile.IsOccupied)
                 {
                     if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile oldTile))
                         oldTile.Vacate();
