@@ -12,6 +12,13 @@ namespace NEA_Project_Oubliette
             return defaultValue;
         }
 
+        ///<summary>Converts a string to a float</summary>
+        public static float ToFloat(this string source, float defaultValue = 0)
+        {
+            if(float.TryParse(source, out float value)) return value;
+            return defaultValue;
+        }
+
         ///<summary>Returns either one or zero depending on a boolean value</summary>
         public static int BoolToInt(this bool source) => source ? 1 : 0;
 

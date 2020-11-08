@@ -82,6 +82,10 @@ namespace NEA_Project_Oubliette.Maps
                         case "E":
                             entities.Add(new Enemy(entityStrings[i]));
                             break;
+
+                        case "I":
+                            entities.Add(new Pickup(entityStrings[i]));
+                            break;
                     }
                 }
             }

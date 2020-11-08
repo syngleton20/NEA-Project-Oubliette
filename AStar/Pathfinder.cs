@@ -79,7 +79,6 @@ namespace NEA_Project_Oubliette.AStar
                 }
             }
 
-            Debug.Warning("No path found!");
             return new Node[0];
         }
     }

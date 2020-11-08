@@ -42,7 +42,11 @@ namespace NEA_Project_Oubliette.Entities
         public virtual void Update() { }
 
         ///<summary>Performs final actions before the entity is removed from a collection</summary>
-        public virtual void OnDestroy() { }
+        public virtual void OnDestroy()
+        {
+            if(Game.Current.CurrentMap.TryGetTile(position, out Tile tile))
+                tile.Vacate();
+        }
 
         ///<summary>Sets entity-specific information after loading from a file</summary>
         public abstract void Load(string data);

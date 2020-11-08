@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.Items;
 using NEA_Project_Oubliette.Maps;
 using System.Threading;
 using System;
@@ -7,12 +8,18 @@ namespace NEA_Project_Oubliette.Entities
     ///<summary>Entity representing the player character</summary>
     internal sealed class Player : Entity, IDamageable
     {
-        private int strength = 4;
+        private int strength = 2;
         private bool takingDamage;
+
+        private Item equippedItem;
+        private Inventory inventory = new Inventory();
 
         public int Health { get; private set; } = 20;
         public int MaxHealth { get; private set; } = 20;
         public bool IsDead { get; private set; }
+
+        public Item EquippedItem => equippedItem;
+        public Inventory Inventory => inventory;
 
         public static Player Instance { get; private set; }
 
@@ -46,8 +53,12 @@ namespace NEA_Project_Oubliette.Entities
                 {
                     if(tile.IsOccupied)
                     {
-                        if(tile.Occupant.GetType() == typeof(Enemy))
-                            (tile.Occupant as Enemy).TakeDamage(strength);
+                        if(tile.Occupant.GetType() == typeof(Enemy)) (tile.Occupant as Enemy).TakeDamage(strength);
+                        else if(tile.Occupant.GetType() == typeof(Pickup))
+                        {
+                            inventory.Combine((tile.Occupant as Pickup).Inventory);
+                            Game.Current.CurrentMap.Collection.Remove(tile.Occupant);
+                        }
                     }
                     else
                     {
@@ -81,7 +92,7 @@ namespace NEA_Project_Oubliette.Entities
                 Console.ForegroundColor = ConsoleColor.Red;
                 Draw();
 
-                Thread.Sleep(100);
+                Thread.Sleep(50);
                 takingDamage = false;
 
                 Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
@@ -92,6 +103,13 @@ namespace NEA_Project_Oubliette.Entities
 
         public void Die() => IsDead = true;
 
+        ///<summary>Equips an item at an index in this player's inventory</summary>
+        public void EquipItemAt(int itemIndex)
+        {
+            equippedItem = inventory.GetItems()[itemIndex];
+            if(equippedItem.GetType() == typeof(MeleeWeapon)) strength = (equippedItem as MeleeWeapon).Damage;
+        }
+
         public override void Load(string data)
         {
             string[] parts = data.Split(' ');
@@ -100,7 +118,12 @@ namespace NEA_Project_Oubliette.Entities
             Health = int.Parse(parts[3]);
         }
 
-        public override void OnDestroy() => Instance = null;
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            Instance = null;
+        }
+
         public override string Save() => $"P {id} {position.ToString()} {Health}";
     }
 }

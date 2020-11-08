@@ -13,7 +13,8 @@ namespace NEA_Project_Oubliette.Entities
         public static Dictionary<char, string> Names = new Dictionary<char, string>()
         {
             { 'P', "Player" },
-            { 'E', "Enemy" }
+            { 'E', "Enemy" },
+            { 'I', "Pickup" }
         };
 
         public EntityCollection(params Entity[] initialEntities) => entities.AddRange(initialEntities);

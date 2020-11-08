@@ -1,6 +1,7 @@
 using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Maps;
 using System;
+using System.Text;
 
 namespace NEA_Project_Oubliette.Editing
 {
@@ -121,6 +122,43 @@ namespace NEA_Project_Oubliette.Editing
 
                     case 'E':
                         newEntity = new Enemy($"E {Game.Current.CurrentMap.Collection.AssignId()} {position.ToString()} 20");
+                        break;
+
+                    case 'I':
+                        Display.Clear();
+                        GUI.Title("Add New Item");
+
+                        StringBuilder data = new StringBuilder();
+
+                        bool addAnotherItem = false;
+                        int typeIndex = GUI.VerticalMenu("Back", "Melee Weapon");
+                        string itemTypes = "M"; // More item types will be added later...
+
+                        do
+                        {
+                            if(typeIndex == 0) break;
+
+                            data.Append(itemTypes[typeIndex - 1].ToString());
+                            GUI.Title("Add New Item");
+                            data.Append(' ' + GUI.TextField("Name: ", 20));
+                            GUI.Title("Add New Item");
+                            data.Append(' ' + GUI.TextField("Weight (kg): ", 4));
+
+                            if(typeIndex == 1)
+                            {
+                                GUI.Title("Add New Item");
+                                data.Append(' ' + GUI.TextField("Damage: ", 4));
+                            }
+
+                            Display.Clear();
+                            GUI.Title("Add Another Item");
+
+                            addAnotherItem = GUI.YesOrNo("Do you want to add another item?");
+                            if(addAnotherItem) data.Append('/');
+                        }
+                        while(addAnotherItem);
+
+                        newEntity = new Pickup($"I {Game.Current.CurrentMap.Collection.AssignId()} {position.ToString()} {data.ToString()}");
                         break;
                 }
 

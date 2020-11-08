@@ -125,7 +125,7 @@ namespace NEA_Project_Oubliette
 
                     Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Return to Editor");
 
-                    if(Player.Instance.IsDead) GameOver();
+                    if(Player.Instance != null && Player.Instance.IsDead) GameOver();
                     else
                     {
                         Input.GetTestInput();

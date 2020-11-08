@@ -1,7 +1,9 @@
 using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Editing;
-using System;
+using NEA_Project_Oubliette.Items;
 using NEA_Project_Oubliette.Maps;
+using System.Text;
+using System;
 
 namespace NEA_Project_Oubliette
 {
@@ -15,6 +17,79 @@ namespace NEA_Project_Oubliette
         public static bool IsAltKeyDown => lastInput.Modifiers.HasFlag(ConsoleModifiers.Alt);
 
         public static char KeyChar => lastInput.KeyChar;
+
+        private static void PlayerInventory()
+        {
+            Item[] items = Player.Instance?.Inventory.GetItems();
+
+            Display.Clear();
+            GUI.Title("Inventory");
+
+            if(items.Length <= 0)
+            {
+                Display.WriteAtCentre("You have no items!");
+                Input.GetKeyDown();
+            }
+            else
+            {
+                StringBuilder itemString = new StringBuilder();
+
+                float totalWeight = 0f;
+                string[] itemList = new string[items.Length + 1];
+
+                itemList[0] = "Back";
+
+                for (int i = 0; i < items.Length; i++)
+                {
+                    if(i > 0) itemString.Append('\n');
+
+                    itemString.Append(Display.SplitStringOverBufferWidth(items[i].Name, $"{items[i].Weight}kg"));
+                    itemList[i + 1] = items[i].Name;
+                    totalWeight += items[i].Weight;
+                }
+
+                itemString.Append($"\n\nTotal Weight: {totalWeight}kg");
+                itemString.Append($"\nCurrently Equipped: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}");
+
+                GUI.VerticalScrollView(itemString.ToString().Split('\n'));
+                Display.WriteAtCentreBottom("E - Equip, Q - Drop");
+
+                int itemIndex = -1;
+
+                switch (Input.GetKeyDown())
+                {
+                    case ConsoleKey.E:
+                        Display.Clear();
+                        GUI.Title("Equip Item");
+
+                        itemIndex = GUI.VerticalMenu(itemList);
+                        if(itemIndex == 0) break;
+
+                        Player.Instance.EquipItemAt(itemIndex - 1);
+
+                        Display.Clear();
+                        break;
+
+                    case ConsoleKey.Q:
+                        Display.Clear();
+                        GUI.Title("Drop Item");
+
+                        itemIndex = GUI.VerticalMenu(itemList);
+                        if(itemIndex == 0) break;
+
+                        Display.Clear();
+                        GUI.Title("Are you sure?");
+
+                        if(!GUI.YesOrNo("Are you sure you want to drop this item?\nYou will not be able to reclaim it.")) break;
+
+                        Player.Instance.Inventory.Remove(items[itemIndex - 1]);
+                        Display.Clear();
+                        break;
+                }
+            }
+
+            Display.Clear();
+        }
 
         ///<summary>Halts the program and waits to return a keycode from the keyboard</summary>
         public static ConsoleKey GetKeyDown()
@@ -50,6 +125,10 @@ namespace NEA_Project_Oubliette
 
                 case ConsoleKey.H:
                     if(IsShiftKeyDown) Player.Instance?.TakeDamage();
+                    break;
+
+                case ConsoleKey.I:
+                    if(Player.Instance != null) PlayerInventory();
                     break;
 
                 case ConsoleKey.Escape:
@@ -254,6 +333,10 @@ namespace NEA_Project_Oubliette
 
                 case ConsoleKey.H:
                     Player.Instance?.TakeDamage();
+                    break;
+
+                case ConsoleKey.I:
+                    if(Player.Instance != null) PlayerInventory();
                     break;
             }
         }
