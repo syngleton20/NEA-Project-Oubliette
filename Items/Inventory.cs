@@ -37,9 +37,14 @@ namespace NEA_Project_Oubliette.Items
         ///<summary>Adds the items from a given inventory to this inventory</summary>
         public void Combine(Inventory inventory) => Add(inventory.items.ToArray());
 
+        ///<summary>Removes all items in this inventory</summary>
+        public void Clear() => items.Clear();
+
         ///<summary>Loads items from raw data, where '/' is the item delimiter</summary>
         public void Load(string data)
         {
+            items.Clear();
+
             if(data.Contains('/'))
             {
                 string[] parts = data.Split('/');

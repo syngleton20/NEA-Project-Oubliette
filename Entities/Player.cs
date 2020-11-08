@@ -1,6 +1,7 @@
 using NEA_Project_Oubliette.Items;
 using NEA_Project_Oubliette.Maps;
 using System.Threading;
+using System.Linq;
 using System;
 
 namespace NEA_Project_Oubliette.Entities
@@ -30,6 +31,12 @@ namespace NEA_Project_Oubliette.Entities
                 equippedItem = null;
                 return null;
             }
+            private set
+            {
+                equippedItem = value;
+                if(equippedItem.GetType() == typeof(MeleeWeapon))
+                    strength = (equippedItem as MeleeWeapon).Damage;
+            }
         }
 
         public Inventory Inventory => inventory;
@@ -44,7 +51,7 @@ namespace NEA_Project_Oubliette.Entities
             Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
         }
 
-        public Player(string data) : base(data)
+        public Player(string data)
         {
             Instance = this;
             Load(data);
@@ -117,11 +124,7 @@ namespace NEA_Project_Oubliette.Entities
         public void Die() => IsDead = true;
 
         ///<summary>Equips an item at an index in this player's inventory</summary>
-        public void EquipItemAt(int itemIndex)
-        {
-            equippedItem = inventory.GetItems()[itemIndex];
-            if(equippedItem.GetType() == typeof(MeleeWeapon)) strength = (equippedItem as MeleeWeapon).Damage;
-        }
+        public void EquipItemAt(int itemIndex) => EquippedItem = inventory.GetItems()[itemIndex];
 
         public override void Load(string data)
         {
@@ -129,6 +132,19 @@ namespace NEA_Project_Oubliette.Entities
             id = parts[1].ToInt();
             position = parts[2].ToVector();
             Health = int.Parse(parts[3]);
+
+            if(parts.Length >= 6)
+            {
+                int startIndex = 0;
+
+                for (int i = 0; i < 5; i++)
+                    startIndex += parts[i].Length + 1;
+
+                string inventoryString = data.Substring(startIndex, data.Length - startIndex);
+
+                inventory.Load(inventoryString);
+                EquippedItem = inventory.GetItems()[parts[4].ToInt()];
+            }
         }
 
         public override void OnDestroy()
@@ -137,6 +153,6 @@ namespace NEA_Project_Oubliette.Entities
             Instance = null;
         }
 
-        public override string Save() => $"P {id} {position.ToString()} {Health}";
+        public override string Save() => $"P {id} {position.ToString()} {Health} {(inventory.Count > 0 && EquippedItem != null ? Array.IndexOf(inventory.GetItems(), EquippedItem) : -1)} {inventory.Save()}";
     }
 }
