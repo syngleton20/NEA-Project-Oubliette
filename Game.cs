@@ -69,6 +69,12 @@ namespace NEA_Project_Oubliette
 
                     if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+                    Display.WriteAtCentre($"Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
+                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Pause, I - Inventory, E - Use");
+
                     if(Player.Instance.IsDead) GameOver();
                     else
                     {
@@ -112,7 +118,7 @@ namespace NEA_Project_Oubliette
                 else
                 {
                     Console.SetCursorPosition(0, 1);
-                    Display.WriteAtCentre("▶ " + Game.Current.CurrentMap.Name);
+                    Display.WriteAtCentre(Game.Current.CurrentMap.Name + " (Test Mode)");
                     GUI.HorizontalSeparator();
 
                     Display.DrawMap(currentMap, cameraPosition.X, cameraPosition.Y);
@@ -123,6 +129,10 @@ namespace NEA_Project_Oubliette
 
                     if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+                    Display.WriteAtCentre($"Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
                     Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Return to Editor");
 
                     if(Player.Instance != null && Player.Instance.IsDead) GameOver();

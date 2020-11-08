@@ -14,6 +14,8 @@ namespace NEA_Project_Oubliette.Entities
         private Item equippedItem;
         private Inventory inventory = new Inventory();
 
+        public int Strength => strength;
+
         public int Health { get; private set; } = 20;
         public int MaxHealth { get; private set; } = 20;
         public bool IsDead { get; private set; }
