@@ -125,17 +125,18 @@ namespace NEA_Project_Oubliette.Editing
                         break;
 
                     case 'I':
-                        Display.Clear();
-                        GUI.Title("Add New Item");
-
                         StringBuilder data = new StringBuilder();
 
+                        int typeIndex = -1;
                         bool addAnotherItem = false;
-                        int typeIndex = GUI.VerticalMenu("Back", "Melee Weapon");
-                        string itemTypes = "M"; // More item types will be added later...
+                        string itemTypes = "MF"; // More item types will be added later...
 
                         do
                         {
+                            Display.Clear();
+                            GUI.Title("Add New Item");
+
+                            typeIndex = GUI.VerticalMenu("Back", "Melee Weapon", "Food");
                             if(typeIndex == 0) break;
 
                             data.Append(itemTypes[typeIndex - 1].ToString());
@@ -144,10 +145,17 @@ namespace NEA_Project_Oubliette.Editing
                             GUI.Title("Add New Item");
                             data.Append(' ' + GUI.TextField("Weight (kg): ", 4));
 
-                            if(typeIndex == 1)
+                            switch (typeIndex)
                             {
-                                GUI.Title("Add New Item");
-                                data.Append(' ' + GUI.TextField("Damage: ", 4));
+                                case 1:
+                                    GUI.Title("Add New Item");
+                                    data.Append(' ' + GUI.TextField("Damage: ", 4));
+                                    break;
+
+                                case 2:
+                                    GUI.Title("Add New Item");
+                                    data.Append(' ' + GUI.TextField("Effect Multiplier: ", 4));
+                                    break;
                             }
 
                             Display.Clear();

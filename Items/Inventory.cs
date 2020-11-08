@@ -16,6 +16,10 @@ namespace NEA_Project_Oubliette.Items
                 case 'M':
                     items.Add(new MeleeWeapon(itemData));
                     break;
+
+                case 'F':
+                    items.Add(new Food(itemData));
+                    break;
             }
         }
 

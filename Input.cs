@@ -123,6 +123,11 @@ namespace NEA_Project_Oubliette
                     Player.Instance?.Move(1, 0);
                     break;
 
+                case ConsoleKey.E:
+                    if(Player.Instance.EquippedItem != null)
+                        Player.Instance.EquippedItem.Use();
+                    break;
+
                 case ConsoleKey.H:
                     if(IsShiftKeyDown) Player.Instance?.TakeDamage();
                     break;
@@ -325,6 +330,11 @@ namespace NEA_Project_Oubliette
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.D:
                     Player.Instance?.Move(1, 0);
+                    break;
+
+                case ConsoleKey.E:
+                    if(Player.Instance.EquippedItem != null)
+                        Player.Instance.EquippedItem.Use();
                     break;
 
                 case ConsoleKey.Escape:

@@ -18,7 +18,18 @@ namespace NEA_Project_Oubliette.Entities
         public int MaxHealth { get; private set; } = 20;
         public bool IsDead { get; private set; }
 
-        public Item EquippedItem => equippedItem;
+        public Item EquippedItem
+        {
+            get
+            {
+                if(inventory.Contains(equippedItem))
+                    return equippedItem;
+
+                equippedItem = null;
+                return null;
+            }
+        }
+
         public Inventory Inventory => inventory;
 
         public static Player Instance { get; private set; }

@@ -45,6 +45,10 @@ namespace NEA_Project_Oubliette.Entities
                     case 'M':
                         inventory.Add(new MeleeWeapon(itemData[i]));
                         break;
+
+                    case 'F':
+                        inventory.Add(new Food(itemData[i]));
+                        break;
                 }
             }
         }
