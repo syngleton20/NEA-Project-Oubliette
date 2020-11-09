@@ -128,7 +128,7 @@ namespace NEA_Project_Oubliette.Editing
                         StringBuilder data = new StringBuilder();
 
                         int typeIndex = -1;
-                        bool addAnotherItem = false;
+                        bool addAnotherItem = false, hasCancelled = false;
                         string itemTypes = "MF"; // More item types will be added later...
 
                         do
@@ -137,7 +137,12 @@ namespace NEA_Project_Oubliette.Editing
                             GUI.Title("Add New Item");
 
                             typeIndex = GUI.VerticalMenu("Back", "Melee Weapon", "Food");
-                            if(typeIndex == 0) break;
+
+                            if(typeIndex == 0)
+                            {
+                                hasCancelled = true;
+                                break;
+                            }
 
                             data.Append(itemTypes[typeIndex - 1].ToString());
                             GUI.Title("Add New Item");
@@ -165,6 +170,8 @@ namespace NEA_Project_Oubliette.Editing
                             if(addAnotherItem) data.Append('/');
                         }
                         while(addAnotherItem);
+
+                        if(hasCancelled) break;
 
                         newEntity = new Pickup($"I {Game.Current.CurrentMap.Collection.AssignId()} {position.ToString()} {data.ToString()}");
                         break;

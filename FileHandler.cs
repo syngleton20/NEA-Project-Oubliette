@@ -8,17 +8,18 @@ namespace NEA_Project_Oubliette
     internal static class FileHandler
     {
         ///<summary>Creates a directory inside the bin/Debug/netcoreapp3.1/ directory</summary>
-        private static void CreateDirectory(string directoryName)
-        {
-            string directoryPath = AppDomain.CurrentDomain.BaseDirectory + directoryName;
-            Directory.CreateDirectory(directoryPath);
-        }
+        private static void CreateDirectory(string directoryName) => Directory.CreateDirectory(GetPath(directoryName));
 
         ///<summary>Checks if a directory exists inside the bin/Debug/netcoreapp3.1/ directory</summary>
-        private static bool DirectoryExists(string directoryName)
+        private static bool DirectoryExists(string directoryName) => Directory.Exists(GetPath(directoryName));
+
+        ///<summary>Returns a path to the AppData directory on Windows, and the Application Support directory on macOS</summary>
+        private static string GetPath(string name)
         {
-            string directoryPath = AppDomain.CurrentDomain.BaseDirectory + directoryName;
-            return Directory.Exists(directoryPath);
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            path = Path.Combine(path, "NEA-Project-Oubliette", name);
+
+            return path;
         }
 
         ///<summary>Adds the necessary project directories if they do not already exist</summary>
@@ -38,40 +39,25 @@ namespace NEA_Project_Oubliette
         ///<summary>Writes a file into the bin/Debug/netcoreapp3.1/ directory</summary>
         public static void WriteToFile(string fileName, string fileContent, bool appendFile = false)
         {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
-
-            using (StreamWriter writer = new StreamWriter(filePath, appendFile))
+            using (StreamWriter writer = new StreamWriter(GetPath(fileName), appendFile))
                 writer.Write(fileContent);
         }
 
         ///<summary>Deletes a file in bin/Debug/netcoreapp3.1/ directory</summary>
-        public static void DeleteFile(string fileName)
-        {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
-            File.Delete(filePath);
-        }
+        public static void DeleteFile(string fileName) => File.Delete(GetPath(fileName));
 
         ///<summary>Returns the number of files in a directory</summary>
-        public static int GetNumberOfFilesInDirectory(string directoryName)
-        {
-            string directoryPath = AppDomain.CurrentDomain.BaseDirectory + directoryName;
-            return new DirectoryInfo(directoryPath).GetFiles().Length;
-        }
+        public static int GetNumberOfFilesInDirectory(string directoryName) => new DirectoryInfo(GetPath(directoryName)).GetFiles().Length;
 
         ///<summary>Checks if a file exists inside the bin/Debug/netcoreapp3.1/ directory</summary>
-        public static bool FileExists(string fileName)
-        {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
-            return File.Exists(filePath);
-        }
+        public static bool FileExists(string fileName) => File.Exists(GetPath(fileName));
 
         ///<summary>Reads a file from the bin/Debug/netcoreapp3.1/ directory</summary>
         public static string ReadFile(string fileName)
         {
             StringBuilder fileContent = new StringBuilder();
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
 
-            using (StreamReader reader = new StreamReader(filePath))
+            using (StreamReader reader = new StreamReader(GetPath(fileName)))
             {
                 do
                 {
@@ -85,10 +71,6 @@ namespace NEA_Project_Oubliette
         }
 
         ///<summary>Returns an array of files from a directory</summary>
-        public static FileInfo[] GetFilesInDirectory(string directoryName)
-        {
-            string directoryPath = AppDomain.CurrentDomain.BaseDirectory + directoryName;
-            return new DirectoryInfo(directoryPath).GetFiles();
-        }
+        public static FileInfo[] GetFilesInDirectory(string directoryName) => new DirectoryInfo(GetPath(directoryName)).GetFiles();
     }
 }

@@ -34,8 +34,11 @@ namespace NEA_Project_Oubliette.Entities
             private set
             {
                 equippedItem = value;
-                if(equippedItem.GetType() == typeof(MeleeWeapon))
+
+                if(equippedItem != null && equippedItem.GetType() == typeof(MeleeWeapon))
                     strength = (equippedItem as MeleeWeapon).Damage;
+                else
+                    strength = 2;
             }
         }
 
@@ -142,8 +145,11 @@ namespace NEA_Project_Oubliette.Entities
 
                 string inventoryString = data.Substring(startIndex, data.Length - startIndex);
 
-                inventory.Load(inventoryString);
-                EquippedItem = inventory.GetItems()[parts[4].ToInt()];
+                if(inventoryString != "")
+                {
+                    inventory.Load(inventoryString);
+                    EquippedItem = inventory.GetItems()[parts[4].ToInt()];
+                }
             }
         }
 
