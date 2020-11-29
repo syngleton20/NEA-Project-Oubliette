@@ -19,8 +19,11 @@ namespace NEA_Project_Oubliette.Items
 
         public override void Use()
         {
-            Player.Instance.Heal(effectMultiplier);
-            Player.Instance.Inventory.Remove(this);
+            if(Player.Instance.Health < Player.Instance.MaxHealth)
+            {
+                Player.Instance.Heal(effectMultiplier);
+                Player.Instance.Inventory.Remove(this);
+            }
         }
 
         public override string Save() => $"F {name} {weight} {effectMultiplier}";

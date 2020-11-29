@@ -2,6 +2,7 @@ using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Maps;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.IO;
 using System;
 
@@ -197,7 +198,24 @@ namespace NEA_Project_Oubliette.Editing
                     if(entities.Length > 0)
                     {
                         for (int i = 0; i < entities.Length; i++)
-                            entityStrings[i] = Display.SplitStringOverBufferWidth(EntityCollection.Names[entities[i].Save()[0]], entities[i].Save());
+                        {
+                            StringBuilder information = new StringBuilder();
+
+                            if(entities[i].GetType() == typeof(Pickup))
+                            {
+                                string fullInformation = entities[i].Save();
+                                string[] parts = fullInformation.Split(' ');
+
+                                for (int j = 0; j < 3; j++)
+                                {
+                                    if(j > 0) information.Append(' ');
+                                    information.Append(parts[j]);
+                                }
+                            }
+                            else information.Append(entities[i].Save());
+
+                            entityStrings[i] = Display.SplitStringOverBufferWidth(EntityCollection.Names[entities[i].Save()[0]], information.ToString());
+                        }
 
                         GUI.VerticalScrollView(entityStrings);
                     }
