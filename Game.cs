@@ -111,7 +111,7 @@ namespace NEA_Project_Oubliette
                         editorInformation.Append("  Id: " + entity.Id);
 
                     Display.WriteAtCentre(editorInformation.ToString());
-                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, SPACE - Place, Q - Stamp, ^F - Fill Area");
+                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, SPACE - Place\nQ - Stamp, ^F - Fill Area");
 
                     Input.GetEditorInput();
                 }

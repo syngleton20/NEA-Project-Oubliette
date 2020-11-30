@@ -55,7 +55,7 @@ namespace NEA_Project_Oubliette.Editing
         ///<summary>Displays a menu for saving a map to a file</summary>
         public static void SaveAs()
         {
-            string illegalCharacters = "/\\.,\"\'?!:;(){}[]$%&@";
+            string illegalCharacters = "/?<>\\:*|\"";
             bool isValidMapName = false;
 
             do

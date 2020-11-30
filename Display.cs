@@ -58,14 +58,19 @@ namespace NEA_Project_Oubliette
         }
 
         ///<summary>Writes horizontally-centred text at the bottom of the console buffer</summary>
-        public static void WriteAtCentreBottom(object text)
+        public static void WriteAtCentreBottom(string text)
         {
-            int centre = (int)Math.Floor((double)(Console.BufferWidth / 2) - (text.ToString().Length / 2));
-            Console.ForegroundColor = ConsoleColor.DarkGray;
+            string[] lines = text.Split('\n');
 
-            Console.SetCursorPosition(centre, Console.BufferHeight - 2);
-            Console.WriteLine(text);
-            Console.ResetColor();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                int centre = (int)Math.Floor((double)(Console.BufferWidth / 2) - (lines[i].Length / 2));
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+
+                Console.SetCursorPosition(centre, Console.BufferHeight - 2 - (lines.Length - i));
+                Console.WriteLine(lines[i]);
+                Console.ResetColor();
+            }
         }
 
         ///<summary>Displays horizonally-centred text in a 'ribbon' drawn over whatever was underneath</summary>
