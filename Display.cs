@@ -67,7 +67,7 @@ namespace NEA_Project_Oubliette
                 int centre = (int)Math.Floor((double)(Console.BufferWidth / 2) - (lines[i].Length / 2));
                 Console.ForegroundColor = ConsoleColor.DarkGray;
 
-                Console.SetCursorPosition(centre, Console.BufferHeight - 2 - (lines.Length - i));
+                Console.SetCursorPosition(centre, Console.BufferHeight - 2 - (lines.Length - i) + 1);
                 Console.WriteLine(lines[i]);
                 Console.ResetColor();
             }

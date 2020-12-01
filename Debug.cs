@@ -47,5 +47,19 @@ namespace NEA_Project_Oubliette
             Console.Write("Press any key to end the program... ");
             Console.ReadKey(true);
         }
+
+        ///<summary>Prints an error message on the screen, then exits the program</summary>
+        public static void Error(Exception exception, bool clear = true)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Message:");
+            Console.WriteLine(exception.Message);
+            Console.WriteLine("\nSource:");
+            Console.WriteLine(exception.Source);
+            Console.WriteLine("\nStack Trace:");
+            Console.WriteLine(exception.StackTrace);
+            Console.Write("Press any key to end the program... ");
+            Console.ReadKey(true);
+        }
     }
 }
