@@ -10,15 +10,13 @@ namespace NEA_Project_Oubliette
         ///<summary>The method which is called when the program is run</summary>
         private static void Main(string[] args)
         {
-            FileHandler.Setup();
-            Window.Setup();
-
             Console.WriteLine();
             Console.WriteLine("  Loading...");
 
-            DatabaseManager.Connect();
+            FileHandler.Setup();
+            Window.Setup();
 
-            Display.Clear();
+            ConnectToDatabase();
 
             while (true)
             {
@@ -54,6 +52,8 @@ namespace NEA_Project_Oubliette
                         break;
 
                     case 4:
+                        ConnectToDatabase();
+
                         if(!DatabaseManager.IsConnected)
                         {
                             Console.Clear();
@@ -112,6 +112,18 @@ namespace NEA_Project_Oubliette
                         break;
                 }
             }
+
+        }
+
+        private static void ConnectToDatabase()
+        {
+            Display.Clear();
+
+            Console.WriteLine();
+            Console.WriteLine("  Attempting to connect to Database...");
+
+            DatabaseManager.Connect();
+            Display.Clear();
         }
     }
 }

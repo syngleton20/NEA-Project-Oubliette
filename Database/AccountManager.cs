@@ -105,9 +105,9 @@ namespace NEA_Project_Oubliette.Database
             if(!LogIn(username, password))
             {
                 Display.Clear();
-                GUI.Title("Log In - Error");
+                GUI.Title("Log In");
 
-                Display.WriteAtCentre("Username or password were incorrect!");
+                Display.WriteAtCentre("Username or password was incorrect!");
                 Display.WriteAtCentre("Press any key to continue...");
 
                 Input.GetKeyDown();

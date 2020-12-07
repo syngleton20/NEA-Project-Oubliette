@@ -221,9 +221,7 @@ namespace NEA_Project_Oubliette.Editing
                     }
                     else Display.WriteAtCentre("No entities in map!");
 
-                    Display.WriteAtCentre("Press any key to continue...");
-                    Input.GetKeyDown();
-                    Display.Clear();
+                    GUI.Confirm("FINISH");
                     break;
             }
         }

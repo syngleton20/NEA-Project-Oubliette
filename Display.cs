@@ -16,8 +16,8 @@ namespace NEA_Project_Oubliette
         ///<summary>Clears the console buffer and resets all necessary values</summary>
         public static void Clear()
         {
-            Console.Clear();
             Console.ResetColor();
+            Console.Clear();
             Console.SetCursorPosition(0, 0);
 
             Console.CursorVisible = false;

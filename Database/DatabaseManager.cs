@@ -9,7 +9,7 @@ namespace NEA_Project_Oubliette.Database
         private static MySqlConnection connection;
         private static MySqlCommand command;
 
-        public static bool IsConnected => connection.State == ConnectionState.Open;
+        public static bool IsConnected => connection != null ? connection.State == ConnectionState.Open : false;
 
         ///<summary>Creates a paramaterised connection string using data from the dbprofile.txt file</summary>
         private static string ConnectionString()
@@ -28,6 +28,8 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Attempts to open a connection to the database</summary>
         public static void Connect()
         {
+            if(IsConnected) return;
+
             try
             {
                 if(ConnectionString() == "") return;

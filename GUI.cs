@@ -59,9 +59,9 @@ namespace NEA_Project_Oubliette
                 if(Console.CursorTop >= (Console.BufferHeight - 4))
                 {
                     Console.WriteLine();
-                    Display.WriteAtCentre("Press any key to continue... ");
-                    Input.GetKeyDown();
+                    Confirm(i == (items.Length - 1) ? "FINISH" : "CONTINUE");
 
+                    Console.ResetColor(); // temp
                     Console.SetCursorPosition(startX, startY);
 
                     for (int j = 0; j < Console.CursorTop; j++)
@@ -74,6 +74,9 @@ namespace NEA_Project_Oubliette
                 }
             }
         }
+
+        ///<summary>Provides a pause in the flow of the program, giving the user time to take in the current GUI before pressing return or space to continue</summary>
+        public static void Confirm(string label = "OKAY") => VerticalMenu(label);
 
         ///<summary>Draws a vertical list menu which returns the selected index</summary>
         public static int VerticalMenu(params string[] choices)
