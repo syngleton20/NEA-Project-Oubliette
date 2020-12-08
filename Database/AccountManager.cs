@@ -127,7 +127,7 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Creates a new user account, provided the username is unique</summary>
         public static bool CreateUserAccount(string username, string password)
         {
-            MySqlDataReader rowCheck = DatabaseManager.QuerySQL($"SELECT * FROM User WHERE Username='{username}'");
+            MySqlDataReader rowCheck = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username", username);
             bool hasRows = rowCheck.HasRows;
 
             rowCheck.Close();
@@ -137,8 +137,8 @@ namespace NEA_Project_Oubliette.Database
             {
                 rowCheck.Close();
 
-                DatabaseManager.ExecuteDDL($"INSERT INTO User(Username, Password) VALUES ('{username}', '{password}')");
-                MySqlDataReader result = DatabaseManager.QuerySQL($"SELECT * FROM User WHERE Username='{username}' AND Password='{password}'");
+                DatabaseManager.ExecuteDDL("INSERT INTO User(Username, Password) VALUES (@Username, @Password)", username, password);
+                MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username AND Password = @Password", username, password);
 
                 Account = new Account(ref result);
                 return true;
@@ -150,7 +150,7 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Logs a user into their account, provided the username and password arguments are both valid</summary>
         public static bool LogIn(string username, string password)
         {
-            MySqlDataReader result = DatabaseManager.QuerySQL($"SELECT * FROM User WHERE Username = '{username}'");
+            MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username", username);
             result.Read();
 
             if(!result.HasRows)

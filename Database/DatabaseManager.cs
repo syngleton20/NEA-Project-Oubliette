@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System;
 
 namespace NEA_Project_Oubliette.Database
 {
@@ -25,6 +27,17 @@ namespace NEA_Project_Oubliette.Database
             return "";
         }
 
+        ///<summary>Tries to return an SqlDbType from a .NET core Type</summary>
+        private static MySqlDbType GetSqlType(Type type)
+        {
+            if(type == typeof(int)) return MySqlDbType.Int32;
+            if(type == typeof(float)) return MySqlDbType.Float;
+            if(type == typeof(bool)) return MySqlDbType.Bit;
+            if(type == typeof(string)) return MySqlDbType.VarChar;
+
+            throw new FormatException($"Cannot convert '{type.ToString()}' to an SqlDbType!");
+        }
+
         ///<summary>Attempts to open a connection to the database</summary>
         public static void Connect()
         {
@@ -48,26 +61,65 @@ namespace NEA_Project_Oubliette.Database
         }
 
         ///<summary>Attempts to execute a DDL command on the database</summary>
-        public static void ExecuteDDL(string ddl)
+        public static void ExecuteDDL(string ddl, params object[] parameters)
         {
             try
             {
-                using(command = new MySqlCommand(ddl, connection))
-                    command.ExecuteNonQuery();
+                List<string> ddlParams = new List<string>();
+                string[] parts = ddl.Split(' ', '(', ')', '=', ',');
 
-                command.Dispose();
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    if(parts[i].Length <= 0) continue;
+
+                    if(parts[i][0] == '@')
+                        ddlParams.Add(parts[i]);
+                }
+
+                using(command = new MySqlCommand(ddl, connection))
+                {
+                    for (int i = 0; i < ddlParams.Count; i++)
+                    {
+                        command.Parameters.Add(ddlParams[i], GetSqlType(parameters[i].GetType()));
+                        command.Parameters[ddlParams[i]].Value = parameters[i];
+                        // command.Parameters.AddWithValue(ddlParams[i], parameters[i]);
+                    }
+
+                    command.ExecuteNonQuery();
+                }
             }
             catch (MySqlException exception) { Debug.Error(exception); }
         }
 
         ///<summary>Attempts to return the result of an SQL query</summary>
-        public static MySqlDataReader QuerySQL(string sql)
+        public static MySqlDataReader QuerySQL(string sql, params object[] parameters)
         {
             try
             {
+                List<string> sqlParams = new List<string>();
+                string[] parts = sql.Split(' ', '(', ')', '=', ',');
+
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    if(parts[i].Length <= 0) continue;
+
+                    if(parts[i][0] == '@')
+                        sqlParams.Add(parts[i]);
+                }
+
                 using (command = new MySqlCommand(sql, connection))
+                {
+                    for (int i = 0; i < sqlParams.Count; i++)
+                    {
+                        command.Parameters.Add(sqlParams[i], GetSqlType(parameters[i].GetType()));
+                        command.Parameters[sqlParams[i]].Value = parameters[i];
+                        // command.Parameters.AddWithValue(sqlParams[i], parameters[i]);
+                    }
+
                     return command.ExecuteReader();
+                }
             }
+
             catch (MySqlException exception)
             {
                 Debug.Error(exception);
