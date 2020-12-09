@@ -1,4 +1,3 @@
-using System;
 using MySql.Data.MySqlClient;
 
 namespace NEA_Project_Oubliette.Database
@@ -140,7 +139,7 @@ namespace NEA_Project_Oubliette.Database
                 DatabaseManager.ExecuteDDL("INSERT INTO User(Username, Password) VALUES (@Username, @Password)", username, password);
                 MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username AND Password = @Password", username, password);
 
-                Account = new Account(ref result);
+                Account = new UserAccount(ref result);
                 return true;
             }
 
@@ -163,13 +162,17 @@ namespace NEA_Project_Oubliette.Database
 
             string resultingPassword = result.GetString("Password");
 
-
             if(resultingPassword == password)
             {
-                Account = new Account(ref result);
+                Account = new UserAccount(ref result);
 
                 result.Close();
                 result.Dispose();
+
+                result = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", Account.UserID);
+
+                if(result.HasRows)
+                    Account = new AuthorAccount(ref result);
 
                 return true;
             }
