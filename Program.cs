@@ -24,7 +24,7 @@ namespace NEA_Project_Oubliette
                 Display.WriteAtCentreBottom((AccountManager.IsLoggedIn ? AccountManager.Account.Username : "Not Logged In") + '\n' + (DatabaseManager.IsConnected ? "Connected" : "Not Connected"));
                 Console.SetCursorPosition(0, 4);
 
-                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps (Coming Soon)", DatabaseManager.IsConnected ? "Account" : "Account (Not Connected)", "Quit"))
+                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps (Coming Soon)", "Account", "Quit"))
                 {
                     case 0:
                         Game.Current = new Game(GameType.Game, "start.map");
@@ -97,7 +97,7 @@ namespace NEA_Project_Oubliette
                                     break;
 
                                 case 1:
-                                    AccountManager.CreateAccountMenu(AccountType.User);
+                                    AccountManager.CreateAccountMenu();
                                     break;
 
                                 case 2:

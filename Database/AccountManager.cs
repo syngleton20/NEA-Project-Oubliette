@@ -7,69 +7,91 @@ namespace NEA_Project_Oubliette.Database
     ///<summary>Allows user and author accounts to be created, edited, logged into and out of, and deleted</summary>
     internal static class AccountManager
     {
-
         public static bool IsLoggedIn => Account != null;
         public static Account Account { get; private set; }
 
         ///<summary>Displays a GUI for creating either a user account or an author account</summary>
-        public static void CreateAccountMenu(AccountType type)
+        public static void CreateAccountMenu()
         {
-            if(type == AccountType.User)
+            Display.Clear();
+            GUI.Title("Create Account");
+
+            Display.WriteAtCentre("What do you want to use this account for?");
+            AccountType type = (AccountType)GUI.VerticalMenu("Just playing maps", "Playing and publishing maps");
+
+            Display.Clear();
+            GUI.Title("Create Account");
+
+            string username = GUI.TextField("Username: ", 20);
+
+            if(string.IsNullOrWhiteSpace(username))
+                return;
+
+            Display.Clear();
+            GUI.Title("Create Account");
+
+            string password = GUI.TextField("Password: ", 20);
+
+            if(string.IsNullOrWhiteSpace(password))
+                return;
+
+            Display.Clear();
+            GUI.Title("Create Account");
+
+            string passwordRetyped = GUI.TextField("Password (Retype): ", 20);
+
+            if(string.IsNullOrWhiteSpace(passwordRetyped))
+                return;
+
+            if(password == passwordRetyped)
             {
-                Display.Clear();
-                GUI.Title("Create Account - User");
-
-                string username = GUI.TextField("Username: ", 20);
-
-                if(string.IsNullOrWhiteSpace(username))
-                    return;
-
-                Display.Clear();
-                GUI.Title("Create Account - User");
-
-                string password = GUI.TextField("Password: ", 20);
-
-                if(string.IsNullOrWhiteSpace(password))
-                    return;
-
-                Display.Clear();
-                GUI.Title("Create Account - User");
-
-                string passwordRetyped = GUI.TextField("Password (Retype): ", 20);
-
-                if(string.IsNullOrWhiteSpace(passwordRetyped))
-                    return;
-
-                if(password == passwordRetyped)
+                UserAccount userAccount = CreateUserAccount(username, password);
+                if(userAccount != null)
                 {
-                    if(CreateUserAccount(username, password))
+                    if(type == AccountType.Author)
                     {
                         Display.Clear();
-                        GUI.Title("Create Account - User");
+                        GUI.Title("Create Account");
 
-                        Display.WriteAtCentre($"Successfully created account {AccountManager.Account.Username}!");
-                        Display.WriteAtCentre("Press any key to continue...");
+                        string email = GUI.TextField("Email Address: ", 30);
+                        AuthorAccount authorAccount = CreateAuthorAccount(userAccount.UserID, email);
 
-                        Input.GetKeyDown();
+                        if(authorAccount != null)
+                        {
+                            Account = authorAccount;
+
+                            Display.Clear();
+                            GUI.Title("Create Account");
+
+                            Display.WriteAtCentre($"Successfully created account {AccountManager.Account.Username}!");
+                        }
+                        else
+                        {
+                            Display.Clear();
+                            GUI.Title("Create Account");
+
+                            Display.WriteAtCentre("Could not create account!");
+                            Display.WriteAtCentre("This account is already an author account!");
+                        }
                     }
                     else
                     {
                         Display.Clear();
-                        GUI.Title("Create Account - User");
+                        GUI.Title("Create Account");
 
-                        Display.WriteAtCentre("Could not create account!");
-                        Display.WriteAtCentre("Username was already taken!");
-                        Display.WriteAtCentre("Press any key to continue...");
-
-                        Input.GetKeyDown();
+                        Display.WriteAtCentre($"Successfully created account {AccountManager.Account.Username}!");
                     }
+
+                    Display.WriteAtCentre("Press any key to continue...");
+                    Input.GetKeyDown();
                 }
                 else
                 {
                     Display.Clear();
-                    GUI.Title("Create Account - User");
+                    GUI.Title("Create Account");
 
-                    Display.WriteAtCentre("Passwords do not match!");
+                    Display.WriteAtCentre("Could not create account!");
+                    Display.WriteAtCentre("Username was already taken!");
                     Display.WriteAtCentre("Press any key to continue...");
 
                     Input.GetKeyDown();
@@ -78,7 +100,12 @@ namespace NEA_Project_Oubliette.Database
             else
             {
                 Display.Clear();
-                GUI.Title("Create Account - User");
+                GUI.Title("Create Account");
+
+                Display.WriteAtCentre("Passwords do not match!");
+                Display.WriteAtCentre("Press any key to continue...");
+
+                Input.GetKeyDown();
             }
         }
 
@@ -124,7 +151,7 @@ namespace NEA_Project_Oubliette.Database
         }
 
         ///<summary>Creates a new user account, provided the username is unique</summary>
-        public static bool CreateUserAccount(string username, string password)
+        public static UserAccount CreateUserAccount(string username, string password)
         {
             MySqlDataReader rowCheck = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username", username);
             bool hasRows = rowCheck.HasRows;
@@ -140,10 +167,32 @@ namespace NEA_Project_Oubliette.Database
                 MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username AND Password = @Password", username, password);
 
                 Account = new UserAccount(ref result);
-                return true;
+                return Account as UserAccount;
             }
 
-            return false;
+            return null;
+        }
+
+        public static AuthorAccount CreateAuthorAccount(int userID, string email)
+        {
+            MySqlDataReader rowCheck = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", userID);
+            bool hasRows = rowCheck.HasRows;
+
+            rowCheck.Close();
+            rowCheck.Dispose();
+
+            if(!hasRows)
+            {
+                rowCheck.Close();
+
+                DatabaseManager.ExecuteDDL("INSERT INTO Author(UserID, Email) VALUES (@UserID, @Email)", userID, email);
+                MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID AND Email = @Email", userID, email);
+
+                Account = new AuthorAccount(ref result);
+                return Account as AuthorAccount;
+            }
+
+            return null;
         }
 
         ///<summary>Logs a user into their account, provided the username and password arguments are both valid</summary>
