@@ -186,7 +186,7 @@ namespace NEA_Project_Oubliette
                     break;
 
                 case 2:
-                    Environment.Exit(0); // this is temporary
+                    Program.QuitGame();
                     break;
             }
         }

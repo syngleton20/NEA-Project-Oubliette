@@ -96,6 +96,13 @@ namespace NEA_Project_Oubliette
             map.Draw(drawX, drawY);
         }
 
+        public static void Banner()
+        {
+            Display.Clear();
+            Console.WriteLine();
+            Console.WriteLine("     ███   █   █  █████  █      █████  █████  █████████████  █████\n    ██ ██  █  ╒█  █╜ │█  █       ╙█ │  █ │     │██ │ │╙██    █╯  │\n    █│  █  █  ╞█  █  │█  █        █ │  █╒╛     │█    │ ╰█    █    \n    █   █  █  │█  ████   █        █    █████   │█    │  █    █████\n    █  ╭█  █  │█  █╫╯ █  █╮       █    █╯       █    │  █    █ │  \n    ██ ██  ██ ██  █╜ ╭█  █┼╮     ╭█    █        █       █    █    \n     ███   ╰███   █████  █████  █████  █████    █       █    █████");
+        }
+
         ///<summary>Returns a string separated into two parts over the entire width of the console buffer</summary>
         public static string SplitStringOverBufferWidth(string leftPart, string rightPart)
         {

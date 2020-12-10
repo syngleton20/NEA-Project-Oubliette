@@ -16,13 +16,11 @@ namespace NEA_Project_Oubliette
             FileHandler.Setup();
             Window.Setup();
 
-            ConnectToDatabase();
-
             while (true)
             {
-                GUI.Title("Main Menu");
+                Display.Banner();
                 Display.WriteAtCentreBottom((AccountManager.IsLoggedIn ? AccountManager.Account.Username : "Not Logged In") + '\n' + (DatabaseManager.IsConnected ? "Connected" : "Not Connected"));
-                Console.SetCursorPosition(0, 4);
+                Console.SetCursorPosition(0, 9);
 
                 switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps (Coming Soon)", "Account", "Quit"))
                 {
@@ -60,9 +58,8 @@ namespace NEA_Project_Oubliette
                             GUI.Title("Cannot Connect");
 
                             Display.WriteAtCentre("Cannot connect to the database!");
-                            Display.WriteAtCentre("Press any key to continue...");
-
-                            Input.GetKeyDown();
+                            Console.WriteLine();
+                            GUI.Confirm();
                             break;
                         }
 
@@ -71,22 +68,41 @@ namespace NEA_Project_Oubliette
 
                         if(AccountManager.IsLoggedIn)
                         {
-                            switch (GUI.VerticalMenu("Back", "Create Account", "Account Settings", "Log Out"))
+                            if(AccountManager.Account.GetType() == typeof(AuthorAccount))
                             {
-                                case 0:
-                                    break;
+                                switch (GUI.VerticalMenu("Back", "Account Settings", "Log Out"))
+                                {
+                                    case 0:
+                                        break;
 
-                                case 1:
-                                    Debug.Warning("This feature will be added in the next commit!");
-                                    break;
+                                    case 1:
+                                        AccountManager.AccountSettingsMenu();
+                                        break;
 
-                                case 2:
-                                    Debug.Warning("This feature will be added in the next commit!");
-                                    break;
+                                    case 2:
+                                        AccountManager.LogOut();
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                switch (GUI.VerticalMenu("Back", "Upgrade Account", "Account Settings", "Log Out"))
+                                {
+                                    case 0:
+                                        break;
 
-                                case 3:
-                                    AccountManager.LogOut();
-                                    break;
+                                    case 1:
+                                        AccountManager.UpgradeAccountMenu();
+                                        break;
+
+                                    case 2:
+                                        AccountManager.AccountSettingsMenu();
+                                        break;
+
+                                    case 3:
+                                        AccountManager.LogOut();
+                                        break;
+                                }
                             }
                         }
                         else
@@ -108,7 +124,7 @@ namespace NEA_Project_Oubliette
                         break;
 
                     case 5:
-                        Environment.Exit(0);
+                        Program.QuitGame();
                         break;
                 }
             }
@@ -124,6 +140,20 @@ namespace NEA_Project_Oubliette
 
             DatabaseManager.Connect();
             Display.Clear();
+        }
+
+        public static void QuitGame()
+        {
+            Display.Clear();
+            GUI.Title("Are you sure?");
+
+            Display.WriteAtCentre("Are you sure you want to quit?");
+            Display.WriteAtCentre("Any progress you have made will not be saved.");
+
+            Console.WriteLine();
+
+            if(GUI.VerticalMenu("YES", "NO") <= 0)
+                Environment.Exit(0);
         }
     }
 }

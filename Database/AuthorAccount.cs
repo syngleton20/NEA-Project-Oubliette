@@ -1,11 +1,14 @@
 using MySql.Data.MySqlClient;
+using System;
 
 namespace NEA_Project_Oubliette.Database
 {
     internal sealed class AuthorAccount : UserAccount
     {
         private readonly int authorID;
-        private readonly string emailAddress;
+        private string emailAddress;
+
+        public string EmailAddress => emailAddress;
 
         public AuthorAccount(ref MySqlDataReader reader)
         {
@@ -31,6 +34,40 @@ namespace NEA_Project_Oubliette.Database
 
             reader.Close();
             reader.Dispose();
+        }
+
+        public override void Update(params string[] details)
+        {
+            base.Update(details);
+
+            if(details.Length >= 3 && details[2] != "")
+            {
+                MySqlDataReader presenceCheck = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", userID);
+                bool hasRows = presenceCheck.HasRows;
+
+                presenceCheck.Close();
+                presenceCheck.Dispose();
+
+                if(hasRows)
+                {
+                    emailAddress = details[2];
+                    DatabaseManager.ExecuteDDL("UPDATE Author SET Email = @Email WHERE UserID = @UserID", emailAddress, userID);
+
+                    Display.Clear();
+                    GUI.Title("Account Settings");
+
+                    Display.WriteAtCentre("Successfully updated your email address!");
+                    Console.WriteLine();
+                    GUI.Confirm();
+                }
+                else
+                {
+                    Display.Clear();
+                    GUI.Title("Account Settings - Error");
+                    Display.WriteAtCentre("Could not update email address!");
+                    GUI.Confirm();
+                }
+            }
         }
     }
 }

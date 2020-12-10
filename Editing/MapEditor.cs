@@ -136,8 +136,8 @@ namespace NEA_Project_Oubliette.Editing
             else
             {
                 Display.WriteAtCentre("No maps available!");
-                Display.WriteAtCentre("Press any key to continue...");
-                Input.GetKeyDown();
+                Console.WriteLine();
+                GUI.Confirm();
             }
 
             Display.Clear();

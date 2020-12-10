@@ -168,7 +168,7 @@ namespace NEA_Project_Oubliette
                             break;
 
                         case 4:
-                            Environment.Exit(0);
+                            Program.QuitGame();
                             break;
                     }
                     break;
@@ -288,7 +288,7 @@ namespace NEA_Project_Oubliette
                             break;
 
                         case 7:
-                            Environment.Exit(0);
+                            Program.QuitGame();
                             break;
                     }
                     break;

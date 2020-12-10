@@ -206,12 +206,12 @@ namespace NEA_Project_Oubliette
             return VerticalMenu("YES", "NO") == 0;
         }
 
-        public static string TextField(string label, int maxLength, string defaultValue = "")
+        public static string TextField(string label, int maxLength, string defaultValue = "", bool censorInput = false)
         {
             int startX = Console.CursorLeft, startY = Console.CursorTop, cursorPosition = defaultValue.Length;
             bool hasFinished = false;
 
-            StringBuilder text = new StringBuilder();
+            StringBuilder text = new StringBuilder(defaultValue);
 
             do
             {
@@ -219,7 +219,11 @@ namespace NEA_Project_Oubliette
                 Console.CursorVisible = true;
 
                 Console.Write("  " + label);
-                Console.Write(text.ToString());
+
+                if(!censorInput) Console.Write(text.ToString());
+                else
+                    for (int i = 0; i < text.Length; i++)
+                        Console.Write('*');
 
                 Console.CursorLeft -= text.Length;
                 Console.CursorLeft += cursorPosition;
@@ -296,8 +300,6 @@ namespace NEA_Project_Oubliette
             while(!hasFinished);
 
             Console.CursorVisible = false;
-            Display.Clear();
-
             return text.ToString();
         }
     }
