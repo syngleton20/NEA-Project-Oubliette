@@ -50,7 +50,15 @@ namespace NEA_Project_Oubliette.Database
                 connection = new MySqlConnection(ConnectionString());
                 connection.Open();
             }
-            catch { }
+            catch
+            {
+                Display.Clear();
+                GUI.Title("Connection - Failed");
+
+                Display.WriteAtCentre("Could not connect to the database!");
+                Console.WriteLine();
+                GUI.Confirm();
+            }
         }
 
         ///<summary>Attempts to close a connection to the database, if the connection is open in the first place</summary>
@@ -71,9 +79,7 @@ namespace NEA_Project_Oubliette.Database
                 for (int i = 0; i < parts.Length; i++)
                 {
                     if(parts[i].Length <= 0) continue;
-
-                    if(parts[i][0] == '@')
-                        ddlParams.Add(parts[i]);
+                    if(parts[i][0] == '@') ddlParams.Add(parts[i]);
                 }
 
                 using(command = new MySqlCommand(ddl, connection))
@@ -82,7 +88,6 @@ namespace NEA_Project_Oubliette.Database
                     {
                         command.Parameters.Add(ddlParams[i], GetSqlType(parameters[i].GetType()));
                         command.Parameters[ddlParams[i]].Value = parameters[i];
-                        // command.Parameters.AddWithValue(ddlParams[i], parameters[i]);
                     }
 
                     command.ExecuteNonQuery();
@@ -102,9 +107,7 @@ namespace NEA_Project_Oubliette.Database
                 for (int i = 0; i < parts.Length; i++)
                 {
                     if(parts[i].Length <= 0) continue;
-
-                    if(parts[i][0] == '@')
-                        sqlParams.Add(parts[i]);
+                    if(parts[i][0] == '@') sqlParams.Add(parts[i]);
                 }
 
                 using (command = new MySqlCommand(sql, connection))
@@ -113,13 +116,44 @@ namespace NEA_Project_Oubliette.Database
                     {
                         command.Parameters.Add(sqlParams[i], GetSqlType(parameters[i].GetType()));
                         command.Parameters[sqlParams[i]].Value = parameters[i];
-                        // command.Parameters.AddWithValue(sqlParams[i], parameters[i]);
                     }
 
                     return command.ExecuteReader();
                 }
             }
+            catch (MySqlException exception)
+            {
+                Debug.Error(exception);
+                return null;
+            }
+        }
 
+        ///<summary>Attempts to fill and return a DataTable containing the result from an SQL query</summary>
+        public static DataTable QuerySQLIntoTable(string sql, params object[] parameters)
+        {
+            try
+            {
+                List<string> sqlParams = new List<string>();
+                string[] parts = sql.Split(' ', '(', ')', '=', ',');
+
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    if(parts[i].Length <= 0) continue;
+                    if(parts[i][0] == '@') sqlParams.Add(parts[i]);
+                }
+
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                {
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    {
+                        using (DataTable table = new DataTable())
+                        {
+                            adapter.Fill(table);
+                            return table;
+                        }
+                    }
+                }
+            }
             catch (MySqlException exception)
             {
                 Debug.Error(exception);

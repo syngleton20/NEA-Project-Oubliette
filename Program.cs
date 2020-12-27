@@ -22,7 +22,7 @@ namespace NEA_Project_Oubliette
                 Display.WriteAtCentreBottom((AccountManager.IsLoggedIn ? AccountManager.Account.Username : "Not Logged In") + '\n' + (DatabaseManager.IsConnected ? "Connected" : "Not Connected"));
                 Console.SetCursorPosition(0, 9);
 
-                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps (Coming Soon)", "Account", "Quit"))
+                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps", "Account", "Quit"))
                 {
                     case 0:
                         Game.Current = new Game(GameType.Game, "start.map");
@@ -46,22 +46,33 @@ namespace NEA_Project_Oubliette
 
                     case 3:
                         Console.Clear();
-                        Debug.Warning("This feature is still in development. Sorry :(");
+                        GUI.Title("Online Maps");
+
+                        if(AccountManager.Account != null)
+                        {
+                            switch (GUI.VerticalMenu("Back", "Browse Maps", "Upload Map"))
+                            {
+                                case 0:
+                                    break;
+
+                                case 1:
+                                    MapBrowser.Start();
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Display.WriteAtCentre("You need to be logged in to browse online maps.");
+                            Console.WriteLine();
+                            GUI.Confirm();
+                        }
                         break;
 
                     case 4:
                         ConnectToDatabase();
 
                         if(!DatabaseManager.IsConnected)
-                        {
-                            Console.Clear();
-                            GUI.Title("Cannot Connect");
-
-                            Display.WriteAtCentre("Cannot connect to the database!");
-                            Console.WriteLine();
-                            GUI.Confirm();
                             break;
-                        }
 
                         Console.Clear();
                         GUI.Title("Account");
