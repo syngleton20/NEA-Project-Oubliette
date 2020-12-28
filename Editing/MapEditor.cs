@@ -44,7 +44,7 @@ namespace NEA_Project_Oubliette.Editing
                 if(hasSaved) return;
 
                 Game.Current.CurrentMap.Name = currentMapName;
-                FileHandler.WriteToFile("maps/custom/" + currentMapName + ".map", MapFormatter.Serialize(Game.Current.CurrentMap));
+                FileHandler.WriteToFile($"maps/custom/{currentMapName}.map", MapFormatter.Serialize(Game.Current.CurrentMap));
 
                 hasSaved = true;
                 Display.Clear();

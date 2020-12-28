@@ -59,7 +59,7 @@ namespace NEA_Project_Oubliette.Entities
             Instance = this;
             Load(data);
 
-            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
+            Game.Current?.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
         }
 
         public override void Draw()

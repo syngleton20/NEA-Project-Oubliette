@@ -76,7 +76,7 @@ namespace NEA_Project_Oubliette.Database
                 List<string> ddlParams = new List<string>();
                 string[] parts = ddl.Split(' ', '(', ')', '=', ',');
 
-                for (int i = 0; i < parts.Length; i++)
+                for(int i = 0; i < parts.Length; i++)
                 {
                     if(parts[i].Length <= 0) continue;
                     if(parts[i][0] == '@') ddlParams.Add(parts[i]);
@@ -84,7 +84,7 @@ namespace NEA_Project_Oubliette.Database
 
                 using(command = new MySqlCommand(ddl, connection))
                 {
-                    for (int i = 0; i < ddlParams.Count; i++)
+                    for(int i = 0; i < ddlParams.Count; i++)
                     {
                         command.Parameters.Add(ddlParams[i], GetSqlType(parameters[i].GetType()));
                         command.Parameters[ddlParams[i]].Value = parameters[i];
@@ -93,7 +93,7 @@ namespace NEA_Project_Oubliette.Database
                     command.ExecuteNonQuery();
                 }
             }
-            catch (MySqlException exception) { Debug.Error(exception); }
+            catch(MySqlException exception) { Debug.Error(exception); }
         }
 
         ///<summary>Attempts to return the result of an SQL query</summary>
@@ -104,15 +104,15 @@ namespace NEA_Project_Oubliette.Database
                 List<string> sqlParams = new List<string>();
                 string[] parts = sql.Split(' ', '(', ')', '=', ',');
 
-                for (int i = 0; i < parts.Length; i++)
+                for(int i = 0; i < parts.Length; i++)
                 {
                     if(parts[i].Length <= 0) continue;
                     if(parts[i][0] == '@') sqlParams.Add(parts[i]);
                 }
 
-                using (command = new MySqlCommand(sql, connection))
+                using(command = new MySqlCommand(sql, connection))
                 {
-                    for (int i = 0; i < sqlParams.Count; i++)
+                    for(int i = 0; i < sqlParams.Count; i++)
                     {
                         command.Parameters.Add(sqlParams[i], GetSqlType(parameters[i].GetType()));
                         command.Parameters[sqlParams[i]].Value = parameters[i];
@@ -121,7 +121,7 @@ namespace NEA_Project_Oubliette.Database
                     return command.ExecuteReader();
                 }
             }
-            catch (MySqlException exception)
+            catch(MySqlException exception)
             {
                 Debug.Error(exception);
                 return null;
@@ -136,17 +136,23 @@ namespace NEA_Project_Oubliette.Database
                 List<string> sqlParams = new List<string>();
                 string[] parts = sql.Split(' ', '(', ')', '=', ',');
 
-                for (int i = 0; i < parts.Length; i++)
+                for(int i = 0; i < parts.Length; i++)
                 {
                     if(parts[i].Length <= 0) continue;
                     if(parts[i][0] == '@') sqlParams.Add(parts[i]);
                 }
 
-                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                using(MySqlCommand command = new MySqlCommand(sql, connection))
                 {
-                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    for(int i = 0; i < sqlParams.Count; i++)
                     {
-                        using (DataTable table = new DataTable())
+                        command.Parameters.Add(sqlParams[i], GetSqlType(parameters[i].GetType()));
+                        command.Parameters[sqlParams[i]].Value = parameters[i];
+                    }
+
+                    using(MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    {
+                        using(DataTable table = new DataTable())
                         {
                             adapter.Fill(table);
                             return table;
@@ -154,7 +160,7 @@ namespace NEA_Project_Oubliette.Database
                     }
                 }
             }
-            catch (MySqlException exception)
+            catch(MySqlException exception)
             {
                 Debug.Error(exception);
                 return null;

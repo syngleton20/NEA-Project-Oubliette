@@ -8,6 +8,7 @@ namespace NEA_Project_Oubliette.Database
         private readonly int authorID;
         private string emailAddress;
 
+        public int AuthorID => authorID;
         public string EmailAddress => emailAddress;
 
         public AuthorAccount(ref MySqlDataReader reader)
