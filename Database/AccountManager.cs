@@ -293,7 +293,10 @@ namespace NEA_Project_Oubliette.Database
                             authorCheck.Dispose();
 
                             if(isAuthor)
+                            {
+                                DatabaseManager.ExecuteDDL("DELETE FROM Map WHERE AuthorID = @AuthorID", (Account as AuthorAccount).AuthorID);
                                 DatabaseManager.ExecuteDDL("DELETE FROM Author WHERE UserID = @UserID", Account.UserID);
+                            }
 
                             DatabaseManager.ExecuteDDL("DELETE FROM User WHERE UserID = @UserID", Account.UserID);
                             Account = null;

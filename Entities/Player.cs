@@ -145,7 +145,7 @@ namespace NEA_Project_Oubliette.Entities
 
                 string inventoryString = data.Substring(startIndex, data.Length - startIndex);
 
-                if(inventoryString != "")
+                if(inventoryString != "" && parts.Length > 4)
                 {
                     inventory.Load(inventoryString);
                     EquippedItem = inventory.GetItems()[parts[4].ToInt()];

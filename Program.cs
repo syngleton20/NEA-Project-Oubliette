@@ -50,13 +50,21 @@ namespace NEA_Project_Oubliette
 
                         if(AccountManager.Account != null)
                         {
-                            switch (GUI.VerticalMenu("Back", "Browse Maps", "Upload Map"))
+                            switch (GUI.VerticalMenu("Back", "Browse", "Downloads", "Upload"))
                             {
                                 case 0:
                                     break;
 
                                 case 1:
-                                    MapBrowser.Start();
+                                    MapBrowser.ShowBrowserMenu();
+                                    break;
+
+                                case 2:
+                                    MapBrowser.ShowDownloadsMenu();
+                                    break;
+
+                                case 3:
+                                    MapBrowser.ShowUploadMenu();
                                     break;
                             }
                         }

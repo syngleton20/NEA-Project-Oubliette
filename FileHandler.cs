@@ -27,6 +27,7 @@ namespace NEA_Project_Oubliette
         {
             if(!DirectoryExists("maps")) CreateDirectory("maps");
             if(!DirectoryExists("maps/custom")) CreateDirectory("maps/custom");
+            if(!DirectoryExists("maps/downloads")) CreateDirectory("maps/downloads");
             if(!DirectoryExists("maps/.hidden")) CreateDirectory("maps/.hidden");
             if(!DirectoryExists("saves")) CreateDirectory("saves");
 
