@@ -96,6 +96,38 @@ namespace NEA_Project_Oubliette.Database
             catch(MySqlException exception) { Debug.Error(exception); }
         }
 
+        ///<summary>Attempts to return the row count of an SQL query in the form of an integer scalar value</summary>
+        public static int QueryRowCount(string sql, params object[] parameters)
+        {
+            try
+            {
+                List<string> sqlParams = new List<string>();
+                string[] parts = sql.Split(' ', '(', ')', '=', ',');
+
+                for(int i = 0; i < parts.Length; i++)
+                {
+                    if(parts[i].Length <= 0) continue;
+                    if(parts[i][0] == '@') sqlParams.Add(parts[i]);
+                }
+
+                using(command = new MySqlCommand(sql, connection))
+                {
+                    for(int i = 0; i < sqlParams.Count; i++)
+                    {
+                        command.Parameters.Add(sqlParams[i], GetSqlType(parameters[i].GetType()));
+                        command.Parameters[sqlParams[i]].Value = parameters[i];
+                    }
+
+                    return (int)command.ExecuteScalar();
+                }
+            }
+            catch(MySqlException exception)
+            {
+                Debug.Error(exception);
+                return 0;
+            }
+        }
+
         ///<summary>Attempts to return the result of an SQL query</summary>
         public static MySqlDataReader QuerySQL(string sql, params object[] parameters)
         {

@@ -133,5 +133,15 @@ namespace NEA_Project_Oubliette.Entities
             output = null;
             return false;
         }
+
+        ///<summary>Returns whether or not an entity of a certain type is contained in this collection</summary>
+        public bool ContainsEntityOfType<T>() where T : Entity
+        {
+            foreach (Entity entity in entities)
+                if(entity.GetType() == typeof(T))
+                    return true;
+
+            return false;
+        }
     }
 }

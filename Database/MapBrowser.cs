@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.Entities;
 using System.Collections.Generic;
 using NEA_Project_Oubliette.Maps;
 using MySql.Data.MySqlClient;
@@ -22,6 +23,7 @@ namespace NEA_Project_Oubliette.Database
 
         private static void Download(int mapID)
         {
+            Map map = null;
             DataTable mapQuery = DatabaseManager.QuerySQLIntoTable("SELECT * FROM Map WHERE MapID = @MapID", mapID);
 
             string mapData = mapQuery.Rows[0][3].ToString();
@@ -39,7 +41,7 @@ namespace NEA_Project_Oubliette.Database
 
             try
             {
-                Map map = MapFormatter.Deserialize(mapData);
+                map = MapFormatter.Deserialize(mapData);
                 FileHandler.WriteToFile($"maps/downloads/{map.Name}-{authorName}.map", MapFormatter.Serialize(map));
                 DatabaseManager.ExecuteDDL("UPDATE Map SET Downloads = Downloads + 1 WHERE MapID = @MapID", mapID);
 
@@ -64,7 +66,34 @@ namespace NEA_Project_Oubliette.Database
 
         private static void Upload(Map map)
         {
-            if(AccountManager.Account.GetType() != typeof(AuthorAccount)) return;
+            if(AccountManager.Account.GetType() != typeof(AuthorAccount))
+            {
+                Display.Clear();
+                GUI.Title("Upload Map - Cancelled");
+
+                Display.WriteAtCentre("You cannot upload maps unless you upgrade your account");
+                Display.WriteAtCentre("to an author account. This can be done in");
+                Display.WriteAtCentre("Account → Upgrade Account, where you will need");
+                Display.WriteAtCentre("to enter your email address.");
+
+                Console.WriteLine();
+                GUI.Confirm();
+                return;
+            }
+
+            if(!map.Collection.ContainsEntityOfType<Player>())
+            {
+                Display.Clear();
+                GUI.Title("Upload Map - Cancelled");
+
+                Display.WriteAtCentre("The map you are trying to upload does not contain");
+                Display.WriteAtCentre("a player entity. Maps must contain a player entity");
+                Display.WriteAtCentre("for them to be playable. Please add one and try again.");
+
+                Console.WriteLine();
+                GUI.Confirm();
+                return;
+            }
 
             int alreadyUploadedMapID = -1;
             bool alreadyUploaded = false;
@@ -117,13 +146,13 @@ namespace NEA_Project_Oubliette.Database
             Display.Clear();
             GUI.Title("Map Browser");
 
-            DataTable mapTable = DatabaseManager.QuerySQLIntoTable("SELECT M.MapID, M.Name, U.Username FROM Map M, User U INNER JOIN Author A ON A.UserID = U.UserID WHERE A.AuthorID = M.AuthorID");
+            DataTable mapTable = DatabaseManager.QuerySQLIntoTable("SELECT M.MapID, M.Name, U.Username, M.Downloads FROM Map M, User U INNER JOIN Author A ON A.UserID = U.UserID WHERE A.AuthorID = M.AuthorID");
             MapProfile[] mapProfiles = new MapProfile[mapTable.Rows.Count];
 
             for (int i = 0; i < mapProfiles.Length; i++)
-                mapProfiles[i] = new MapProfile((int)mapTable.Rows[i][0], mapTable.Rows[i][1].ToString(), mapTable.Rows[i][2].ToString());
+                mapProfiles[i] = new MapProfile((int)mapTable.Rows[i][0], mapTable.Rows[i][1].ToString(), mapTable.Rows[i][2].ToString(), (int)mapTable.Rows[i][3]);
 
-            List<string> maps = new List<string>(Array.ConvertAll<MapProfile, string>(mapProfiles, map => Display.SplitStringOverBufferWidth(map.Name, map.Author)));
+            List<string> maps = new List<string>(Array.ConvertAll<MapProfile, string>(mapProfiles, map => Display.SplitStringOverBufferWidth(map.Name + " by " + map.Author, map.Downloads + "↓")));
 
             if(maps.Count > 0)
             {

@@ -119,6 +119,10 @@ namespace NEA_Project_Oubliette.Database
             GUI.Title("Upgrade Account");
 
             string email = GUI.TextField("Email Address: ", 30);
+
+            if(string.IsNullOrWhiteSpace(email))
+                return;
+
             AuthorAccount authorAccount = CreateAuthorAccount(Account.UserID, email);
 
             if(authorAccount != null)
