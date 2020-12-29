@@ -35,14 +35,17 @@ namespace NEA_Project_Oubliette.Database
             authorQuery.Close();
             authorQuery.Dispose();
 
+            bool fileAlreadyExists = FileHandler.FileExists($"maps/downloads/{mapQuery.Rows[0][2].ToString()}-{authorName}.map");
+
             try
             {
                 Map map = MapFormatter.Deserialize(mapData);
                 FileHandler.WriteToFile($"maps/downloads/{map.Name}-{authorName}.map", MapFormatter.Serialize(map));
+                DatabaseManager.ExecuteDDL("UPDATE Map SET Downloads = Downloads + 1 WHERE MapID = @MapID", mapID);
 
                 Display.Clear();
                 GUI.Title("Download - Complete");
-                Display.WriteAtCentre($"Successfully downloaded '{map.Name}'.");
+                Display.WriteAtCentre($"Successfully {(fileAlreadyExists ? "updated" : "downloaded")} '{map.Name}'.");
 
                 Console.WriteLine();
                 GUI.Confirm();
@@ -63,19 +66,40 @@ namespace NEA_Project_Oubliette.Database
         {
             if(AccountManager.Account.GetType() != typeof(AuthorAccount)) return;
 
+            int alreadyUploadedMapID = -1;
+            bool alreadyUploaded = false;
+            DataTable uploadedMaps = DatabaseManager.QuerySQLIntoTable("SELECT * FROM Map WHERE AuthorID = @AuthorID", (AccountManager.Account as AuthorAccount).AuthorID);
+
+            for (int i = 0; i < uploadedMaps.Rows.Count; i++)
+            {
+                if(uploadedMaps.Rows[i][2].ToString() == map.Name)
+                {
+                    alreadyUploaded = true;
+                    alreadyUploadedMapID = (int)uploadedMaps.Rows[i][0];
+                    break;
+                }
+            }
+
             try
             {
-                int authorID = (AccountManager.Account as AuthorAccount).AuthorID;
-                string mapData = MapFormatter.Serialize(map);
-
-                DatabaseManager.ExecuteDDL("INSERT INTO Map(AuthorID, Name, Data) VALUES (@AuthorID, @Name, @Data)", authorID, map.Name, mapData);
-
                 Display.Clear();
-                GUI.Title("Upload Map - Complete");
+                GUI.Title("Upload Map");
 
-                Display.WriteAtCentre($"Successfully uploaded '{map.Name}'.");
-                Console.WriteLine();
-                GUI.Confirm();
+                if(GUI.YesOrNo($"Are you sure you want to {(alreadyUploaded ? "update" : "upload")} {map.Name}?"))
+                {
+                    int authorID = (AccountManager.Account as AuthorAccount).AuthorID;
+                    string mapData = MapFormatter.Serialize(map);
+
+                    if(!alreadyUploaded) DatabaseManager.ExecuteDDL("INSERT INTO Map(AuthorID, Name, Data) VALUES (@AuthorID, @Name, @Data)", authorID, map.Name, mapData);
+                    else if(alreadyUploadedMapID > -1) DatabaseManager.ExecuteDDL("UPDATE Map SET Data = @Data WHERE MapID = @MapID", mapData, alreadyUploadedMapID);
+
+                    Display.Clear();
+                    GUI.Title("Upload Map - Complete");
+
+                    Display.WriteAtCentre($"Successfully {(alreadyUploaded ? "updated" : "uploaded")} '{map.Name}'.");
+                    Console.WriteLine();
+                    GUI.Confirm();
+                }
             }
             catch
             {

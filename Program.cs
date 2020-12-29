@@ -19,7 +19,7 @@ namespace NEA_Project_Oubliette
             while (true)
             {
                 Display.Banner();
-                Display.WriteAtCentreBottom((AccountManager.IsLoggedIn ? AccountManager.Account.Username : "Not Logged In") + '\n' + (DatabaseManager.IsConnected ? "Connected" : "Not Connected"));
+                Display.WriteAtCentreBottom((AccountManager.IsLoggedIn ? AccountManager.Account.Username : "Not Logged In"));
                 Console.SetCursorPosition(0, 9);
 
                 switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps", "Account", "Quit"))
