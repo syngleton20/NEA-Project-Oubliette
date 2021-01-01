@@ -29,13 +29,10 @@ namespace NEA_Project_Oubliette.Database
             string mapData = mapQuery.Rows[0][3].ToString();
             mapData = mapData.Replace("\r", "");
 
-            MySqlDataReader authorQuery = DatabaseManager.QuerySQL("SELECT U.Username FROM Map M, User U INNER JOIN Author A ON A.UserID = U.UserID WHERE A.AuthorID = M.AuthorID AND M.MapID = @MapID", mapID);
-            authorQuery.Read();
+            DatabaseManager.QuerySQL("SELECT U.Username FROM Map M, User U INNER JOIN Author A ON A.UserID = U.UserID WHERE A.AuthorID = M.AuthorID AND M.MapID = @MapID", mapID);
 
-            string authorName = authorQuery.GetString("Username");
-
-            authorQuery.Close();
-            authorQuery.Dispose();
+            DatabaseManager.Reader.Read();
+            string authorName = DatabaseManager.Reader.GetString("Username");
 
             bool fileAlreadyExists = FileHandler.FileExists($"maps/downloads/{mapQuery.Rows[0][2].ToString()}-{authorName}.map");
 

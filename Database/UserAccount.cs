@@ -1,4 +1,3 @@
-using MySql.Data.MySqlClient;
 using System;
 
 namespace NEA_Project_Oubliette.Database
@@ -15,32 +14,18 @@ namespace NEA_Project_Oubliette.Database
 
         protected UserAccount() { }
 
-        public UserAccount(ref MySqlDataReader reader)
+        public UserAccount(int userID, string username, string password)
         {
-            reader.Read();
-            userID = reader.GetInt32("UserID");
-
-            reader.Read();
-            username = reader.GetString("Username");
-
-            reader.Read();
-            password = reader.GetString("Password");
-
-            reader.Close();
-            reader.Dispose();
+            this.userID = userID;
+            this.username = username;
+            this.password = password;
         }
 
         public override void Update(params string[] details)
         {
-            MySqlDataReader presenceCheck = null;
-
             if(details[0] != "")
             {
-                presenceCheck = DatabaseManager.QuerySQL("SELECT * FROM User WHERE UserID = @UserID", userID);
-                bool hasRows = presenceCheck.HasRows;
-
-                presenceCheck.Close();
-                presenceCheck.Dispose();
+                bool hasRows = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE UserID = @UserID", userID) > 0;
 
                 if(hasRows)
                 {
@@ -62,13 +47,10 @@ namespace NEA_Project_Oubliette.Database
                     GUI.Confirm();
                 }
             }
+
             if(details.Length >= 2 && details[1] != "")
             {
-                presenceCheck = DatabaseManager.QuerySQL("SELECT * FROM User WHERE UserID = @UserID", userID);
-                bool hasRows = presenceCheck.HasRows;
-
-                presenceCheck.Close();
-                presenceCheck.Dispose();
+                bool hasRows = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE UserID = @UserID", userID) > 0;
 
                 if(hasRows)
                 {

@@ -1,4 +1,3 @@
-using MySql.Data.MySqlClient;
 using System;
 
 namespace NEA_Project_Oubliette.Database
@@ -11,30 +10,13 @@ namespace NEA_Project_Oubliette.Database
         public int AuthorID => authorID;
         public string EmailAddress => emailAddress;
 
-        public AuthorAccount(ref MySqlDataReader reader)
+        public AuthorAccount(int userID, int authorID, string username, string emailAddress, string password)
         {
-            reader.Read();
-            authorID = reader.GetInt32("AuthorID");
-
-            reader.Read();
-            userID = reader.GetInt32("UserID");
-
-            reader.Read();
-            emailAddress = reader.GetString("Email");
-
-            reader.Close();
-            reader.Dispose();
-
-            reader = DatabaseManager.QuerySQL("SELECT Username, Password FROM User WHERE UserID = @UserID", userID);
-
-            reader.Read();
-            username = reader.GetString("Username");
-
-            reader.Read();
-            password = reader.GetString("Password");
-
-            reader.Close();
-            reader.Dispose();
+            this.userID = userID;
+            this.authorID = authorID;
+            this.username = username;
+            this.emailAddress = emailAddress;
+            this.password = password;
         }
 
         public override void Update(params string[] details)
@@ -43,11 +25,7 @@ namespace NEA_Project_Oubliette.Database
 
             if(details.Length >= 3 && details[2] != "")
             {
-                MySqlDataReader presenceCheck = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", userID);
-                bool hasRows = presenceCheck.HasRows;
-
-                presenceCheck.Close();
-                presenceCheck.Dispose();
+                bool hasRows = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Author WHERE UserID = @UserID", userID) > 0;
 
                 if(hasRows)
                 {

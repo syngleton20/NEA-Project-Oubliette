@@ -28,7 +28,9 @@ namespace NEA_Project_Oubliette.Database
             Console.WriteLine("           Username: ");
             Console.WriteLine("           Password: ");
             Console.WriteLine("  Password (Retype): ");
-            if(type == AccountType.Author) Console.WriteLine("      Email Address: ");
+
+            if(type == AccountType.Author)
+                Console.WriteLine("      Email Address: ");
 
             Console.CursorTop -= type == AccountType.Author ? 4 : 3;
 
@@ -113,6 +115,7 @@ namespace NEA_Project_Oubliette.Database
             }
         }
 
+        ///<summary>Receives an email address from the user and uses it to upgrade a user account to an author account</summary>
         public static void UpgradeAccountMenu()
         {
             Display.Clear();
@@ -161,10 +164,6 @@ namespace NEA_Project_Oubliette.Database
                 return;
 
             Console.WriteLine();
-
-            // Display.Clear();
-            // GUI.Title("Log In");
-
             string password = GUI.TextField("Password: ", 20, "", true);
 
             if(string.IsNullOrWhiteSpace(password))
@@ -203,6 +202,7 @@ namespace NEA_Project_Oubliette.Database
                 Account = null;
         }
 
+        ///<summary>Allows users and authors to edit their account details as they see fit</summary>
         public static void AccountSettingsMenu()
         {
             Display.Clear();
@@ -223,12 +223,7 @@ namespace NEA_Project_Oubliette.Database
                 case 2:
                     GUI.Title("Account Settings");
                     string password = GUI.TextField("Current Password: ", 20, "", true);
-
-                    MySqlDataReader validityCheck = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Password = @Password", password);
-                    bool validPassword = validityCheck.HasRows;
-
-                    validityCheck.Close();
-                    validityCheck.Dispose();
+                    bool validPassword = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE Password = @Password", password) > 0;
 
                     if(validPassword)
                     {
@@ -255,6 +250,9 @@ namespace NEA_Project_Oubliette.Database
                         Display.WriteAtCentre("This account is not a registered author account!");
                         Display.WriteAtCentre("Please upgrade your account if you wish to start");
                         Display.WriteAtCentre("publishing maps.");
+
+                        Console.WriteLine();
+                        GUI.Confirm();
                     }
                     else
                     {
@@ -271,7 +269,10 @@ namespace NEA_Project_Oubliette.Database
                     GUI.Title("Account Settings");
 
                     Display.WriteAtCentre("Are you sure you want to delete your account?");
-                    if(Account.GetType() == typeof(AuthorAccount)) Display.WriteAtCentre("All your published maps will be taken down!");
+
+                    if(Account.GetType() == typeof(AuthorAccount))
+                        Display.WriteAtCentre("All your published maps will be taken down!");
+
                     Display.WriteAtCentre("This action is permanent!");
 
                     Console.WriteLine();
@@ -282,19 +283,11 @@ namespace NEA_Project_Oubliette.Database
                         GUI.Title("Account Settings");
 
                         string confirmation = GUI.TextField("Password: ", 20, "", true);
-                        MySqlDataReader confirmationCheck = DatabaseManager.QuerySQL("SELECT * FROM User WHERE UserID = @UserID AND Password = @Password", Account.UserID, confirmation);
-                        bool isValid = confirmationCheck.HasRows;
-
-                        confirmationCheck.Close();
-                        confirmationCheck.Dispose();
+                        bool isValid = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE UserID = @UserID AND Password = @Password", Account.UserID, confirmation) > 0;
 
                         if(isValid)
                         {
-                            MySqlDataReader authorCheck = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", Account.UserID);
-                            bool isAuthor = authorCheck.HasRows;
-
-                            authorCheck.Close();
-                            authorCheck.Dispose();
+                            bool isAuthor = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Author WHERE UserID = @UserID", Account.UserID) > 0;
 
                             if(isAuthor)
                             {
@@ -322,20 +315,17 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Creates a new user account, provided the username is unique</summary>
         public static UserAccount CreateUserAccount(string username, string password)
         {
-            MySqlDataReader rowCheck = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username", username);
-            bool hasRows = rowCheck.HasRows;
-
-            rowCheck.Close();
-            rowCheck.Dispose();
+            bool hasRows = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE Username = @Username", username) > 0;
 
             if(!hasRows)
             {
-                rowCheck.Close();
-
                 DatabaseManager.ExecuteDDL("INSERT INTO User(Username, Password) VALUES (@Username, @Password)", username, password);
-                MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username AND Password = @Password", username, password);
+                DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username AND Password = @Password", username, password);
 
-                Account = new UserAccount(ref result);
+                DatabaseManager.Reader.Read();
+                int userID = DatabaseManager.Reader.GetInt32("UserID");
+
+                Account = new UserAccount(userID, username, password);
                 return Account as UserAccount;
             }
 
@@ -345,20 +335,25 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Creates a new author account, provided a valid user account exists</summary>
         public static AuthorAccount CreateAuthorAccount(int userID, string email)
         {
-            MySqlDataReader rowCheck = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", userID);
-            bool hasRows = rowCheck.HasRows;
-
-            rowCheck.Close();
-            rowCheck.Dispose();
+            bool hasRows = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Author WHERE UserID = @UserID", userID) > 0;
 
             if(!hasRows)
             {
-                rowCheck.Close();
-
                 DatabaseManager.ExecuteDDL("INSERT INTO Author(UserID, Email) VALUES (@UserID, @Email)", userID, email);
-                MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID AND Email = @Email", userID, email);
+                DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID AND Email = @Email", userID, email);
 
-                Account = new AuthorAccount(ref result);
+                DatabaseManager.Reader.Read();
+                int authorID = DatabaseManager.Reader.GetInt32("AuthorID");
+
+                DatabaseManager.QuerySQL("SELECT * FROM User WHERE UserID = @UserID", userID);
+
+                DatabaseManager.Reader.Read();
+                string username = DatabaseManager.Reader.GetString("Username");
+
+                DatabaseManager.Reader.Read();
+                string password = DatabaseManager.Reader.GetString("Password");
+
+                Account = new AuthorAccount(userID, authorID, username, email, password);
                 return Account as AuthorAccount;
             }
 
@@ -368,36 +363,39 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Logs a user into their account, provided the username and password arguments are both valid</summary>
         public static bool LogIn(string username, string password)
         {
-            MySqlDataReader result = DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username", username);
-            result.Read();
+            DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username", username);
+            bool hasRows = DatabaseManager.Reader.HasRows;
 
-            if(!result.HasRows)
-            {
-                result.Close();
-                result.Dispose();
-
+            if(!hasRows)
                 return false;
-            }
 
-            string resultingPassword = result.GetString("Password");
+            DatabaseManager.Reader.Read();
+            string resultingPassword = DatabaseManager.Reader.GetString("Password");
 
             if(resultingPassword == password)
             {
-                Account = new UserAccount(ref result);
+                DatabaseManager.Reader.Read();
+                int userID = DatabaseManager.Reader.GetInt32("UserID");
 
-                result.Close();
-                result.Dispose();
+                Account = new UserAccount(userID, username, password);
+                bool isAuthor = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Author WHERE UserID = @UserID", Account.UserID) > 0;
 
-                result = DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", Account.UserID);
+                if(isAuthor)
+                {
+                    DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID", userID);
 
-                if(result.HasRows)
-                    Account = new AuthorAccount(ref result);
+                    DatabaseManager.Reader.Read();
+                    int authorID = DatabaseManager.Reader.GetInt32("AuthorID");
+
+                    DatabaseManager.Reader.Read();
+                    string emailAddress = DatabaseManager.Reader.GetString("Email");
+
+                    Account = new AuthorAccount(userID, authorID, username, emailAddress, password);
+                }
+                else Account = new UserAccount(userID, username, password);
 
                 return true;
             }
-
-            result.Close();
-            result.Dispose();
 
             return false;
         }
