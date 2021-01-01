@@ -1,4 +1,3 @@
-using MySql.Data.MySqlClient;
 using System;
 
 namespace NEA_Project_Oubliette.Database
@@ -14,6 +13,8 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Displays a GUI for creating either a user account or an author account</summary>
         public static void CreateAccountMenu()
         {
+            string email = "";
+
             Display.Clear();
             GUI.Title("Create Account");
 
@@ -54,13 +55,30 @@ namespace NEA_Project_Oubliette.Database
 
             if(password == passwordRetyped)
             {
+                if(type == AccountType.Author)
+                {
+                    email = GUI.TextField("    Email Address: ", 30);
+
+                    if(!ValidateEmailAddress(email))
+                    {
+                        Display.Clear();
+                        GUI.Title("Create Account - Error");
+
+                        Display.WriteAtCentre("Cannot create author account. The email");
+                        Display.WriteAtCentre("address provided is invalid.");
+
+                        Console.WriteLine();
+                        GUI.Confirm();
+                        return;
+                    }
+                }
+
                 UserAccount userAccount = CreateUserAccount(username, password);
 
                 if(userAccount != null)
                 {
                     if(type == AccountType.Author)
                     {
-                        string email = GUI.TextField("    Email Address: ", 30);
                         AuthorAccount authorAccount = CreateAuthorAccount(userAccount.UserID, email);
 
                         if(authorAccount != null)
@@ -125,6 +143,19 @@ namespace NEA_Project_Oubliette.Database
 
             if(string.IsNullOrWhiteSpace(email))
                 return;
+
+            if(!ValidateEmailAddress(email))
+            {
+                Display.Clear();
+                GUI.Title("Create Account - Error");
+
+                Display.WriteAtCentre("Cannot create author account. The email");
+                Display.WriteAtCentre("address provided is invalid.");
+
+                Console.WriteLine();
+                GUI.Confirm();
+                return;
+            }
 
             AuthorAccount authorAccount = CreateAuthorAccount(Account.UserID, email);
 
@@ -310,6 +341,30 @@ namespace NEA_Project_Oubliette.Database
                     }
                     break;
             }
+        }
+
+        ///<summary>Validates an email address by checking if one and only one at symbol is present in the email address and if there are characters on either side of the at symbol</summary>
+        private static bool ValidateEmailAddress(string email)
+        {
+            bool foundAtSymbol = false;
+
+            if(email.Contains('@'))
+            {
+                for(int i = 0; i < email.Length; i++)
+                {
+                    if(email[i] == '@')
+                    {
+                        if(!foundAtSymbol)
+                        {
+                            if(i <= 0 || i >= (email.Length - 1)) return false;
+                            else foundAtSymbol = true;
+                        }
+                        else return false;
+                    }
+                }
+            }
+
+            return foundAtSymbol;
         }
 
         ///<summary>Creates a new user account, provided the username is unique</summary>

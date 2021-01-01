@@ -1,7 +1,6 @@
 using NEA_Project_Oubliette.Entities;
 using System.Collections.Generic;
 using NEA_Project_Oubliette.Maps;
-using MySql.Data.MySqlClient;
 using System.Data;
 using System.IO;
 using System;
