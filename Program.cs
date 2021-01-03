@@ -16,13 +16,13 @@ namespace NEA_Project_Oubliette
             FileHandler.Setup();
             Window.Setup();
 
-            while (true)
+            while(true)
             {
                 Display.Banner();
                 Display.WriteAtCentreBottom((AccountManager.IsLoggedIn ? AccountManager.Account.Username : "Not Logged In"));
                 Console.SetCursorPosition(0, 9);
 
-                switch (GUI.VerticalMenu("New Game", "Load Game", "Map Editor", "Online Maps", "Account", "Scoreboard", "Quit"))
+                switch(GUI.VerticalMenu("New Game", "Load Game", "Map Editor", "Online Maps", "Account", "Scoreboard", "Quit"))
                 {
                     case 0:
                         Game.Current = new Game(GameType.Game, "start.map");
@@ -48,31 +48,41 @@ namespace NEA_Project_Oubliette
                         Console.Clear();
                         GUI.Title("Online Maps");
 
-                        if(AccountManager.Account != null)
+                        switch(GUI.VerticalMenu("Back", "Browse", "Downloads", "Upload"))
                         {
-                            switch (GUI.VerticalMenu("Back", "Browse", "Downloads", "Upload"))
-                            {
-                                case 0:
-                                    break;
+                            case 0:
+                                break;
 
-                                case 1:
-                                    MapBrowser.ShowBrowserMenu();
-                                    break;
+                            case 1:
+                                if(AccountManager.Account != null) MapBrowser.ShowBrowserMenu();
+                                else
+                                {
+                                    Display.Clear();
+                                    GUI.Title("Online Maps - Error");
 
-                                case 2:
-                                    MapBrowser.ShowDownloadsMenu();
-                                    break;
+                                    Display.WriteAtCentre("You need to be logged in to browse online maps.");
+                                    Console.WriteLine();
+                                    GUI.Confirm();
+                                }
+                                break;
 
-                                case 3:
-                                    MapBrowser.ShowUploadMenu();
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            Display.WriteAtCentre("You need to be logged in to browse online maps.");
-                            Console.WriteLine();
-                            GUI.Confirm();
+                            case 2:
+                                MapBrowser.ShowDownloadsMenu();
+                                break;
+
+                            case 3:
+                                if(AccountManager.Account != null) MapBrowser.ShowUploadMenu();
+                                else
+                                {
+                                    Display.Clear();
+                                    GUI.Title("Online Maps - Error");
+
+                                    Display.WriteAtCentre("You need to be logged in to an");
+                                    Display.WriteAtCentre("author account to upload maps.");
+                                    Console.WriteLine();
+                                    GUI.Confirm();
+                                }
+                                break;
                         }
                         break;
 
@@ -89,7 +99,7 @@ namespace NEA_Project_Oubliette
                         {
                             if(AccountManager.Account.GetType() == typeof(AuthorAccount))
                             {
-                                switch (GUI.VerticalMenu("Back", "Account Settings", "Log Out"))
+                                switch(GUI.VerticalMenu("Back", "Account Settings", "Log Out"))
                                 {
                                     case 0:
                                         break;
@@ -105,7 +115,7 @@ namespace NEA_Project_Oubliette
                             }
                             else
                             {
-                                switch (GUI.VerticalMenu("Back", "Upgrade Account", "Account Settings", "Log Out"))
+                                switch(GUI.VerticalMenu("Back", "Upgrade Account", "Account Settings", "Log Out"))
                                 {
                                     case 0:
                                         break;
@@ -126,7 +136,7 @@ namespace NEA_Project_Oubliette
                         }
                         else
                         {
-                            switch (GUI.VerticalMenu("Back", "Create Account", "Log In"))
+                            switch(GUI.VerticalMenu("Back", "Create Account", "Log In"))
                             {
                                 case 0:
                                     break;

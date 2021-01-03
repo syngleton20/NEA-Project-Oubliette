@@ -12,8 +12,7 @@ namespace NEA_Project_Oubliette
         public static void Save(int index)
         {
             StringBuilder saveData = new StringBuilder();
-
-            saveData.AppendLine(Game.Current.CurrentMap.Name);
+            saveData.AppendLine(Game.Current.MapName.Replace(".map", ""));
 
             for (int i = 0; i < Game.Current.CurrentMap.Collection.Array.Length; i++)
             {
@@ -47,6 +46,14 @@ namespace NEA_Project_Oubliette
                     case "E":
                         game.CurrentMap.Collection.Add(new Enemy(entityStrings[i]));
                         break;
+
+                    case "I":
+                        game.CurrentMap.Collection.Add(new Pickup(entityStrings[i]));
+                        break;
+
+                    case "X":
+                        game.CurrentMap.Collection.Add(new Exit(entityStrings[i]));
+                        break;
                 }
             }
 
@@ -66,7 +73,13 @@ namespace NEA_Project_Oubliette
                 string fileName = "EMPTY";
 
                 if(FileHandler.FileExists("saves/save_" + i + ".sav"))
-                    fileName = FileHandler.ReadFile("saves/save_" + i + ".sav").Split('\n')[0];
+                {
+                    string[] parts = FileHandler.ReadFile("saves/save_" + i + ".sav").Split('\n')[0].Split('/');
+                    fileName = parts[parts.Length - 1];
+
+                    if(fileName.Contains('-'))
+                        fileName = fileName.Split('-')[0];
+                }
 
                 choices[i + 1] = Display.SplitStringOverBufferWidth($"Save Slot {(i + 1)}", fileName);
             }
@@ -114,7 +127,12 @@ namespace NEA_Project_Oubliette
 
             for (int i = 0; i < numberOfSaveFiles; i++)
             {
-                string mapName = FileHandler.ReadFile("saves/save_" + i + ".sav").Split('\n')[0];
+                string[] parts = FileHandler.ReadFile("saves/save_" + i + ".sav").Split('\n')[0].Split('/');
+                string mapName = parts[parts.Length - 1];
+
+                if(mapName.Contains('-'))
+                    mapName = mapName.Split('-')[0];
+
                 choices[i + 1] = Display.SplitStringOverBufferWidth($"Save Slot {(i + 1)}", mapName);
             }
 

@@ -22,6 +22,8 @@ namespace NEA_Project_Oubliette
         private Vector cameraPosition;
 
         public int Frame => frame;
+        public string MapName { get; private set; }
+
         public Map CurrentMap => currentMap;
 
         private static Game current;
@@ -42,6 +44,8 @@ namespace NEA_Project_Oubliette
 
             type = gameType;
             currentMap = MapFormatter.Deserialize(FileHandler.ReadFile("maps/" + mapName));
+
+            MapName = mapName;
         }
 
         ///<summary>Begins the game loop, handling drawing maps and receiving user input</summary>
