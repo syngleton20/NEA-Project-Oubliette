@@ -92,6 +92,9 @@ namespace NEA_Project_Oubliette.Entities
                         tile.Occupy(this);
                     }
                 }
+
+                if(tile.IsOccupied)
+                    tile.Occupant.Push(deltaX, deltaY, this);
             }
 
             Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);

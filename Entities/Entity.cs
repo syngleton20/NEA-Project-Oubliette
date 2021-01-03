@@ -38,6 +38,9 @@ namespace NEA_Project_Oubliette.Entities
             Console.ResetColor();
         }
 
+        ///<summary>Performs entity-specific action after being pushed in a direction</summary>
+        public virtual void Push(int deltaX, int deltaY, Entity pusher) { }
+
         ///<summary>Performs entity-specific action after receiving player input</summary>
         public virtual void Update() { }
 

@@ -14,7 +14,8 @@ namespace NEA_Project_Oubliette.Entities
         {
             { 'P', "Player" },
             { 'E', "Enemy" },
-            { 'I', "Pickup" }
+            { 'I', "Pickup" },
+            { 'X', "Exit" }
         };
 
         public EntityCollection(params Entity[] initialEntities) => entities.AddRange(initialEntities);

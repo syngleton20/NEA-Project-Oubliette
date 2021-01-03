@@ -57,7 +57,6 @@ namespace NEA_Project_Oubliette
 
                 if(type == GameType.Game)
                 {
-
                     Console.SetCursorPosition(0, 1);
                     Display.WriteAtCentre(Game.Current.CurrentMap.Name);
                     GUI.HorizontalSeparator();
@@ -140,7 +139,7 @@ namespace NEA_Project_Oubliette
                     else
                     {
                         Input.GetTestInput();
-                        currentMap.Collection.UpdateAll();
+                        currentMap?.Collection.UpdateAll();
                     }
                 }
             }
@@ -151,6 +150,43 @@ namespace NEA_Project_Oubliette
 
         ///<summary>Assigns to the current map</summary>
         public void LoadMap(Map map) => currentMap = map;
+
+        public void Finish()
+        {
+            isPlaying = false;
+            Display.Clear();
+
+            if(type == GameType.Test)
+            {
+                MapEditor.ExitPlayMode();
+                return;
+            }
+
+            GUI.Title("Congratulations!");
+
+            Display.WriteAtCentre("You managed to escape!");
+            Display.WriteAtCentre($"Your score is {Player.Instance.Score}.");
+
+            if(type == GameType.Game && AccountManager.IsLoggedIn && Scoreboard.IsHighScore(Player.Instance.Score, AccountManager.Account.UserID))
+                if(GUI.YesOrNo($"Your score is {Player.Instance.Score}. Do you want to submit it?"))
+                    Scoreboard.SubmitScore(Player.Instance.Score, AccountManager.Account.UserID);
+
+            Display.Clear();
+            GUI.Title("Congratulations!");
+
+            currentMap.Collection.Clear();
+            currentMap = null;
+
+            switch (GUI.VerticalMenu("Main Menu", "Quit"))
+            {
+                case 0:
+                    break;
+
+                case 1:
+                    Program.QuitGame();
+                    break;
+            }
+        }
 
         ///<summary>Displays a Game Over screen then ends this game</summary>
         public void GameOver()
@@ -184,7 +220,7 @@ namespace NEA_Project_Oubliette
             Display.Clear();
             GUI.Title("Game Over");
 
-            switch(GUI.VerticalMenu("Load from Save Slot", "Main Menu", "Quit"))
+            switch(GUI.VerticalMenu("Load Game", "Main Menu", "Quit"))
             {
                 case 0:
                     int slotIndex = SaveManager.ChooseSlotToLoad();

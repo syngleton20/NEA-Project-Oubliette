@@ -1,7 +1,4 @@
 using NEA_Project_Oubliette.Items;
-using NEA_Project_Oubliette.Maps;
-using System.Collections.Generic;
-using System.Text;
 using System;
 
 namespace NEA_Project_Oubliette.Entities

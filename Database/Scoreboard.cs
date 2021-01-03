@@ -41,6 +41,11 @@ namespace NEA_Project_Oubliette.Database
 
         public static bool IsHighScore(int score, int userID)
         {
+            bool hasScores = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Scoreboard") > 0;
+
+            if(!hasScores)
+                return false;
+
             DatabaseManager.QuerySQL("SELECT Score FROM Scoreboard WHERE UserID = @UserID", userID);
             DatabaseManager.Reader.Read();
 

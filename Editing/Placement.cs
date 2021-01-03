@@ -175,6 +175,10 @@ namespace NEA_Project_Oubliette.Editing
 
                         newEntity = new Pickup($"I {Game.Current.CurrentMap.Collection.AssignId()} {position.ToString()} {data.ToString()}");
                         break;
+
+                    case 'X':
+                        newEntity = new Exit($"X {Game.Current.CurrentMap.Collection.AssignId()} {position.ToString()}");
+                        break;
                 }
 
                 if(!Game.Current.CurrentMap.Collection.TryGetEntity(position.X, position.Y, out Entity output) && newEntity != null)

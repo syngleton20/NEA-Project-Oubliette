@@ -205,7 +205,6 @@ namespace NEA_Project_Oubliette.Database
                     Console.WriteLine();
                     GUI.Confirm();
                 }
-
             }
             else
             {
