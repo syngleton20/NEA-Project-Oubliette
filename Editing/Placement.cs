@@ -146,20 +146,20 @@ namespace NEA_Project_Oubliette.Editing
 
                             data.Append(itemTypes[typeIndex - 1].ToString());
                             GUI.Title("Add New Item");
-                            data.Append(' ' + GUI.TextField("Name: ", 20));
+                            data.Append('_' + GUI.TextField("Name: ", 20));
                             GUI.Title("Add New Item");
-                            data.Append(' ' + GUI.TextField("Weight (kg): ", 4));
+                            data.Append('_' + GUI.TextField("Weight (kg): ", 4));
 
                             switch (typeIndex)
                             {
                                 case 1:
                                     GUI.Title("Add New Item");
-                                    data.Append(' ' + GUI.TextField("Damage: ", 4));
+                                    data.Append('_' + GUI.TextField("Damage: ", 4));
                                     break;
 
                                 case 2:
                                     GUI.Title("Add New Item");
-                                    data.Append(' ' + GUI.TextField("Effect Multiplier: ", 4));
+                                    data.Append('_' + GUI.TextField("Effect Multiplier: ", 4));
                                     break;
                             }
 

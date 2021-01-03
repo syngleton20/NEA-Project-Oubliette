@@ -8,7 +8,7 @@ namespace NEA_Project_Oubliette.Items
 
         public MeleeWeapon(string data)
         {
-            string[] parts = data.Split(' ');
+            string[] parts = data.Split('_');
 
             name = parts[1];
             weight = parts[2].ToFloat();
@@ -18,6 +18,6 @@ namespace NEA_Project_Oubliette.Items
         public override void OnEquip() { }
         public override void Use() { }
 
-        public override string Save() => $"M {name} {weight} {damage}";
+        public override string Save() => $"M_{name}_{weight}_{damage}";
     }
 }

@@ -8,7 +8,7 @@ namespace NEA_Project_Oubliette.Items
 
         public Food(string data)
         {
-            string[] parts = data.Split(' ');
+            string[] parts = data.Split('_');
 
             name = parts[1];
             weight = parts[2].ToFloat();
@@ -26,6 +26,6 @@ namespace NEA_Project_Oubliette.Items
             }
         }
 
-        public override string Save() => $"F {name} {weight} {effectMultiplier}";
+        public override string Save() => $"F_{name}_{weight}_{effectMultiplier}";
     }
 }
