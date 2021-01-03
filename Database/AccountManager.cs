@@ -326,6 +326,7 @@ namespace NEA_Project_Oubliette.Database
                                 DatabaseManager.ExecuteDDL("DELETE FROM Author WHERE UserID = @UserID", Account.UserID);
                             }
 
+                            DatabaseManager.ExecuteDDL("DELETE FROM Scoreboard WHERE UserID = @UserID", Account.UserID);
                             DatabaseManager.ExecuteDDL("DELETE FROM User WHERE UserID = @UserID", Account.UserID);
                             Account = null;
                         }

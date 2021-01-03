@@ -22,7 +22,7 @@ namespace NEA_Project_Oubliette
                 Display.WriteAtCentreBottom((AccountManager.IsLoggedIn ? AccountManager.Account.Username : "Not Logged In"));
                 Console.SetCursorPosition(0, 9);
 
-                switch (GUI.VerticalMenu("New Game", "Continue", "Map Editor", "Online Maps", "Account", "Quit"))
+                switch (GUI.VerticalMenu("New Game", "Load Game", "Map Editor", "Online Maps", "Account", "Scoreboard", "Quit"))
                 {
                     case 0:
                         Game.Current = new Game(GameType.Game, "start.map");
@@ -30,7 +30,7 @@ namespace NEA_Project_Oubliette
                         break;
 
                     case 1:
-                        GUI.Title("Load from Save File");
+                        GUI.Title("Load Game");
 
                         int slotIndex = SaveManager.ChooseSlotToLoad();
                         if(slotIndex < 0) break;
@@ -143,11 +143,19 @@ namespace NEA_Project_Oubliette
                         break;
 
                     case 5:
+                        ConnectToDatabase();
+
+                        if(!DatabaseManager.IsConnected)
+                            break;
+
+                        Scoreboard.DisplayAll();
+                        break;
+
+                    case 6:
                         Program.QuitGame();
                         break;
                 }
             }
-
         }
 
         private static void ConnectToDatabase()

@@ -93,6 +93,7 @@ namespace NEA_Project_Oubliette.Entities
                 tile.Vacate();
 
             Game.Current.CurrentMap.Collection.Remove(this);
+            Player.Instance.IncrementScore();
         }
 
         public override void Load(string data)

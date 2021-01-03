@@ -1,7 +1,6 @@
 using NEA_Project_Oubliette.Items;
 using NEA_Project_Oubliette.Maps;
 using System.Threading;
-using System.Linq;
 using System;
 
 namespace NEA_Project_Oubliette.Entities
@@ -9,13 +8,14 @@ namespace NEA_Project_Oubliette.Entities
     ///<summary>Entity representing the player character</summary>
     internal sealed class Player : Entity, IDamageable
     {
-        private int strength = 2;
+        private int strength = 2, score = 0;
         private bool takingDamage;
 
         private Item equippedItem;
         private Inventory inventory = new Inventory();
 
         public int Strength => strength;
+        public int Score => score;
 
         public int Health { get; private set; } = 20;
         public int MaxHealth { get; private set; } = 20;
@@ -125,6 +125,8 @@ namespace NEA_Project_Oubliette.Entities
         }
 
         public void Die() => IsDead = true;
+
+        public void IncrementScore(int amount = 1) => score += amount;
 
         ///<summary>Equips an item at an index in this player's inventory</summary>
         public void EquipItemAt(int itemIndex) => EquippedItem = inventory.GetItems()[itemIndex];

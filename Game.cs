@@ -4,6 +4,7 @@ using NEA_Project_Oubliette.Maps;
 using System.Threading;
 using System.Text;
 using System;
+using NEA_Project_Oubliette.Database;
 
 namespace NEA_Project_Oubliette
 {
@@ -72,7 +73,7 @@ namespace NEA_Project_Oubliette
                     Console.WriteLine();
                     Console.WriteLine();
 
-                    Display.WriteAtCentre($"Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
+                    Display.WriteAtCentre($"Score: {Player.Instance.Score} Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
                     Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Pause, I - Inventory, E - Use");
 
                     if(Player.Instance.IsDead) GameOver();
@@ -132,7 +133,7 @@ namespace NEA_Project_Oubliette
                     Console.WriteLine();
                     Console.WriteLine();
 
-                    Display.WriteAtCentre($"Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
+                    Display.WriteAtCentre($"Score: {Player.Instance.Score} Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
                     Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Return to Editor");
 
                     if(Player.Instance != null && Player.Instance.IsDead) GameOver();
@@ -159,17 +160,28 @@ namespace NEA_Project_Oubliette
             Display.ShowRibbonMessage("G A M E    O V E R");
             Thread.Sleep(2000);
 
-            currentMap.Collection.Clear();
-            currentMap = null;
-
             Display.Clear();
 
             if(type == GameType.Test)
             {
                 MapEditor.ExitPlayMode();
+
+                currentMap.Collection.Clear();
+                currentMap = null;
+
                 return;
             }
 
+            GUI.Title("Game Over");
+
+            if(type == GameType.Game && AccountManager.IsLoggedIn && Scoreboard.IsHighScore(Player.Instance.Score, AccountManager.Account.UserID))
+                if(GUI.YesOrNo($"Your score is {Player.Instance.Score}. Do you want to submit it?"))
+                    Scoreboard.SubmitScore(Player.Instance.Score, AccountManager.Account.UserID);
+
+            currentMap.Collection.Clear();
+            currentMap = null;
+
+            Display.Clear();
             GUI.Title("Game Over");
 
             switch(GUI.VerticalMenu("Load from Save Slot", "Main Menu", "Quit"))
