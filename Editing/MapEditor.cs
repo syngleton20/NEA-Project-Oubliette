@@ -214,7 +214,7 @@ namespace NEA_Project_Oubliette.Editing
                             }
                             else information.Append(entities[i].Save());
 
-                            entityStrings[i] = Display.SplitStringOverBufferWidth(EntityCollection.Names[entities[i].Save()[0]], information.ToString());
+                            entityStrings[i] = Display.SplitStringOverBufferWidth(EntityCollection.NAMES[entities[i].Save()[0]], information.ToString());
                         }
 
                         GUI.VerticalScrollView(entityStrings);

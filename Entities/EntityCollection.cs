@@ -10,7 +10,7 @@ namespace NEA_Project_Oubliette.Entities
 
         public Entity[] Array => entities.ToArray();
 
-        public static Dictionary<char, string> Names = new Dictionary<char, string>()
+        public static readonly Dictionary<char, string> NAMES = new Dictionary<char, string>()
         {
             { 'P', "Player" },
             { 'E', "Enemy" },

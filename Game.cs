@@ -1,10 +1,10 @@
-using NEA_Project_Oubliette.Editing;
+using NEA_Project_Oubliette.Database;
 using NEA_Project_Oubliette.Entities;
+using NEA_Project_Oubliette.Editing;
 using NEA_Project_Oubliette.Maps;
 using System.Threading;
 using System.Text;
 using System;
-using NEA_Project_Oubliette.Database;
 
 namespace NEA_Project_Oubliette
 {
@@ -48,7 +48,7 @@ namespace NEA_Project_Oubliette
             MapName = mapName;
         }
 
-        ///<summary>Begins the game loop, handling drawing maps and receiving user input</summary>
+        ///<summary>Begins the game loop, handling the drawing of maps and receiving user input</summary>
         public void Start()
         {
             isPlaying = true;
@@ -77,7 +77,7 @@ namespace NEA_Project_Oubliette
                     Console.WriteLine();
 
                     Display.WriteAtCentre($"Score: {Player.Instance.Score} Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
-                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Pause, I - Inventory, E - Use");
+                    Display.WriteAtCentreBottom("Press P for help");
 
                     if(Player.Instance.IsDead) GameOver();
                     else
@@ -115,7 +115,7 @@ namespace NEA_Project_Oubliette
                         editorInformation.Append("  Id: " + entity.Id);
 
                     Display.WriteAtCentre(editorInformation.ToString());
-                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, SPACE - Place\nQ - Stamp, ^F - Fill Area");
+                    Display.WriteAtCentreBottom("Press P for help");
 
                     Input.GetEditorInput();
                 }
@@ -137,7 +137,7 @@ namespace NEA_Project_Oubliette
                     Console.WriteLine();
 
                     Display.WriteAtCentre($"Score: {Player.Instance.Score} Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
-                    Display.WriteAtCentreBottom("WASD/ARROW KEYS - Move, ESCAPE - Return to Editor");
+                    Display.WriteAtCentreBottom("Press P for help");
 
                     if(Player.Instance != null && Player.Instance.IsDead) GameOver();
                     else
@@ -178,8 +178,7 @@ namespace NEA_Project_Oubliette
             Display.Clear();
             GUI.Title("Congratulations!");
 
-            currentMap.Collection.Clear();
-            currentMap = null;
+            Dispose();
 
             switch (GUI.VerticalMenu("Main Menu", "Quit"))
             {
@@ -205,10 +204,7 @@ namespace NEA_Project_Oubliette
             if(type == GameType.Test)
             {
                 MapEditor.ExitPlayMode();
-
-                currentMap.Collection.Clear();
-                currentMap = null;
-
+                Dispose();
                 return;
             }
 
@@ -218,8 +214,7 @@ namespace NEA_Project_Oubliette
                 if(GUI.YesOrNo($"Your score is {Player.Instance.Score}. Do you want to submit it?"))
                     Scoreboard.SubmitScore(Player.Instance.Score, AccountManager.Account.UserID);
 
-            currentMap.Collection.Clear();
-            currentMap = null;
+            Dispose();
 
             Display.Clear();
             GUI.Title("Game Over");

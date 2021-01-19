@@ -2,6 +2,7 @@ using NEA_Project_Oubliette.Entities;
 using NEA_Project_Oubliette.Editing;
 using NEA_Project_Oubliette.Items;
 using NEA_Project_Oubliette.Maps;
+using System.Collections.Generic;
 using System.Text;
 using System;
 
@@ -136,6 +137,19 @@ namespace NEA_Project_Oubliette
                     if(Player.Instance != null) PlayerInventory();
                     break;
 
+                case ConsoleKey.P:
+                    Display.Clear();
+                    GUI.Title("Help");
+
+                    Display.WriteAtCentre("WASD/Arrow Keys - Movement/Melee Attack");
+                    Display.WriteAtCentre("I - View Inventory");
+                    Display.WriteAtCentre("E - Use Equipped Item");
+                    Display.WriteAtCentre("Escape - Pause");
+
+                    Console.WriteLine();
+                    GUI.Confirm();
+                    break;
+
                 case ConsoleKey.Escape:
                     int slotIndex = 0;
 
@@ -208,6 +222,62 @@ namespace NEA_Project_Oubliette
                 case ConsoleKey.D:
                     if(Placement.Position.X >= (Game.Current.CurrentMap.Width - 1)) Game.Current.CurrentMap.AddArea(1, 0);
                     Placement.Move(1 * (Input.IsShiftKeyDown ? 4 : 1), 0);
+                    break;
+
+                case ConsoleKey.P:
+                    Display.Clear();
+                    GUI.Title("Help");
+
+                    Display.WriteAtCentre("WASD/Arrow Keys - Placement Movement");
+                    Display.WriteAtCentre("Space - Place Tile/Entity");
+                    Display.WriteAtCentre("Tab - Toggle Tile and Entity Placement");
+                    Display.WriteAtCentre("Q - Toggle Stamp Mode");
+
+                    Console.WriteLine();
+
+                    Display.WriteAtCentre("Enter/Return - Enter Playmode");
+                    Display.WriteAtCentre("Escape - Menu/Exit Playmode");
+
+                    Console.WriteLine();
+
+                    Display.WriteAtCentre("Ctrl+N - New Map");
+                    Display.WriteAtCentre("Ctrl+O - Open Map");
+                    Display.WriteAtCentre("Ctrl+S - Save Map");
+
+                    Console.WriteLine();
+
+                    Display.WriteAtCentre("Tiles and entities can be selected using");
+                    Display.WriteAtCentre("their respective keys on the keyboard.");
+
+                    if(GUI.YesOrNo("Do you want to see a list of tiles and entities?"))
+                    {
+                        Display.Clear();
+                        GUI.Title("Help - Tiles");
+
+                        for (int i = 0; i < TileSet.PROFILES.Length; i++)
+                        {
+                            Console.Write("  " + TileSet.PROFILES[i].Ascii + " - ");
+                            new Tile(TileSet.PROFILES[i].Ascii).Draw();
+
+                            Console.ResetColor();
+                            Console.WriteLine();
+                        }
+
+                        Console.WriteLine();
+                        GUI.Confirm("NEXT");
+
+                        Display.Clear();
+                        GUI.Title("Help - Entities");
+
+                        foreach (KeyValuePair<char, string> entityProfile in EntityCollection.NAMES)
+                        {
+                            Console.Write("  " + entityProfile.Key.ToString() + " - " + entityProfile.Value);
+                            Console.WriteLine();
+                        }
+
+                        Console.WriteLine();
+                        GUI.Confirm("FINISH");
+                    }
                     break;
 
                 case ConsoleKey.N:
@@ -301,7 +371,7 @@ namespace NEA_Project_Oubliette
                     }
                     else
                     {
-                        if(EntityCollection.Names.ContainsKey(lastInput.KeyChar))
+                        if(EntityCollection.NAMES.ContainsKey(lastInput.KeyChar))
                             Placement.Entity = lastInput.KeyChar;
                     }
                     break;
@@ -347,6 +417,19 @@ namespace NEA_Project_Oubliette
 
                 case ConsoleKey.I:
                     if(Player.Instance != null) PlayerInventory();
+                    break;
+
+                case ConsoleKey.P:
+                    Display.Clear();
+                    GUI.Title("Help");
+
+                    Display.WriteAtCentre("WASD/Arrow Keys - Movement/Melee Attack");
+                    Display.WriteAtCentre("I - View Inventory");
+                    Display.WriteAtCentre("E - Use Equipped Item");
+                    Display.WriteAtCentre("Escape - Pause");
+
+                    Console.WriteLine();
+                    GUI.Confirm();
                     break;
             }
         }
