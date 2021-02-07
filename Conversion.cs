@@ -1,5 +1,3 @@
-using System;
-
 namespace NEA_Project_Oubliette
 {
     ///<summary>Provides extensions methods to easily convert between string format and various data types</summary>
