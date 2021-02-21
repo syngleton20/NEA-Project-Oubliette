@@ -1,3 +1,4 @@
+using NEA_Project_Oubliette.Database.Security;
 using System;
 
 namespace NEA_Project_Oubliette.Database
@@ -253,7 +254,7 @@ namespace NEA_Project_Oubliette.Database
 
                 case 2:
                     GUI.Title("Account Settings");
-                    string password = GUI.TextField("Current Password: ", 20, "", true);
+                    string password = HashManager.HashPassword(GUI.TextField("Current Password: ", 20, "", true));
                     bool validPassword = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE Password = @Password", password) > 0;
 
                     if(validPassword)
@@ -261,7 +262,7 @@ namespace NEA_Project_Oubliette.Database
                         Display.Clear();
                         GUI.Title("Account Settings");
 
-                        string newPassword = GUI.TextField("New Password: ", 20, "", true);
+                        string newPassword = HashManager.HashPassword(GUI.TextField("New Password: ", 20, "", true));
                         Account.Update("", newPassword);
                     }
                     else
@@ -278,6 +279,7 @@ namespace NEA_Project_Oubliette.Database
                     {
                         Display.Clear();
                         GUI.Title("Account Settings - Error");
+
                         Display.WriteAtCentre("This account is not a registered author account!");
                         Display.WriteAtCentre("Please upgrade your account if you wish to start");
                         Display.WriteAtCentre("publishing maps.");
@@ -290,8 +292,24 @@ namespace NEA_Project_Oubliette.Database
                         Display.Clear();
                         GUI.Title("Account Settings");
 
-                        string email = GUI.TextField("Email Address: ", 30, (Account as AuthorAccount).EmailAddress);
-                        Account.Update("", "", email);
+                        string email = GUI.TextField("Email Address: ", 30, EncryptionManager.DecryptEmailAddress((Account as AuthorAccount).EmailAddress));
+
+                        if(ValidateEmailAddress(email))
+                        {
+                            string encryptedEmail = EncryptionManager.EncryptEmailAddress(email);
+                            Account.Update("", "", encryptedEmail);
+                        }
+                        else
+                        {
+                            Display.Clear();
+                            GUI.Title("Create Account - Error");
+
+                            Display.WriteAtCentre("Cannot create author account. The email");
+                            Display.WriteAtCentre("address provided is invalid.");
+
+                            Console.WriteLine();
+                            GUI.Confirm();
+                        }
                     }
                     break;
 
@@ -313,7 +331,7 @@ namespace NEA_Project_Oubliette.Database
                         Display.Clear();
                         GUI.Title("Account Settings");
 
-                        string confirmation = GUI.TextField("Password: ", 20, "", true);
+                        string confirmation = HashManager.HashPassword(GUI.TextField("Password: ", 20, "", true));
                         bool isValid = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE UserID = @UserID AND Password = @Password", Account.UserID, confirmation) > 0;
 
                         if(isValid)
@@ -328,6 +346,7 @@ namespace NEA_Project_Oubliette.Database
 
                             DatabaseManager.ExecuteDDL("DELETE FROM Scoreboard WHERE UserID = @UserID", Account.UserID);
                             DatabaseManager.ExecuteDDL("DELETE FROM User WHERE UserID = @UserID", Account.UserID);
+
                             Account = null;
                         }
                         else
@@ -371,17 +390,21 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Creates a new user account, provided the username is unique</summary>
         public static UserAccount CreateUserAccount(string username, string password)
         {
-            bool hasRows = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE Username = @Username", username) > 0;
+            int rowCount = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM User WHERE Username = @Username", username);
+            bool hasRows = rowCount > 0;
+            string hashedPassword = HashManager.HashPassword(password);
+
+            Debug.Warning(hashedPassword);
 
             if(!hasRows)
             {
-                DatabaseManager.ExecuteDDL("INSERT INTO User(Username, Password) VALUES (@Username, @Password)", username, password);
-                DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username AND Password = @Password", username, password);
+                DatabaseManager.ExecuteDDL("INSERT INTO User(Username, Password) VALUES (@Username, @Password)", username, hashedPassword);
+                DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username AND Password = @Password", username, hashedPassword);
 
                 DatabaseManager.Reader.Read();
                 int userID = DatabaseManager.Reader.GetInt32("UserID");
 
-                Account = new UserAccount(userID, username, password);
+                Account = new UserAccount(userID, username, hashedPassword);
                 return Account as UserAccount;
             }
 
@@ -392,11 +415,12 @@ namespace NEA_Project_Oubliette.Database
         public static AuthorAccount CreateAuthorAccount(int userID, string email)
         {
             bool hasRows = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Author WHERE UserID = @UserID", userID) > 0;
+            string encryptedEmail = EncryptionManager.EncryptEmailAddress(email);
 
             if(!hasRows)
             {
-                DatabaseManager.ExecuteDDL("INSERT INTO Author(UserID, Email) VALUES (@UserID, @Email)", userID, email);
-                DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID AND Email = @Email", userID, email);
+                DatabaseManager.ExecuteDDL("INSERT INTO Author(UserID, Email) VALUES (@UserID, @Email)", userID, encryptedEmail);
+                DatabaseManager.QuerySQL("SELECT * FROM Author WHERE UserID = @UserID AND Email = @Email", userID, encryptedEmail);
 
                 DatabaseManager.Reader.Read();
                 int authorID = DatabaseManager.Reader.GetInt32("AuthorID");
@@ -409,7 +433,7 @@ namespace NEA_Project_Oubliette.Database
                 DatabaseManager.Reader.Read();
                 string password = DatabaseManager.Reader.GetString("Password");
 
-                Account = new AuthorAccount(userID, authorID, username, email, password);
+                Account = new AuthorAccount(userID, authorID, username, encryptedEmail, password);
                 return Account as AuthorAccount;
             }
 
@@ -421,19 +445,19 @@ namespace NEA_Project_Oubliette.Database
         {
             DatabaseManager.QuerySQL("SELECT * FROM User WHERE Username = @Username", username);
             bool hasRows = DatabaseManager.Reader.HasRows;
+            string hashedPassword = HashManager.HashPassword(password);
 
-            if(!hasRows)
-                return false;
+            if(!hasRows) return false;
 
             DatabaseManager.Reader.Read();
             string resultingPassword = DatabaseManager.Reader.GetString("Password");
 
-            if(resultingPassword == password)
+            if(resultingPassword == hashedPassword)
             {
                 DatabaseManager.Reader.Read();
                 int userID = DatabaseManager.Reader.GetInt32("UserID");
 
-                Account = new UserAccount(userID, username, password);
+                Account = new UserAccount(userID, username, resultingPassword);
                 bool isAuthor = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Author WHERE UserID = @UserID", Account.UserID) > 0;
 
                 if(isAuthor)
@@ -446,9 +470,9 @@ namespace NEA_Project_Oubliette.Database
                     DatabaseManager.Reader.Read();
                     string emailAddress = DatabaseManager.Reader.GetString("Email");
 
-                    Account = new AuthorAccount(userID, authorID, username, emailAddress, password);
+                    Account = new AuthorAccount(userID, authorID, username, emailAddress, resultingPassword);
                 }
-                else Account = new UserAccount(userID, username, password);
+                else Account = new UserAccount(userID, username, resultingPassword);
 
                 return true;
             }

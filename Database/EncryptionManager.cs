@@ -2,15 +2,18 @@ using System.Security.Cryptography;
 using System.Text;
 using System;
 
-namespace NEA_Project_Oubliette.Database
+namespace NEA_Project_Oubliette.Database.Security
 {
     internal static class EncryptionManager
     {
         private static string HASH = "k^FW@13?";
 
-        public static string Encrypt(string plainText)
+        public static string EncryptEmailAddress(string plainText, int maxLength = 30)
         {
-            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            string[] parts = plainText.Split('@');
+
+            byte[] leftPlainTextBytes = Encoding.UTF8.GetBytes(parts[0]);
+            byte[] rightPlainTextBytes = Encoding.UTF8.GetBytes(parts[1]);
 
             using (MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider())
             {
@@ -19,15 +22,21 @@ namespace NEA_Project_Oubliette.Database
                 using (TripleDESCryptoServiceProvider tripleDES = new TripleDESCryptoServiceProvider { Key = keyBytes, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
                 {
                     ICryptoTransform transform = tripleDES.CreateEncryptor();
-                    byte[] resultBytes = transform.TransformFinalBlock(plainTextBytes, 0, plainText.Length);
-                    return Convert.ToBase64String(resultBytes, 0, resultBytes.Length);
+
+                    byte[] leftCipherTextBytes = transform.TransformFinalBlock(leftPlainTextBytes, 0, leftPlainTextBytes.Length);
+                    byte[] rightCipherTextBytes = transform.TransformFinalBlock(rightPlainTextBytes, 0, rightPlainTextBytes.Length);
+
+                    return Convert.ToBase64String(leftCipherTextBytes, 0, leftCipherTextBytes.Length) + '@' + Convert.ToBase64String(rightCipherTextBytes, 0, rightCipherTextBytes.Length);
                 }
             }
         }
 
-        public static string Decrypt(string cipherText)
+        public static string DecryptEmailAddress(string cipherText, int maxLength = 30)
         {
-            byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
+            string[] parts = cipherText.Split('@');
+
+            byte[] leftCipherTextBytes = Convert.FromBase64String(parts[0]);
+            byte[] rightCipherTextBytes = Convert.FromBase64String(parts[1]);
 
             using (MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider())
             {
@@ -36,8 +45,11 @@ namespace NEA_Project_Oubliette.Database
                 using (TripleDESCryptoServiceProvider tripleDES = new TripleDESCryptoServiceProvider { Key = keyBytes, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
                 {
                     ICryptoTransform transform = tripleDES.CreateDecryptor();
-                    byte[] resultBytes = transform.TransformFinalBlock(cipherTextBytes, 0, cipherTextBytes.Length);
-                    return UTF8Encoding.UTF8.GetString(resultBytes);
+
+                    byte[] leftPlainTextBytes = transform.TransformFinalBlock(leftCipherTextBytes, 0, leftCipherTextBytes.Length);
+                    byte[] rightPlainTextBytes = transform.TransformFinalBlock(rightCipherTextBytes, 0, rightCipherTextBytes.Length);
+
+                    return UTF8Encoding.UTF8.GetString(leftPlainTextBytes) + '@' + UTF8Encoding.UTF8.GetString(rightPlainTextBytes);
                 }
             }
         }
