@@ -33,7 +33,7 @@ namespace NEA_Project_Oubliette.Entities
         }
 
         ///<summary>Adds non-existent entities to the collection</summary>
-        public void Add(params Entity[] entities) { foreach (Entity entity in entities) Add(entity); }
+        public void Add(params Entity[] entities) { foreach(Entity entity in entities) Add(entity); }
 
         ///<summary>Removes an existing entity from the collection</summary>
         public void Remove(Entity entity)
@@ -48,7 +48,7 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Clears the collection</summary>
         public void Clear()
         {
-            for (int i = 0; i < entities.Count; i++)
+            for(int i = 0; i < entities.Count; i++)
             {
                 if(Game.Current.CurrentMap.TryGetTile(entities[i].Position, out Tile tile))
                 {
@@ -63,7 +63,7 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Calls the Update() method on all entities in the collection</summary>
         public void UpdateAll()
         {
-            for (int i = 0; i < entities.Count; i++)
+            for(int i = 0; i < entities.Count; i++)
                 entities[i]?.Update();
         }
 
@@ -74,7 +74,7 @@ namespace NEA_Project_Oubliette.Entities
 
             if(entities.Count <= 0) return nextFreeId;
 
-            for (int i = 0; i < entities.Count; i++)
+            for(int i = 0; i < entities.Count; i++)
             {
                 if(!TryGetEntityById(nextFreeId, out Entity entity))
                     return nextFreeId;
@@ -90,7 +90,7 @@ namespace NEA_Project_Oubliette.Entities
         {
             Vector position = new Vector(positionX, positionY);
 
-            foreach (Entity entity in entities)
+            foreach(Entity entity in entities)
             {
                 if(entity.Position == position)
                 {
@@ -106,7 +106,7 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Attempts to return an entity at a position</summary>
         public bool TryGetEntity(Vector position, out Entity output)
         {
-            foreach (Entity entity in entities)
+            foreach(Entity entity in entities)
             {
                 if(entity.Position == position)
                 {
@@ -122,7 +122,7 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Attempts to return an entity with an id</summary>
         public bool TryGetEntityById(int id, out Entity output)
         {
-            foreach (Entity entity in entities)
+            foreach(Entity entity in entities)
             {
                 if(entity.Id == id)
                 {
@@ -138,7 +138,7 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Returns whether or not an entity of a certain type is contained in this collection</summary>
         public bool ContainsEntityOfType<T>() where T : Entity
         {
-            foreach (Entity entity in entities)
+            foreach(Entity entity in entities)
                 if(entity.GetType() == typeof(T))
                     return true;
 

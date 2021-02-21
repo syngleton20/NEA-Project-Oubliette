@@ -27,7 +27,7 @@ namespace NEA_Project_Oubliette.Entities
             string[] itemData = new string[0];
             int startIndex = 0;
 
-            for (int i = 0; i < 3; i++)
+            for(int i = 0; i < 3; i++)
                 startIndex += parts[i].Length + 1;
 
             string items = data.Substring(startIndex, data.Length - startIndex);
@@ -35,9 +35,9 @@ namespace NEA_Project_Oubliette.Entities
             if(items.Contains('/')) itemData = items.Split('/');
             else itemData = new string[] { items };
 
-            for (int i = 0; i < itemData.Length; i++)
+            for(int i = 0; i < itemData.Length; i++)
             {
-                switch (itemData[i][0])
+                switch(itemData[i][0])
                 {
                     case 'M':
                         inventory.Add(new MeleeWeapon(itemData[i]));

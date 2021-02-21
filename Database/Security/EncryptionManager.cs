@@ -15,11 +15,11 @@ namespace NEA_Project_Oubliette.Database.Security
             byte[] leftPlainTextBytes = Encoding.UTF8.GetBytes(parts[0]);
             byte[] rightPlainTextBytes = Encoding.UTF8.GetBytes(parts[1]);
 
-            using (MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider())
+            using(MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider())
             {
                 byte[] keyBytes = md5Provider.ComputeHash(Encoding.UTF8.GetBytes(HASH));
 
-                using (TripleDESCryptoServiceProvider tripleDES = new TripleDESCryptoServiceProvider { Key = keyBytes, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
+                using(TripleDESCryptoServiceProvider tripleDES = new TripleDESCryptoServiceProvider { Key = keyBytes, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
                 {
                     ICryptoTransform transform = tripleDES.CreateEncryptor();
 
@@ -38,11 +38,11 @@ namespace NEA_Project_Oubliette.Database.Security
             byte[] leftCipherTextBytes = Convert.FromBase64String(parts[0]);
             byte[] rightCipherTextBytes = Convert.FromBase64String(parts[1]);
 
-            using (MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider())
+            using(MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider())
             {
                 byte[] keyBytes = md5Provider.ComputeHash(Encoding.UTF8.GetBytes(HASH));
 
-                using (TripleDESCryptoServiceProvider tripleDES = new TripleDESCryptoServiceProvider { Key = keyBytes, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
+                using(TripleDESCryptoServiceProvider tripleDES = new TripleDESCryptoServiceProvider { Key = keyBytes, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
                 {
                     ICryptoTransform transform = tripleDES.CreateDecryptor();
 

@@ -11,7 +11,7 @@ namespace NEA_Project_Oubliette.Items
 
         public void Add(string itemData)
         {
-            switch (itemData[0])
+            switch(itemData[0])
             {
                 case 'M':
                     items.Add(new MeleeWeapon(itemData));
@@ -26,7 +26,7 @@ namespace NEA_Project_Oubliette.Items
         ///<summary>Adds each item from an array to this inventory</summary>
         public void Add(params Item[] items)
         {
-            foreach (Item item in items)
+            foreach(Item item in items)
                 if(!this.items.Contains(item))
                     this.items.Add(item);
         }
@@ -49,7 +49,7 @@ namespace NEA_Project_Oubliette.Items
             {
                 string[] parts = data.Split('/');
 
-                for (int i = 0; i < parts.Length; i++)
+                for(int i = 0; i < parts.Length; i++)
                     Add(parts[i]);
             }
             else Add(data);
@@ -60,7 +60,7 @@ namespace NEA_Project_Oubliette.Items
         {
             StringBuilder itemString = new StringBuilder();
 
-            for (int i = 0; i < items.Count; i++)
+            for(int i = 0; i < items.Count; i++)
             {
                 if(i > 0) itemString.Append('/');
                 itemString.Append(items[i].Save());

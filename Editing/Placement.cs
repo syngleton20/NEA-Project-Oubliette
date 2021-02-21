@@ -103,12 +103,12 @@ namespace NEA_Project_Oubliette.Editing
             {
                 Entity newEntity = null;
 
-                switch (entity)
+                switch(entity)
                 {
                     case 'P':
                         Entity[] entities = Game.Current.CurrentMap.Collection.Array;
 
-                        for (int i = 0; i < entities.Length; i++)
+                        for(int i = 0; i < entities.Length; i++)
                         {
                             if(entities[i].GetType() == typeof(Player))
                             {
@@ -150,7 +150,7 @@ namespace NEA_Project_Oubliette.Editing
                             GUI.Title("Add New Item");
                             data.Append('_' + GUI.TextField("Weight (kg): ", 4));
 
-                            switch (typeIndex)
+                            switch(typeIndex)
                             {
                                 case 1:
                                     GUI.Title("Add New Item");

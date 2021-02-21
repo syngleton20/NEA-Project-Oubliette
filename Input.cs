@@ -40,7 +40,7 @@ namespace NEA_Project_Oubliette
 
                 itemList[0] = "Back";
 
-                for (int i = 0; i < items.Length; i++)
+                for(int i = 0; i < items.Length; i++)
                 {
                     if(i > 0) itemString.Append('\n');
 
@@ -57,7 +57,7 @@ namespace NEA_Project_Oubliette
 
                 int itemIndex = -1;
 
-                switch (Input.GetKeyDown())
+                switch(Input.GetKeyDown())
                 {
                     case ConsoleKey.E:
                         Display.Clear();
@@ -102,7 +102,7 @@ namespace NEA_Project_Oubliette
         ///<summary>Gets user input to control the player entity</summary>
         public static void GetPlayerInput()
         {
-            switch (GetKeyDown())
+            switch(GetKeyDown())
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
@@ -156,7 +156,7 @@ namespace NEA_Project_Oubliette
                     Display.Clear();
                     GUI.Title("Paused");
 
-                    switch (GUI.VerticalMenu("Resume", "Save", "Load", "Main Menu", "Quit"))
+                    switch(GUI.VerticalMenu("Resume", "Save", "Load", "Main Menu", "Quit"))
                     {
                         case 0:
                             Display.Clear();
@@ -254,7 +254,7 @@ namespace NEA_Project_Oubliette
                         Display.Clear();
                         GUI.Title("Help - Tiles");
 
-                        for (int i = 0; i < TileSet.PROFILES.Length; i++)
+                        for(int i = 0; i < TileSet.PROFILES.Length; i++)
                         {
                             Console.Write("  " + TileSet.PROFILES[i].Ascii + " - ");
                             new Tile(TileSet.PROFILES[i].Ascii).Draw();
@@ -269,7 +269,7 @@ namespace NEA_Project_Oubliette
                         Display.Clear();
                         GUI.Title("Help - Entities");
 
-                        foreach (KeyValuePair<char, string> entityProfile in EntityCollection.NAMES)
+                        foreach(KeyValuePair<char, string> entityProfile in EntityCollection.NAMES)
                         {
                             Console.Write("  " + entityProfile.Key.ToString() + " - " + entityProfile.Value);
                             Console.WriteLine();
@@ -318,7 +318,7 @@ namespace NEA_Project_Oubliette
                     Display.Clear();
                     GUI.Title("Paused");
 
-                    switch (GUI.VerticalMenu("Resume", "Debugging", "New Map", "Open Map", "Save Map", "Save Map As", "Main Menu", "Quit"))
+                    switch(GUI.VerticalMenu("Resume", "Debugging", "New Map", "Open Map", "Save Map", "Save Map As", "Main Menu", "Quit"))
                     {
                         case 0:
                             Display.Clear();
@@ -380,7 +380,7 @@ namespace NEA_Project_Oubliette
 
         public static void GetTestInput()
         {
-            switch (GetKeyDown())
+            switch(GetKeyDown())
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:

@@ -38,11 +38,7 @@ namespace NEA_Project_Oubliette
         }
 
         ///<summary>Writes a file into the bin/Debug/netcoreapp3.1/ directory</summary>
-        public static void WriteToFile(string fileName, string fileContent, bool appendFile = false)
-        {
-            using (StreamWriter writer = new StreamWriter(GetPath(fileName), appendFile))
-                writer.Write(fileContent);
-        }
+        public static void WriteToFile(string fileName, string fileContent, bool appendFile = false) { using(StreamWriter writer = new StreamWriter(GetPath(fileName), appendFile)) writer.Write(fileContent); }
 
         ///<summary>Deletes a file in bin/Debug/netcoreapp3.1/ directory</summary>
         public static void DeleteFile(string fileName) => File.Delete(GetPath(fileName));
@@ -58,14 +54,14 @@ namespace NEA_Project_Oubliette
         {
             StringBuilder fileContent = new StringBuilder();
 
-            using (StreamReader reader = new StreamReader(GetPath(fileName)))
+            using(StreamReader reader = new StreamReader(GetPath(fileName)))
             {
                 do
                 {
                     if(fileContent.ToString() != "") fileContent.Append('\n'); // This is to avoid adding a newline character to the end of the file
                     fileContent.Append(reader.ReadLine());
                 }
-                while (!reader.EndOfStream);
+                while(!reader.EndOfStream);
             }
 
             return fileContent.ToString();

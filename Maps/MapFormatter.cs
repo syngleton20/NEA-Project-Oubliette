@@ -16,7 +16,7 @@ namespace NEA_Project_Oubliette.Maps
             char previousCharacter = data[0];
             int charCount = 1;
 
-            for (int i = 1; i < data.Length; i++)
+            for(int i = 1; i < data.Length; i++)
             {
                 if(previousCharacter != data[i])
                 {
@@ -30,7 +30,7 @@ namespace NEA_Project_Oubliette.Maps
 
             if(map.Collection.Array.Length > 0)
             {
-                for (int i = 0; i < map.Collection.Array.Length; i++)
+                for(int i = 0; i < map.Collection.Array.Length; i++)
                 {
                     if(i > 0) entities.Append('\\');
                     entities.Append(map.Collection.Array[i].Save());
@@ -55,7 +55,7 @@ namespace NEA_Project_Oubliette.Maps
 
             string[] lines = data.Split('\n');
 
-            for (int i = 0; i < lines[1].Length; i++)
+            for(int i = 0; i < lines[1].Length; i++)
             {
                 if(char.IsNumber(lines[1][i])) numberString.Append(lines[1][i]);
                 else
@@ -71,9 +71,9 @@ namespace NEA_Project_Oubliette.Maps
             {
                 string[] entityStrings = lines[2].Split('\\');
 
-                for (int i = 0; i < entityStrings.Length; i++)
+                for(int i = 0; i < entityStrings.Length; i++)
                 {
-                    switch (entityStrings[i].Split(' ')[0])
+                    switch(entityStrings[i].Split(' ')[0])
                     {
                         case "P":
                             entities.Add(new Player(entityStrings[i]));

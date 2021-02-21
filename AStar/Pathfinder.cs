@@ -26,7 +26,7 @@ namespace NEA_Project_Oubliette.AStar
             List<Node> path = new List<Node>();
             Node currentNode = targetNode;
 
-            while (currentNode != startNode)
+            while(currentNode != startNode)
             {
                 path.Add(currentNode);
                 currentNode = currentNode.Parent;
@@ -47,11 +47,11 @@ namespace NEA_Project_Oubliette.AStar
 
             openSet.Add(startNode);
 
-            while (openSet.Count > 0)
+            while(openSet.Count > 0)
             {
                 Node currentNode = openSet[0];
 
-                for (int i = 1; i < openSet.Count; i++)
+                for(int i = 1; i < openSet.Count; i++)
                     if(openSet[i].FCost < currentNode.FCost || openSet[i].FCost == currentNode.FCost && openSet[i].HCost < currentNode.HCost)
                         currentNode = openSet[i];
 
@@ -61,7 +61,7 @@ namespace NEA_Project_Oubliette.AStar
                 if(currentNode == targetNode)
                     return RetracePath(startNode, targetNode);
 
-                foreach (Node neighbour in grid.GetNeighbours(currentNode))
+                foreach(Node neighbour in grid.GetNeighbours(currentNode))
                 {
                     if(!neighbour.IsWalkable || closedSet.Contains(neighbour))
                         continue;

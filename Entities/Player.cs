@@ -144,9 +144,7 @@ namespace NEA_Project_Oubliette.Entities
             if(parts.Length >= 6)
             {
                 int startIndex = 0;
-
-                for (int i = 0; i < 5; i++)
-                    startIndex += parts[i].Length + 1;
+                for(int i = 0; i < 5; i++) startIndex += parts[i].Length + 1;
 
                 string inventoryString = data.Substring(startIndex, data.Length - startIndex);
 

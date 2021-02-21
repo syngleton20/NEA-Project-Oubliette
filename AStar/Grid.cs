@@ -19,8 +19,8 @@ namespace NEA_Project_Oubliette.AStar
             nodes = new Node[mapSize.Y, mapSize.X]; // remember the order!
             Vector bottomLeft = new Vector(0, mapSize.Y);
 
-            for (int y = 0; y < mapSize.Y; y++)
-                for (int x = 0; x < mapSize.X; x++)
+            for(int y = 0; y < mapSize.Y; y++)
+                for(int x = 0; x < mapSize.X; x++)
                     nodes[y, x] = new Node(tiles[y, x]);
         }
 
@@ -32,9 +32,9 @@ namespace NEA_Project_Oubliette.AStar
         {
             List<Node> neighbours = new List<Node>();
 
-            for (int y = -1; y <= 1; y++)
+            for(int y = -1; y <= 1; y++)
             {
-                for (int x = -1; x <= 1; x++)
+                for(int x = -1; x <= 1; x++)
                 {
                     if((x == 0 && y == 0) || (Math.Abs(x) == Math.Abs(y))) continue;
 

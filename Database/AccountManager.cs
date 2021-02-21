@@ -240,7 +240,7 @@ namespace NEA_Project_Oubliette.Database
             Display.Clear();
             GUI.Title("Account Settings");
 
-            switch (GUI.VerticalMenu("Back", "Change Username", "Change Password", "Change Email", "Delete Account"))
+            switch(GUI.VerticalMenu("Back", "Change Username", "Change Password", "Change Email", "Delete Account"))
             {
                 case 0:
                     break;

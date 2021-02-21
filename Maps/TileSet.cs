@@ -17,7 +17,7 @@ namespace NEA_Project_Oubliette
         ///<summary>Returns a boolean depending on whether or not a tile profile was found</summary>
         public static bool TryGetProfileFromAscii(char ascii, out TileProfile output)
         {
-            for (int i = 0; i < PROFILES.Length; i++)
+            for(int i = 0; i < PROFILES.Length; i++)
             {
                 if(PROFILES[i].Ascii == ascii)
                 {
@@ -33,7 +33,7 @@ namespace NEA_Project_Oubliette
         ///<summary>Returns a tile profile from an ascii character</summary>
         public static TileProfile GetProfileFromAscii(char ascii)
         {
-            for (int i = 0; i < PROFILES.Length; i++)
+            for(int i = 0; i < PROFILES.Length; i++)
                 if(PROFILES[i].Ascii == ascii) return PROFILES[i];
 
             return null;

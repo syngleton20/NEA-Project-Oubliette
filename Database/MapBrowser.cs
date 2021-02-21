@@ -95,7 +95,7 @@ namespace NEA_Project_Oubliette.Database
             bool alreadyUploaded = false;
             DataTable uploadedMaps = DatabaseManager.QuerySQLIntoTable("SELECT * FROM Map WHERE AuthorID = @AuthorID", (AccountManager.Account as AuthorAccount).AuthorID);
 
-            for (int i = 0; i < uploadedMaps.Rows.Count; i++)
+            for(int i = 0; i < uploadedMaps.Rows.Count; i++)
             {
                 if(uploadedMaps.Rows[i][2].ToString() == map.Name)
                 {
@@ -145,7 +145,7 @@ namespace NEA_Project_Oubliette.Database
             DataTable mapTable = DatabaseManager.QuerySQLIntoTable("SELECT M.MapID, M.Name, U.Username, M.Downloads FROM Map M, User U INNER JOIN Author A ON A.UserID = U.UserID WHERE A.AuthorID = M.AuthorID");
             MapProfile[] mapProfiles = new MapProfile[mapTable.Rows.Count];
 
-            for (int i = 0; i < mapProfiles.Length; i++)
+            for(int i = 0; i < mapProfiles.Length; i++)
                 mapProfiles[i] = new MapProfile((int)mapTable.Rows[i][0], mapTable.Rows[i][1].ToString(), mapTable.Rows[i][2].ToString(), (int)mapTable.Rows[i][3]);
 
             List<string> maps = new List<string>(Array.ConvertAll<MapProfile, string>(mapProfiles, map => Display.SplitStringOverBufferWidth(map.Name + " by " + map.Author, map.Downloads + "↓")));

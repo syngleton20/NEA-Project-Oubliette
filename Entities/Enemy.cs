@@ -31,7 +31,7 @@ namespace NEA_Project_Oubliette.Entities
         {
             if(hasSeenPlayer)
             {
-                foreach (Tile tile in Game.Current.CurrentMap.GetNeighbouringTiles(position))
+                foreach(Tile tile in Game.Current.CurrentMap.GetNeighbouringTiles(position))
                     if(tile.IsOccupied)
                         if(tile.Occupant.GetType() == typeof(Player))
                             Player.Instance.TakeDamage(strength);

@@ -38,7 +38,7 @@ namespace NEA_Project_Oubliette.Maps
             string[] lines = data.Split('\n');
             int maxWidth = 0, maxHeight = lines.Length;
 
-            for (int y = 0; y < lines.Length; y++)
+            for(int y = 0; y < lines.Length; y++)
                 maxWidth = Math.Max(maxWidth, lines[y].Length);
 
             tiles = new Tile[maxHeight, maxWidth];
@@ -46,14 +46,14 @@ namespace NEA_Project_Oubliette.Maps
             Height = tiles.GetLength(0);
             Width = tiles.GetLength(1);
 
-            for (int y = 0; y < Height; y++)
-                for (int x = 0; x < Width; x++)
+            for(int y = 0; y < Height; y++)
+                for(int x = 0; x < Width; x++)
                     tiles[y, x] = new Tile(x, y, lines[y][x]);
 
             Grid = new Grid(this, tiles);
 
             if(entities.Length > 0)
-                for (int i = 0; i < entities.Length; i++)
+                for(int i = 0; i < entities.Length; i++)
                     if(TryGetTile(entities[i].Position, out Tile tile))
                         tile.Occupy(entities[i]);
         }
@@ -64,9 +64,9 @@ namespace NEA_Project_Oubliette.Maps
             drawX *= AREA_SIZE;
             drawY *= AREA_SIZE;
 
-            for (int y = drawY; y < drawY + AREA_SIZE; y++)
+            for(int y = drawY; y < drawY + AREA_SIZE; y++)
             {
-                for (int x = drawX; x < drawX + AREA_SIZE; x++)
+                for(int x = drawX; x < drawX + AREA_SIZE; x++)
                 {
                     if(Collection.TryGetEntity(x, y, out Entity entity)) entity.Draw();
                     else tiles[y, x].Draw();
@@ -81,8 +81,8 @@ namespace NEA_Project_Oubliette.Maps
             areaX *= AREA_SIZE;
             areaY *= AREA_SIZE;
 
-            for (int y = areaY; y < areaY + AREA_SIZE; y++)
-                for (int x = areaX; x < areaX + AREA_SIZE; x++)
+            for(int y = areaY; y < areaY + AREA_SIZE; y++)
+                for(int x = areaX; x < areaX + AREA_SIZE; x++)
                     tiles[y, x] = new Tile(x, y, fillCharacter);
         }
 
@@ -91,12 +91,12 @@ namespace NEA_Project_Oubliette.Maps
         {
             Tile[,] newTiles = new Tile[Height + (directionY * AREA_SIZE), Width + (directionX * AREA_SIZE)];
 
-            for (int y = 0; y < Height; y++)
-                for (int x = 0; x < Width; x++)
+            for(int y = 0; y < Height; y++)
+                for(int x = 0; x < Width; x++)
                     newTiles[y, x] = tiles[y, x];
 
-            for (int y = 0; y < newTiles.GetLength(0); y++)
-                for (int x = 0; x < newTiles.GetLength(1); x++)
+            for(int y = 0; y < newTiles.GetLength(0); y++)
+                for(int x = 0; x < newTiles.GetLength(1); x++)
                     if(newTiles[y, x] == null)
                         newTiles[y, x] = new Tile(x, y, fillCharacter);
 
@@ -143,17 +143,16 @@ namespace NEA_Project_Oubliette.Maps
         {
             List<Tile> neighbours = new List<Tile>();
 
-            for (int neighbourY = -1; neighbourY <= 1; neighbourY++)
+            for(int neighbourY = -1; neighbourY <= 1; neighbourY++)
             {
-                for (int neighbourX = -1; neighbourX <= 1; neighbourX++)
+                for(int neighbourX = -1; neighbourX <= 1; neighbourX++)
                 {
                     if((neighbourX == 0 && neighbourY == 0) || (Math.Abs(tileX) == Math.Abs(tileY))) continue;
 
                     int checkX = tileX + neighbourX;
                     int checkY = tileY + neighbourY;
 
-                    if(checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height)
-                        neighbours.Add(tiles[checkY, checkX]);
+                    if(checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height) neighbours.Add(tiles[checkY, checkX]);
                 }
             }
 
@@ -165,9 +164,9 @@ namespace NEA_Project_Oubliette.Maps
         {
             List<Tile> neighbours = new List<Tile>();
 
-            for (int neighbourY = -1; neighbourY <= 1; neighbourY++)
+            for(int neighbourY = -1; neighbourY <= 1; neighbourY++)
             {
-                for (int neighbourX = -1; neighbourX <= 1; neighbourX++)
+                for(int neighbourX = -1; neighbourX <= 1; neighbourX++)
                 {
                     if((neighbourX == 0 && neighbourY == 0) || (Math.Abs(tilePosition.X) == Math.Abs(tilePosition.Y))) continue;
 
@@ -187,11 +186,11 @@ namespace NEA_Project_Oubliette.Maps
         {
             StringBuilder mapData = new StringBuilder();
 
-            for (int y = 0; y < Height; y++)
+            for(int y = 0; y < Height; y++)
             {
                 if(y > 0) mapData.Append('\\');
 
-                for (int x = 0; x < Width; x++)
+                for(int x = 0; x < Width; x++)
                     mapData.Append(tiles[y, x].Ascii);
             }
 

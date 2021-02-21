@@ -22,7 +22,7 @@ namespace NEA_Project_Oubliette
         {
             Console.Write("  ");
 
-            for (int i = 2; i < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth - 1 : Console.BufferWidth - 3); i++)
+            for(int i = 2; i < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth - 1 : Console.BufferWidth - 3); i++)
                 Console.Write('─');
 
             Console.WriteLine('─');
@@ -38,10 +38,10 @@ namespace NEA_Project_Oubliette
 
             Console.ForegroundColor = colour;
 
-            for (int i = 0; i < currentValue; i++)
+            for(int i = 0; i < currentValue; i++)
                 Console.Write('█');
 
-            for (int i = currentValue; i < maxValue; i++)
+            for(int i = currentValue; i < maxValue; i++)
                 Console.Write('░');
 
             Console.ResetColor();
@@ -52,7 +52,7 @@ namespace NEA_Project_Oubliette
         {
             int startX = Console.CursorLeft, startY = Console.CursorTop;
 
-            for (int i = 0; i < items.Length; i++)
+            for(int i = 0; i < items.Length; i++)
             {
                 Console.WriteLine("  " + items[i]);
 
@@ -64,7 +64,7 @@ namespace NEA_Project_Oubliette
                     Console.ResetColor(); // temp
                     Console.SetCursorPosition(startX, startY);
 
-                    for (int j = 0; j < Console.CursorTop; j++)
+                    for(int j = 0; j < Console.CursorTop; j++)
                     {
                         Display.ClearLine();
                         Console.WriteLine();
@@ -92,16 +92,16 @@ namespace NEA_Project_Oubliette
             {
                 Console.SetCursorPosition(startX, startY);
 
-                for (int i = 0; i < choices.Length; i++)
+                for(int i = 0; i < choices.Length; i++)
                 {
                     Console.ResetColor();
                     Console.Write("  ");
 
-                    if (i == choiceIndex) Console.BackgroundColor = ConsoleColor.Red;
+                    if(i == choiceIndex) Console.BackgroundColor = ConsoleColor.Red;
 
                     Console.Write(choices[i]);
 
-                    for (int j = Console.CursorLeft; j < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth : Console.BufferWidth - 2); j++)
+                    for(int j = Console.CursorLeft; j < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth : Console.BufferWidth - 2); j++)
                         Console.Write(' ');
 
                     if(Environment.OSVersion.Platform == PlatformID.Unix) Console.WriteLine();
@@ -109,17 +109,17 @@ namespace NEA_Project_Oubliette
 
                 Console.ResetColor();
 
-                switch (Input.GetKeyDown())
+                switch(Input.GetKeyDown())
                 {
                     case ConsoleKey.UpArrow:
                     case ConsoleKey.W:
-                        if (choiceIndex > 0) choiceIndex--;
+                        if(choiceIndex > 0) choiceIndex--;
                         else choiceIndex = (choices.Length - 1);
                         break;
 
                     case ConsoleKey.DownArrow:
                     case ConsoleKey.S:
-                        if (choiceIndex < (choices.Length - 1)) choiceIndex++;
+                        if(choiceIndex < (choices.Length - 1)) choiceIndex++;
                         else choiceIndex = 0;
                         break;
 
@@ -129,7 +129,7 @@ namespace NEA_Project_Oubliette
                         break;
                 }
             }
-            while (!hasChosen);
+            while(!hasChosen);
 
             Console.Clear();
             return choiceIndex;
@@ -150,28 +150,28 @@ namespace NEA_Project_Oubliette
                 Console.SetCursorPosition(startX, startY);
                 Console.Write("  ");
 
-                for (int i = 0; i < choices.Length; i++)
+                for(int i = 0; i < choices.Length; i++)
                 {
                     Console.ResetColor();
 
-                    if (i == choiceIndex) Console.BackgroundColor = ConsoleColor.Red;
+                    if(i == choiceIndex) Console.BackgroundColor = ConsoleColor.Red;
 
                     Console.Write(' ' + choices[i] + ' ');
                 }
 
                 Console.ResetColor();
 
-                switch (Input.GetKeyDown())
+                switch(Input.GetKeyDown())
                 {
                     case ConsoleKey.LeftArrow:
                     case ConsoleKey.A:
-                        if (choiceIndex > 0) choiceIndex--;
+                        if(choiceIndex > 0) choiceIndex--;
                         else choiceIndex = (choices.Length - 1);
                         break;
 
                     case ConsoleKey.RightArrow:
                     case ConsoleKey.D:
-                        if (choiceIndex < (choices.Length - 1)) choiceIndex++;
+                        if(choiceIndex < (choices.Length - 1)) choiceIndex++;
                         else choiceIndex = 0;
                         break;
 
@@ -181,7 +181,7 @@ namespace NEA_Project_Oubliette
                         break;
                 }
             }
-            while (!hasChosen);
+            while(!hasChosen);
 
             Console.Clear();
             return choiceIndex;
@@ -195,9 +195,7 @@ namespace NEA_Project_Oubliette
             if(question.Contains('\n'))
             {
                 string[] lines = question.Split('\n');
-
-                for (int i = 0; i < lines.Length; i++)
-                    Display.WriteAtCentre(lines[i]);
+                for(int i = 0; i < lines.Length; i++) Display.WriteAtCentre(lines[i]);
             }
             else Display.WriteAtCentre(question);
 
@@ -221,14 +219,12 @@ namespace NEA_Project_Oubliette
                 Console.Write("  " + label);
 
                 if(!censorInput) Console.Write(text.ToString());
-                else
-                    for (int i = 0; i < text.Length; i++)
-                        Console.Write('*');
+                else for(int i = 0; i < text.Length; i++) Console.Write('*');
 
                 Console.CursorLeft -= text.Length;
                 Console.CursorLeft += cursorPosition;
 
-                switch (Input.GetKeyDown())
+                switch(Input.GetKeyDown())
                 {
                     case ConsoleKey.DownArrow:
                     case ConsoleKey.UpArrow:

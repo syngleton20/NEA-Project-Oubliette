@@ -14,7 +14,7 @@ namespace NEA_Project_Oubliette
             StringBuilder saveData = new StringBuilder();
             saveData.AppendLine(Game.Current.MapName.Replace(".map", ""));
 
-            for (int i = 0; i < Game.Current.CurrentMap.Collection.Array.Length; i++)
+            for(int i = 0; i < Game.Current.CurrentMap.Collection.Array.Length; i++)
             {
                 if(i > 0) saveData.Append('\\');
                 saveData.Append(Game.Current.CurrentMap.Collection.Array[i].Save());

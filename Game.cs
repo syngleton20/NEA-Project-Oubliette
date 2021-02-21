@@ -55,7 +55,7 @@ namespace NEA_Project_Oubliette
 
             if(type == GameType.Editor) Placement.Reset();
 
-            while (isPlaying)
+            while(isPlaying)
             {
                 frame++;
 
@@ -180,7 +180,7 @@ namespace NEA_Project_Oubliette
 
             Dispose();
 
-            switch (GUI.VerticalMenu("Main Menu", "Quit"))
+            switch(GUI.VerticalMenu("Main Menu", "Quit"))
             {
                 case 0:
                     break;

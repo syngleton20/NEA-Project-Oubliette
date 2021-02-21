@@ -31,7 +31,7 @@ namespace NEA_Project_Oubliette.Database
             DataTable scoreTable = DatabaseManager.QuerySQLIntoTable("SELECT U.Username, S.Score FROM Scoreboard S INNER JOIN User U ON U.UserID WHERE U.UserID = S.UserID ORDER BY S.Score DESC");
             string[] scores = new string[scoreTable.Rows.Count];
 
-            for (int i = 0; i < scores.Length; i++)
+            for(int i = 0; i < scores.Length; i++)
                 scores[i] = Display.SplitStringOverBufferWidth(scoreTable.Rows[i][0].ToString(), scoreTable.Rows[i][1].ToString());
 
             GUI.VerticalScrollView(scores);

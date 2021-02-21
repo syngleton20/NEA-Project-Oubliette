@@ -29,7 +29,7 @@ namespace NEA_Project_Oubliette
             Console.ResetColor();
             Console.CursorLeft = 0;
 
-            for (int i = 0; i < Console.BufferWidth; i++)
+            for(int i = 0; i < Console.BufferWidth; i++)
                 Console.Write(' ');
 
             Console.CursorTop--;
@@ -62,7 +62,7 @@ namespace NEA_Project_Oubliette
         {
             string[] lines = text.Split('\n');
 
-            for (int i = 0; i < lines.Length; i++)
+            for(int i = 0; i < lines.Length; i++)
             {
                 int centre = (int)Math.Floor((double)(Console.BufferWidth / 2) - (lines[i].Length / 2));
                 Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -78,7 +78,7 @@ namespace NEA_Project_Oubliette
         {
             Console.SetCursorPosition(0, Offset.Y + ((Map.AREA_SIZE / 2) - 2));
 
-            for (int i = 0; i < 3; i++)
+            for(int i = 0; i < 3; i++)
             {
                 ClearLine();
                 Console.WriteLine();
@@ -111,8 +111,7 @@ namespace NEA_Project_Oubliette
             splitString.Append(leftPart);
             splitString.Append(' ');
 
-            for (int i = splitString.Length; i < (Console.BufferWidth - rightPart.Length) - (Environment.OSVersion.Platform == PlatformID.Win32NT ? 4 : 5); i++)
-                splitString.Append('.');
+            for(int i = splitString.Length; i < (Console.BufferWidth - rightPart.Length) - (Environment.OSVersion.Platform == PlatformID.Win32NT ? 4 : 5); i++) splitString.Append('.');
 
             splitString.Append(' ');
             splitString.Append(rightPart);

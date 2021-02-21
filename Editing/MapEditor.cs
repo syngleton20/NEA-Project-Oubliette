@@ -78,7 +78,7 @@ namespace NEA_Project_Oubliette.Editing
                 if(string.IsNullOrEmpty(currentMapName) || string.IsNullOrWhiteSpace(currentMapName)) return;
                 if(currentMapName.Length >= 20) isValidMapName = false;
 
-                for (int i = 0; i < currentMapName.Length; i++)
+                for(int i = 0; i < currentMapName.Length; i++)
                 {
                     if(illegalCharacters.Contains(currentMapName[i]))
                     {
@@ -105,7 +105,7 @@ namespace NEA_Project_Oubliette.Editing
             Display.Clear();
             GUI.Title("Open Map");
 
-            foreach (FileInfo file in files)
+            foreach(FileInfo file in files)
                 if(file.Extension == ".map")
                     choices.Add(file.Name.Split('.')[0]);
 
@@ -179,7 +179,7 @@ namespace NEA_Project_Oubliette.Editing
             Display.Clear();
             GUI.Title("Debugging");
 
-            switch (GUI.VerticalMenu("Back", "Show Entity List"))
+            switch(GUI.VerticalMenu("Back", "Show Entity List"))
             {
                 case 0:
                     Display.Clear();
@@ -197,7 +197,7 @@ namespace NEA_Project_Oubliette.Editing
 
                     if(entities.Length > 0)
                     {
-                        for (int i = 0; i < entities.Length; i++)
+                        for(int i = 0; i < entities.Length; i++)
                         {
                             StringBuilder information = new StringBuilder();
 
@@ -206,7 +206,7 @@ namespace NEA_Project_Oubliette.Editing
                                 string fullInformation = entities[i].Save();
                                 string[] parts = fullInformation.Split(' ');
 
-                                for (int j = 0; j < 3; j++)
+                                for(int j = 0; j < 3; j++)
                                 {
                                     if(j > 0) information.Append(' ');
                                     information.Append(parts[j]);
