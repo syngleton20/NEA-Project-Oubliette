@@ -14,8 +14,7 @@ namespace NEA_Project_Oubliette.Entities
         public override void Draw()
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write("██");
-            Console.ResetColor();
+            base.Draw();
         }
 
         public override void Load(string data)
@@ -27,9 +26,7 @@ namespace NEA_Project_Oubliette.Entities
             string[] itemData = new string[0];
             int startIndex = 0;
 
-            for(int i = 0; i < 3; i++)
-                startIndex += parts[i].Length + 1;
-
+            for(int i = 0; i < 3; i++) startIndex += parts[i].Length + 1;
             string items = data.Substring(startIndex, data.Length - startIndex);
 
             if(items.Contains('/')) itemData = items.Split('/');

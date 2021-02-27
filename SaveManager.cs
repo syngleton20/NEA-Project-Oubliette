@@ -77,8 +77,7 @@ namespace NEA_Project_Oubliette
                     string[] parts = FileHandler.ReadFile("saves/save_" + i + ".sav").Split('\n')[0].Split('/');
                     fileName = parts[parts.Length - 1];
 
-                    if(fileName.Contains('-'))
-                        fileName = fileName.Split('-')[0];
+                    if(fileName.Contains('-')) fileName = fileName.Split('-')[0];
                 }
 
                 choices[i + 1] = Display.SplitStringOverBufferWidth($"Save Slot {(i + 1)}", fileName);
@@ -130,9 +129,7 @@ namespace NEA_Project_Oubliette
                 string[] parts = FileHandler.ReadFile("saves/save_" + i + ".sav").Split('\n')[0].Split('/');
                 string mapName = parts[parts.Length - 1];
 
-                if(mapName.Contains('-'))
-                    mapName = mapName.Split('-')[0];
-
+                if(mapName.Contains('-')) mapName = mapName.Split('-')[0];
                 choices[i + 1] = Display.SplitStringOverBufferWidth($"Save Slot {(i + 1)}", mapName);
             }
 

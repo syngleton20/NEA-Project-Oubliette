@@ -20,10 +20,9 @@ namespace NEA_Project_Oubliette
         ///<summary>Draws a line separating different sections of GUI</summary>
         public static void HorizontalSeparator()
         {
+            // Draws a horizontal separator with minor changes, depending on the OS the game is running on
             Console.Write("  ");
-
-            for(int i = 2; i < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth - 1 : Console.BufferWidth - 3); i++)
-                Console.Write('─');
+            for(int i = 2; i < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth - 1 : Console.BufferWidth - 3); i++) Console.Write('─');
 
             Console.WriteLine('─');
             if(Environment.OSVersion.Platform == PlatformID.Unix) Console.WriteLine();
@@ -38,11 +37,8 @@ namespace NEA_Project_Oubliette
 
             Console.ForegroundColor = colour;
 
-            for(int i = 0; i < currentValue; i++)
-                Console.Write('█');
-
-            for(int i = currentValue; i < maxValue; i++)
-                Console.Write('░');
+            for(int i = 0; i < currentValue; i++) Console.Write('█'); // Draws the foreground until the current value is reached
+            for(int i = currentValue; i < maxValue; i++) Console.Write('░'); // Draws the background until the maximum value is reached
 
             Console.ResetColor();
         }
@@ -59,11 +55,12 @@ namespace NEA_Project_Oubliette
                 if(Console.CursorTop >= (Console.BufferHeight - 4))
                 {
                     Console.WriteLine();
-                    Confirm(i == (items.Length - 1) ? "FINISH" : "CONTINUE");
+                    Confirm(i == (items.Length - 1) ? "FINISH" : "CONTINUE"); // Asks for confirmation from the user to continue, depending on whether this is the last section or not
 
-                    Console.ResetColor(); // temp
+                    Console.ResetColor();
                     Console.SetCursorPosition(startX, startY);
 
+                    // Clears the previous lines for the next section
                     for(int j = 0; j < Console.CursorTop; j++)
                     {
                         Display.ClearLine();
@@ -98,17 +95,15 @@ namespace NEA_Project_Oubliette
                     Console.Write("  ");
 
                     if(i == choiceIndex) Console.BackgroundColor = ConsoleColor.Red;
-
                     Console.Write(choices[i]);
 
-                    for(int j = Console.CursorLeft; j < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth : Console.BufferWidth - 2); j++)
-                        Console.Write(' ');
-
-                    if(Environment.OSVersion.Platform == PlatformID.Unix) Console.WriteLine();
+                    for(int j = Console.CursorLeft; j < (Environment.OSVersion.Platform == PlatformID.Win32NT ? Console.BufferWidth : Console.BufferWidth - 2); j++) Console.Write(' ');
+                    if(Environment.OSVersion.Platform == PlatformID.Unix) Console.WriteLine(); // Writes an extra line for Unix-based OSs, due to a minor display bug
                 }
 
                 Console.ResetColor();
 
+                // Handles user input for this menu
                 switch(Input.GetKeyDown())
                 {
                     case ConsoleKey.UpArrow:
@@ -153,14 +148,13 @@ namespace NEA_Project_Oubliette
                 for(int i = 0; i < choices.Length; i++)
                 {
                     Console.ResetColor();
-
                     if(i == choiceIndex) Console.BackgroundColor = ConsoleColor.Red;
-
                     Console.Write(' ' + choices[i] + ' ');
                 }
 
                 Console.ResetColor();
 
+                // Handles user input for this menu
                 switch(Input.GetKeyDown())
                 {
                     case ConsoleKey.LeftArrow:
@@ -200,7 +194,6 @@ namespace NEA_Project_Oubliette
             else Display.WriteAtCentre(question);
 
             Console.WriteLine();
-
             return VerticalMenu("YES", "NO") == 0;
         }
 

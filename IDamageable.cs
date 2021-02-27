@@ -1,5 +1,3 @@
-using System;
-
 namespace NEA_Project_Oubliette
 {
     ///<summary>Allows entities to deal and receive damage – and die</summary>

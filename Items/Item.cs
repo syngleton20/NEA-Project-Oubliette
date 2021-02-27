@@ -1,5 +1,3 @@
-using System;
-
 namespace NEA_Project_Oubliette.Items
 {
     internal abstract class Item
@@ -9,6 +7,8 @@ namespace NEA_Project_Oubliette.Items
 
         public string Name => name;
         public float Weight => weight;
+
+        public static readonly string ITEM_TYPES = "MF";
 
         public Item() { }
 

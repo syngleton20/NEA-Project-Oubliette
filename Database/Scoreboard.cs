@@ -3,8 +3,10 @@ using System;
 
 namespace NEA_Project_Oubliette.Database
 {
+    ///<summary>Provides a visual representation of players' highscores</summary>
     internal static class Scoreboard
     {
+        ///<summary>Either uploads a new player's highscore the Scoreboard table or updates a player's past highscore</summary>
         public static void SubmitScore(int score, int userID)
         {
             bool alreadyHasScore = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Scoreboard WHERE UserID = @UserID", userID) > 0;
@@ -13,6 +15,7 @@ namespace NEA_Project_Oubliette.Database
             else DatabaseManager.ExecuteDDL("UPDATE Scoreboard SET Score = @Score WHERE UserID = @UserID", score, userID);
         }
 
+        ///<summary>Shows players' highest scores in descending order</summary>
         public static void DisplayAll()
         {
             Display.Clear();
@@ -20,6 +23,7 @@ namespace NEA_Project_Oubliette.Database
 
             bool hasScores = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Scoreboard") > 0;
 
+            // Cancels the method if the Scoreboard table is empty
             if(!hasScores)
             {
                 Display.WriteAtCentre("No scores found!");
@@ -28,23 +32,23 @@ namespace NEA_Project_Oubliette.Database
                 return;
             }
 
+            // Populates the scoreTable with the best players' names and their high scores in descending order
             DataTable scoreTable = DatabaseManager.QuerySQLIntoTable("SELECT U.Username, S.Score FROM Scoreboard S INNER JOIN User U ON U.UserID WHERE U.UserID = S.UserID ORDER BY S.Score DESC");
             string[] scores = new string[scoreTable.Rows.Count];
 
-            for(int i = 0; i < scores.Length; i++)
-                scores[i] = Display.SplitStringOverBufferWidth(scoreTable.Rows[i][0].ToString(), scoreTable.Rows[i][1].ToString());
+            for(int i = 0; i < scores.Length; i++) scores[i] = Display.SplitStringOverBufferWidth(scoreTable.Rows[i][0].ToString(), scoreTable.Rows[i][1].ToString());
 
             GUI.VerticalScrollView(scores);
             Console.WriteLine();
             GUI.Confirm("FINISH");
         }
 
+        ///<summary>Determines whether a player's score is higher than their current highscore</summary>
         public static bool IsHighScore(int score, int userID)
         {
             bool hasScores = DatabaseManager.QueryRowScalarValue("SELECT COUNT(*) FROM Scoreboard") > 0;
 
-            if(!hasScores)
-                return false;
+            if(!hasScores) return false;
 
             DatabaseManager.QuerySQL("SELECT Score FROM Scoreboard WHERE UserID = @UserID", userID);
             DatabaseManager.Reader.Read();

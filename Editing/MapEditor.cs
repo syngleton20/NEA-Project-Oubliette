@@ -22,6 +22,7 @@ namespace NEA_Project_Oubliette.Editing
         {
             if(!hasSaved && currentMapName != "")
             {
+                // Provides a fail-safe in the event that an author does not save the map they were working on before
                 GUI.Title("New Map");
                 if(!GUI.YesOrNo("Are you sure you want to create a new map without saving?\nYour changes will not be saved."))
                 {
@@ -55,7 +56,7 @@ namespace NEA_Project_Oubliette.Editing
         ///<summary>Displays a menu for saving a map to a file</summary>
         public static void SaveAs()
         {
-            string illegalCharacters = "/?<>\\:*|\"";
+            string illegalCharacters = "/?<>\\:*|\""; // Specifies characters which cannot appear in a map name in order to prevent errors
             bool isValidMapName = false;
 
             do
@@ -78,6 +79,7 @@ namespace NEA_Project_Oubliette.Editing
                 if(string.IsNullOrEmpty(currentMapName) || string.IsNullOrWhiteSpace(currentMapName)) return;
                 if(currentMapName.Length >= 20) isValidMapName = false;
 
+                // Checks each character in the currentMapName for characters in the illegalCharacters string
                 for(int i = 0; i < currentMapName.Length; i++)
                 {
                     if(illegalCharacters.Contains(currentMapName[i]))
@@ -90,7 +92,7 @@ namespace NEA_Project_Oubliette.Editing
             while(!isValidMapName);
 
             Game.Current.CurrentMap.Name = currentMapName;
-            FileHandler.WriteToFile("maps/custom/" + currentMapName + ".map", MapFormatter.Serialize(Game.Current.CurrentMap));
+            FileHandler.WriteToFile("maps/custom/" + currentMapName + ".map", MapFormatter.Serialize(Game.Current.CurrentMap)); // Writes the file to the game's custom maps directory
 
             hasEverSaved = hasSaved = true;
             Display.Clear();
@@ -105,14 +107,15 @@ namespace NEA_Project_Oubliette.Editing
             Display.Clear();
             GUI.Title("Open Map");
 
+            // Checks each file in the game's custom maps directory and only adds map files to the choices list
             foreach(FileInfo file in files)
                 if(file.Extension == ".map")
                     choices.Add(file.Name.Split('.')[0]);
 
             if(choices.Count > 0)
             {
-                choices = (from choice in choices orderby choice select choice).ToList();
-                choices.Insert(0, "Back");
+                choices = (from choice in choices orderby choice select choice).ToList(); // Orders the maps in alphabetical order
+                choices.Insert(0, "Back"); // Adds an option to go back
 
                 int choiceIndex = GUI.VerticalMenu(choices.ToArray());
 
@@ -120,15 +123,14 @@ namespace NEA_Project_Oubliette.Editing
                 {
                     if(!hasSaved && hasEverSaved)
                     {
-                        GUI.Title("Exiting Without Saving");
-
-                        if(!GUI.YesOrNo("Are you sure you want to open another map without saving?\nYour changes will not be saved."))
-                            return;
+                        GUI.Title("Exiting Without Saving"); 
+                        if(!GUI.YesOrNo("Are you sure you want to open another map without saving?\nYour changes will not be saved.")) return;
                     }
 
                     currentMapName = choices[choiceIndex];
                     hasEverSaved = hasSaved = true;
 
+                    // Creates and starts a new editor session using the map chosen by the author
                     Game.Current = new Game(GameType.Editor, "custom/" + currentMapName + ".map");
                     Game.Current.Start();
                 }
@@ -187,10 +189,10 @@ namespace NEA_Project_Oubliette.Editing
 
                 case 1:
                     Entity[] entities = Game.Current.CurrentMap.Collection.Array;
-                    IEnumerable<Entity> orderedEntities = from entity in entities orderby entity.Id select entity;
+                    IEnumerable<Entity> orderedEntities = from entity in entities orderby entity.Id select entity; // Orders the entities array by each entity's ID
 
                     string[] entityStrings = new string[entities.Length];
-                    entities = orderedEntities.ToArray();
+                    entities = orderedEntities.ToArray(); // Reassigns the ordered entities to the original entities array
 
                     Display.Clear();
                     GUI.Title("Entity List");
@@ -246,7 +248,7 @@ namespace NEA_Project_Oubliette.Editing
             }
             while(!isValid);
 
-            Game.Current.CurrentMap.Fill(Placement.Position.X / Map.AREA_SIZE, Placement.Position.Y / Map.AREA_SIZE, fillCharacter);
+            Game.Current.CurrentMap.Fill(Placement.Position.X / Map.AREA_SIZE, Placement.Position.Y / Map.AREA_SIZE, fillCharacter); // Fills the quadrant containing the placement point with the fillCharacter
             Display.Clear();
         }
 

@@ -11,7 +11,7 @@ namespace NEA_Project_Oubliette
         ///<summary>Runs code for testing certain functionality</summary>
         public static void Test()
         {
-            // Write test code here
+            // WRITE TEST CODE BELOW:
 
         }
 

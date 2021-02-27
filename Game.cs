@@ -107,6 +107,7 @@ namespace NEA_Project_Oubliette
                     Console.CursorTop--;
                     StringBuilder editorInformation = new StringBuilder();
 
+                    // Draws editor information for the author
                     editorInformation.Append($"{(Placement.Type == PlacementType.Entity ? $"Entity: {Placement.Entity.ToString()}" : $"Tile: {Placement.Tile.ToString()}")}");
                     editorInformation.Append($"  Pos: {Placement.Position.ToString()}  Stamp: {(Placement.UseStamp ? "On " : "Off")}  Size: {Game.Current.CurrentMap.Size.ToString()}");
                     editorInformation.Append($"  Area: {(Placement.Position / Map.AREA_SIZE).ToString()}");
@@ -131,6 +132,7 @@ namespace NEA_Project_Oubliette
                     Console.WriteLine();
                     Console.WriteLine();
 
+                    // Draws the player's Heads Up Display (HUD)
                     if(Player.Instance != null) GUI.HorizontalBar(Player.Instance.Health * 2, Player.Instance.MaxHealth * 2, "Health");
 
                     Console.WriteLine();
@@ -182,8 +184,7 @@ namespace NEA_Project_Oubliette
 
             switch(GUI.VerticalMenu("Main Menu", "Quit"))
             {
-                case 0:
-                    break;
+                case 0: break;
 
                 case 1:
                     Program.QuitGame();
@@ -229,8 +230,7 @@ namespace NEA_Project_Oubliette
                     Current.Start();
                     break;
 
-                case 1:
-                    break;
+                case 1: break;
 
                 case 2:
                     Program.QuitGame();

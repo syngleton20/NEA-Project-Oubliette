@@ -125,8 +125,7 @@ namespace NEA_Project_Oubliette
                     break;
 
                 case ConsoleKey.E:
-                    if(Player.Instance.EquippedItem != null)
-                        Player.Instance.EquippedItem.Use();
+                    if(Player.Instance.EquippedItem != null) Player.Instance.EquippedItem.Use();
                     break;
 
                 case ConsoleKey.H:
@@ -366,13 +365,11 @@ namespace NEA_Project_Oubliette
                 default:
                     if(Placement.Type == PlacementType.Tile)
                     {
-                        if(TileSet.TryGetProfileFromAscii(lastInput.KeyChar, out TileProfile profile))
-                            Placement.Tile = lastInput.KeyChar;
+                        if(TileSet.TryGetProfileFromAscii(lastInput.KeyChar, out TileProfile profile)) Placement.Tile = lastInput.KeyChar;
                     }
                     else
                     {
-                        if(EntityCollection.NAMES.ContainsKey(lastInput.KeyChar))
-                            Placement.Entity = lastInput.KeyChar;
+                        if(EntityCollection.NAMES.ContainsKey(lastInput.KeyChar)) Placement.Entity = lastInput.KeyChar;
                     }
                     break;
             }
@@ -403,8 +400,7 @@ namespace NEA_Project_Oubliette
                     break;
 
                 case ConsoleKey.E:
-                    if(Player.Instance.EquippedItem != null)
-                        Player.Instance.EquippedItem.Use();
+                    if(Player.Instance.EquippedItem != null) Player.Instance.EquippedItem.Use();
                     break;
 
                 case ConsoleKey.Escape:

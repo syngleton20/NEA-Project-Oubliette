@@ -34,8 +34,17 @@ namespace NEA_Project_Oubliette.Entities
         ///<summary>Draws the visual representation of the entity</summary>
         public virtual void Draw()
         {
-            Console.Write("██");
-            Console.ResetColor();
+            if(Game.Current.CurrentMap.TryGetTile(position, out Tile currentTile) && (currentTile.Ascii == '=' || currentTile.Ascii == '-'))
+            {
+                Console.BackgroundColor = ConsoleColor.Cyan;
+                Console.Write("▀▀");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.Write("██");
+                Console.ResetColor();
+            }
         }
 
         ///<summary>Performs entity-specific action after being pushed in a direction</summary>
@@ -45,11 +54,7 @@ namespace NEA_Project_Oubliette.Entities
         public virtual void Update() { }
 
         ///<summary>Performs final actions before the entity is removed from a collection</summary>
-        public virtual void OnDestroy()
-        {
-            if(Game.Current.CurrentMap.TryGetTile(position, out Tile tile))
-                tile.Vacate();
-        }
+        public virtual void OnDestroy() { if(Game.Current.CurrentMap.TryGetTile(position, out Tile tile)) tile.Vacate(); }
 
         ///<summary>Sets entity-specific information after loading from a file</summary>
         public abstract void Load(string data);

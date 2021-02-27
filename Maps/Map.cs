@@ -38,20 +38,20 @@ namespace NEA_Project_Oubliette.Maps
             string[] lines = data.Split('\n');
             int maxWidth = 0, maxHeight = lines.Length;
 
-            for(int y = 0; y < lines.Length; y++)
-                maxWidth = Math.Max(maxWidth, lines[y].Length);
-
+            for(int y = 0; y < lines.Length; y++) maxWidth = Math.Max(maxWidth, lines[y].Length); // Calculates the maximum width of this map
             tiles = new Tile[maxHeight, maxWidth];
 
             Height = tiles.GetLength(0);
             Width = tiles.GetLength(1);
 
+            // Instantiates each tile from the lines array
             for(int y = 0; y < Height; y++)
                 for(int x = 0; x < Width; x++)
                     tiles[y, x] = new Tile(x, y, lines[y][x]);
 
             Grid = new Grid(this, tiles);
 
+            // Occupies the necessary tiles with their new entity occupants
             if(entities.Length > 0)
                 for(int i = 0; i < entities.Length; i++)
                     if(TryGetTile(entities[i].Position, out Tile tile))
@@ -68,6 +68,7 @@ namespace NEA_Project_Oubliette.Maps
             {
                 for(int x = drawX; x < drawX + AREA_SIZE; x++)
                 {
+                    // Draws an entity or a tile, if that tile has no occupant
                     if(Collection.TryGetEntity(x, y, out Entity entity)) entity.Draw();
                     else tiles[y, x].Draw();
                 }
@@ -95,6 +96,7 @@ namespace NEA_Project_Oubliette.Maps
                 for(int x = 0; x < Width; x++)
                     newTiles[y, x] = tiles[y, x];
 
+            // Fills the new area with the fillCharacter
             for(int y = 0; y < newTiles.GetLength(0); y++)
                 for(int x = 0; x < newTiles.GetLength(1); x++)
                     if(newTiles[y, x] == null)
@@ -173,8 +175,7 @@ namespace NEA_Project_Oubliette.Maps
                     int checkX = tilePosition.X + neighbourX;
                     int checkY = tilePosition.Y + neighbourY;
 
-                    if(checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height)
-                        neighbours.Add(tiles[checkY, checkX]);
+                    if(checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height) neighbours.Add(tiles[checkY, checkX]);
                 }
             }
 
@@ -189,9 +190,7 @@ namespace NEA_Project_Oubliette.Maps
             for(int y = 0; y < Height; y++)
             {
                 if(y > 0) mapData.Append('\\');
-
-                for(int x = 0; x < Width; x++)
-                    mapData.Append(tiles[y, x].Ascii);
+                for(int x = 0; x < Width; x++) mapData.Append(tiles[y, x].Ascii);
             }
 
             return mapData.ToString();

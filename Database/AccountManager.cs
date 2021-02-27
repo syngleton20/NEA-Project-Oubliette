@@ -27,13 +27,12 @@ namespace NEA_Project_Oubliette.Database
             Display.Clear();
             GUI.Title("Create Account");
 
+            // This shows the data to be entered into the text fields
             Console.WriteLine("           Username: ");
             Console.WriteLine("           Password: ");
             Console.WriteLine("  Password (Retype): ");
 
-            if(type == AccountType.Author)
-                Console.WriteLine("      Email Address: ");
-
+            if(type == AccountType.Author) Console.WriteLine("      Email Address: ");
             Console.CursorTop -= type == AccountType.Author ? 4 : 3;
 
             string username = GUI.TextField("         Username: ", 20);
@@ -242,8 +241,7 @@ namespace NEA_Project_Oubliette.Database
 
             switch(GUI.VerticalMenu("Back", "Change Username", "Change Password", "Change Email", "Delete Account"))
             {
-                case 0:
-                    break;
+                case 0: break;
 
                 case 1:
                     GUI.Title("Account Settings");

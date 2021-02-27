@@ -17,7 +17,6 @@ namespace NEA_Project_Oubliette.Items
 
         public override void OnEquip() { }
         public override void Use() { }
-
         public override string Save() => $"M_{name}_{weight}_{damage}";
     }
 }

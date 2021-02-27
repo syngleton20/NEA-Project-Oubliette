@@ -9,6 +9,7 @@ namespace NEA_Project_Oubliette.Items
 
         public int Count => items.Count;
 
+        ///<summary>Adds an item's data to this inventory</summary>
         public void Add(string itemData)
         {
             switch(itemData[0])
@@ -48,9 +49,7 @@ namespace NEA_Project_Oubliette.Items
             if(data.Contains('/'))
             {
                 string[] parts = data.Split('/');
-
-                for(int i = 0; i < parts.Length; i++)
-                    Add(parts[i]);
+                for(int i = 0; i < parts.Length; i++) Add(parts[i]);
             }
             else Add(data);
         }

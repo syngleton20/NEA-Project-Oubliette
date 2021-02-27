@@ -1,7 +1,8 @@
 using NEA_Project_Oubliette.Entities;
+using NEA_Project_Oubliette.Items;
 using NEA_Project_Oubliette.Maps;
-using System;
 using System.Text;
+using System;
 
 namespace NEA_Project_Oubliette.Editing
 {
@@ -58,17 +59,19 @@ namespace NEA_Project_Oubliette.Editing
         ///<summary>Moves this placement by an amount on the X and Y axes</summary>
         public static void Move(int deltaX, int deltaY)
         {
+            // Validates movement on the Y axis to avoid this placement point escaping the bounds of the map
             if(position.Y + deltaY <= 0) position = new Vector(position.X, 0);
             else if((position.Y + deltaY) >= (Game.Current.CurrentMap.Height - 1)) position = new Vector(position.X, Game.Current.CurrentMap.Height - 1);
             else position += new Vector(0, deltaY);
 
+            // Validates movement on the X axis to avoid this placement point escaping the bounds of the map
             if(position.X + deltaX <= 0) position = new Vector(0, position.Y);
             else if((position.X + deltaX) >= (Game.Current.CurrentMap.Width - 1)) position = new Vector(Game.Current.CurrentMap.Width - 1, position.Y);
             else position += new Vector(deltaX, 0);
 
             if(useStamp && type == PlacementType.Tile) Place();
 
-            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
+            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE); // Sets the camera position to the quadrant this placement's position is in, so that the correct quadrant of the map is drawn
         }
 
         ///<summary>Draws a visual representation of this placement's position</summary>
@@ -88,11 +91,12 @@ namespace NEA_Project_Oubliette.Editing
             {
                 if(Game.Current.CurrentMap.TryGetTile(position, out Tile output))
                 {
+                    // Automatically places a wall tile below a void tile to give the illusion of a topdown perspective and to speed up the author's workflow
                     if(tile == '#')
                         if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y + 1, out Tile tileBelow))
                             if(tileBelow.Ascii != '#') Game.Current.CurrentMap.SetTile(position + Vector.Up, new Tile('^'));
 
-
+                    // Cancels this method if the author attempts to place a tile which is already placed at this position
                     if(output.Ascii == tile) return;
 
                     Game.Current.CurrentMap.SetTile(position, new Tile(tile));
@@ -108,6 +112,7 @@ namespace NEA_Project_Oubliette.Editing
                     case 'P':
                         Entity[] entities = Game.Current.CurrentMap.Collection.Array;
 
+                        // Checks each entity in the map and removes any duplicate players when placing a new player entity, so that there is only one instance of the player at all times
                         for(int i = 0; i < entities.Length; i++)
                         {
                             if(entities[i].GetType() == typeof(Player))
@@ -129,7 +134,6 @@ namespace NEA_Project_Oubliette.Editing
 
                         int typeIndex = -1;
                         bool addAnotherItem = false, hasCancelled = false;
-                        string itemTypes = "MF"; // More item types will be added later...
 
                         do
                         {
@@ -144,7 +148,7 @@ namespace NEA_Project_Oubliette.Editing
                                 break;
                             }
 
-                            data.Append(itemTypes[typeIndex - 1].ToString());
+                            data.Append(Item.ITEM_TYPES[typeIndex - 1].ToString());
                             GUI.Title("Add New Item");
                             data.Append('_' + GUI.TextField("Name: ", 20));
                             GUI.Title("Add New Item");
@@ -167,12 +171,11 @@ namespace NEA_Project_Oubliette.Editing
                             GUI.Title("Add Another Item");
 
                             addAnotherItem = GUI.YesOrNo("Do you want to add another item?");
-                            if(addAnotherItem) data.Append('/');
+                            if(addAnotherItem) data.Append('/'); // Adds a '/' delimiter so that another item can be added to the inventory of the container
                         }
-                        while(addAnotherItem);
+                        while(addAnotherItem); // Stops once the author chooses to not add another item to the inventory of the container
 
-                        if(hasCancelled) break;
-
+                        if(hasCancelled) break; // Cancels this case if the author has cancelled the creation of the container
                         newEntity = new Pickup($"I {Game.Current.CurrentMap.Collection.AssignId()} {position.ToString()} {data.ToString()}");
                         break;
 
@@ -206,7 +209,7 @@ namespace NEA_Project_Oubliette.Editing
         public static void ToggleStamp()
         {
             useStamp = !useStamp;
-            if(useStamp && type == PlacementType.Tile) Place();
+            if(useStamp && type == PlacementType.Tile) Place(); // Automatically places a tile if the stamp is toggled on and this placement is in tile placement mode
         }
     }
 }

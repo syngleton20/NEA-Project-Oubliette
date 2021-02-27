@@ -29,9 +29,7 @@ namespace NEA_Project_Oubliette
             Console.ResetColor();
             Console.CursorLeft = 0;
 
-            for(int i = 0; i < Console.BufferWidth; i++)
-                Console.Write(' ');
-
+            for(int i = 0; i < Console.BufferWidth; i++) Console.Write(' ');
             Console.CursorTop--;
         }
 
@@ -53,6 +51,7 @@ namespace NEA_Project_Oubliette
         public static void WriteAtCentre(object text)
         {
             int centre = (int)Math.Floor((double)(Console.BufferWidth / 2) - (text.ToString().Length / 2));
+
             Console.SetCursorPosition(centre, Console.CursorTop);
             Console.WriteLine(text.ToString());
         }

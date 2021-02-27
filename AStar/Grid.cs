@@ -1,6 +1,6 @@
 using NEA_Project_Oubliette.Maps;
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace NEA_Project_Oubliette.AStar
 {
@@ -13,12 +13,12 @@ namespace NEA_Project_Oubliette.AStar
 
         public Grid(Map map, Tile[,] tiles)
         {
+            // Assigns to member fields
             this.map = map;
             mapSize = new Vector(map.Width, map.Height);
+            nodes = new Node[mapSize.Y, mapSize.X];
 
-            nodes = new Node[mapSize.Y, mapSize.X]; // remember the order!
-            Vector bottomLeft = new Vector(0, mapSize.Y);
-
+            // Instantiates a new node for each tile in this Grid's map
             for(int y = 0; y < mapSize.Y; y++)
                 for(int x = 0; x < mapSize.X; x++)
                     nodes[y, x] = new Node(tiles[y, x]);
@@ -36,13 +36,10 @@ namespace NEA_Project_Oubliette.AStar
             {
                 for(int x = -1; x <= 1; x++)
                 {
-                    if((x == 0 && y == 0) || (Math.Abs(x) == Math.Abs(y))) continue;
+                    int checkX = node.POSITION.X + x, checkY = node.POSITION.Y + y; // These local variables ensure that the x and y coordinates are relative to the current node's position
 
-                    int checkX = node.POSITION.X + x;
-                    int checkY = node.POSITION.Y + y;
-
-                    if(checkX >= 0 && checkX < mapSize.X && checkY >= 0 && checkY < mapSize.Y)
-                        neighbours.Add(nodes[checkY, checkX]);
+                    if((x == 0 && y == 0) || (Math.Abs(x) == Math.Abs(y))) continue; // This ignores the current node, since it cannot a neighbour of itself
+                    if(checkX >= 0 && checkX < mapSize.X && checkY >= 0 && checkY < mapSize.Y) neighbours.Add(nodes[checkY, checkX]); // This adds the node at the check coordinates to the local list of neighbour nodes, provided they are within range
                 }
             }
 

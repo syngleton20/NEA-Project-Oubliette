@@ -25,8 +25,7 @@ namespace NEA_Project_Oubliette.Entities
         {
             get
             {
-                if(inventory.Contains(equippedItem))
-                    return equippedItem;
+                if(inventory.Contains(equippedItem)) return equippedItem;
 
                 equippedItem = null;
                 return null;
@@ -35,10 +34,8 @@ namespace NEA_Project_Oubliette.Entities
             {
                 equippedItem = value;
 
-                if(equippedItem != null && equippedItem.GetType() == typeof(MeleeWeapon))
-                    strength = (equippedItem as MeleeWeapon).Damage;
-                else
-                    strength = 2;
+                if(equippedItem != null && equippedItem.GetType() == typeof(MeleeWeapon)) strength = (equippedItem as MeleeWeapon).Damage;
+                else strength = 2;
             }
         }
 
@@ -51,7 +48,7 @@ namespace NEA_Project_Oubliette.Entities
             Instance = this;
             position = new Vector(startX, startY);
 
-            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
+            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE); // Sets the camera position to the quadrant of the map this player is in, so that the correct quadrant is drawn
         }
 
         public Player(string data)
@@ -59,7 +56,7 @@ namespace NEA_Project_Oubliette.Entities
             Instance = this;
             Load(data);
 
-            Game.Current?.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
+            Game.Current?.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE); // Sets the camera position to the quadrant of the map this player is in, so that the correct quadrant is drawn
         }
 
         public override void Draw()
@@ -76,28 +73,26 @@ namespace NEA_Project_Oubliette.Entities
                 {
                     if(tile.IsOccupied)
                     {
-                        if(tile.Occupant.GetType() == typeof(Enemy)) (tile.Occupant as Enemy).TakeDamage(strength);
+                        if(tile.Occupant.GetType() == typeof(Enemy)) (tile.Occupant as Enemy).TakeDamage(strength); // Deals melee damage to an enemy within a one tile radius
                         else if(tile.Occupant.GetType() == typeof(Pickup))
                         {
-                            inventory.Combine((tile.Occupant as Pickup).Inventory);
-                            Game.Current.CurrentMap.Collection.Remove(tile.Occupant);
+                            inventory.Combine((tile.Occupant as Pickup).Inventory); // Adds all the items from the container into this player's inventory
+                            Game.Current.CurrentMap.Collection.Remove(tile.Occupant); // Removes the container from the map
                         }
                     }
                     else
                     {
-                        if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile oldTile))
-                            oldTile.Vacate();
+                        if(Game.Current.CurrentMap.TryGetTile(position.X, position.Y, out Tile oldTile)) oldTile.Vacate();
 
                         position += new Vector(deltaX, deltaY);
                         tile.Occupy(this);
                     }
                 }
 
-                if(tile.IsOccupied)
-                    tile.Occupant.Push(deltaX, deltaY, this);
+                if(tile.IsOccupied) tile.Occupant.Push(deltaX, deltaY, this);
             }
 
-            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE);
+            Game.Current.SetCameraPosition(position.X / Map.AREA_SIZE, position.Y / Map.AREA_SIZE); // Sets the camera position to the quadrant of the map this player is in, so that the correct quadrant is drawn
         }
 
         public void Heal(int amount = 1)
@@ -112,6 +107,7 @@ namespace NEA_Project_Oubliette.Entities
             if(Health <= 0 && !IsDead) Die();
             else
             {
+                // Causes this player to flash red when they take damage
                 takingDamage = true;
 
                 Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
@@ -121,6 +117,7 @@ namespace NEA_Project_Oubliette.Entities
                 Thread.Sleep(50);
                 takingDamage = false;
 
+                // Draws the player white again
                 Console.SetCursorPosition(Display.Offset.X + (position.X * 2) % (Map.AREA_SIZE * 2), Display.Offset.Y + (position.Y % Map.AREA_SIZE));
                 Console.ForegroundColor = ConsoleColor.White;
                 Draw();
@@ -129,6 +126,7 @@ namespace NEA_Project_Oubliette.Entities
 
         public void Die() => IsDead = true;
 
+        ///<summary>Adds an amount to this player's current score</summary>
         public void IncrementScore(int amount = 1) => score += amount;
 
         ///<summary>Equips an item at an index in this player's inventory</summary>
@@ -159,7 +157,7 @@ namespace NEA_Project_Oubliette.Entities
         public override void OnDestroy()
         {
             base.OnDestroy();
-            Instance = null;
+            Instance = null; // Resets the Instance property so that this player cannot be referenced after it has been destroyed
         }
 
         public override string Save() => $"P {id} {position.ToString()} {Health} {(inventory.Count > 0 && EquippedItem != null ? Array.IndexOf(inventory.GetItems(), EquippedItem) : -1)} {inventory.Save()}";

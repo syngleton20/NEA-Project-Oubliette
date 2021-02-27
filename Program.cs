@@ -50,8 +50,7 @@ namespace NEA_Project_Oubliette
 
                         switch(GUI.VerticalMenu("Back", "Browse", "Downloads", "Upload"))
                         {
-                            case 0:
-                                break;
+                            case 0: break;
 
                             case 1:
                                 if(AccountManager.Account != null) MapBrowser.ShowBrowserMenu();
@@ -88,9 +87,7 @@ namespace NEA_Project_Oubliette
 
                     case 4:
                         ConnectToDatabase();
-
-                        if(!DatabaseManager.IsConnected)
-                            break;
+                        if(!DatabaseManager.IsConnected) break;
 
                         Console.Clear();
                         GUI.Title("Account");
@@ -101,8 +98,7 @@ namespace NEA_Project_Oubliette
                             {
                                 switch(GUI.VerticalMenu("Back", "Account Settings", "Log Out"))
                                 {
-                                    case 0:
-                                        break;
+                                    case 0: break;
 
                                     case 1:
                                         AccountManager.AccountSettingsMenu();
@@ -117,8 +113,7 @@ namespace NEA_Project_Oubliette
                             {
                                 switch(GUI.VerticalMenu("Back", "Upgrade Account", "Account Settings", "Log Out"))
                                 {
-                                    case 0:
-                                        break;
+                                    case 0: break;
 
                                     case 1:
                                         AccountManager.UpgradeAccountMenu();
@@ -138,8 +133,7 @@ namespace NEA_Project_Oubliette
                         {
                             switch(GUI.VerticalMenu("Back", "Create Account", "Log In"))
                             {
-                                case 0:
-                                    break;
+                                case 0: break;
 
                                 case 1:
                                     AccountManager.CreateAccountMenu();
@@ -154,9 +148,7 @@ namespace NEA_Project_Oubliette
 
                     case 5:
                         ConnectToDatabase();
-
-                        if(!DatabaseManager.IsConnected)
-                            break;
+                        if(!DatabaseManager.IsConnected) break;
 
                         Scoreboard.DisplayAll();
                         break;
@@ -189,8 +181,7 @@ namespace NEA_Project_Oubliette
 
             Console.WriteLine();
 
-            if(GUI.VerticalMenu("YES", "NO") <= 0)
-                Environment.Exit(0);
+            if(GUI.VerticalMenu("YES", "NO") <= 0) Environment.Exit(0);
         }
     }
 }

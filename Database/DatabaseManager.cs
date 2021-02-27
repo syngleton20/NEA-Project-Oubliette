@@ -21,8 +21,7 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Closes and disposes of the command, reader and adapter fields</summary>
         private static void ResetAll()
         {
-            if(command != null)
-                command.Dispose();
+            if(command != null) command.Dispose();
 
             if(reader != null)
             {
@@ -30,8 +29,7 @@ namespace NEA_Project_Oubliette.Database
                 reader.Dispose();
             }
 
-            if(adapter != null)
-                adapter.Dispose();
+            if(adapter != null) adapter.Dispose();
         }
 
         ///<summary>Creates a paramaterised connection string using data from the dbprofile.txt file</summary>
@@ -67,14 +65,16 @@ namespace NEA_Project_Oubliette.Database
             command = new MySqlCommand(commandText, connection);
             List<string> sqlParams = new List<string>();
 
-            string[] parts = commandText.Split(' ', '(', ')', '=', ',');
+            string[] parts = commandText.Split(' ', '(', ')', '=', ','); // Splits the commandText by common delimiters found in SQL queries and DDL commands
 
+            // Examines each part of the commandText and adds a parameter to the sqlParams list if the first character of that part of the string is an '@' symbol
             for(int i = 0; i < parts.Length; i++)
             {
                 if(parts[i].Length <= 0) continue;
                 if(parts[i][0] == '@') sqlParams.Add(parts[i]);
             }
 
+            // Adds each parameter to the current MySqlCommand's Parameters list and assigns the necessary values
             for(int i = 0; i < sqlParams.Count; i++)
             {
                 command.Parameters.Add(sqlParams[i], GetSqlType(parameters[i].GetType()));
@@ -87,17 +87,18 @@ namespace NEA_Project_Oubliette.Database
         ///<summary>Attempts to open a connection to the database</summary>
         public static void Connect()
         {
-            if(IsConnected) return;
+            if(IsConnected) return; // Cancels this method if a connection has already been established
 
             try
             {
-                if(ConnectionString() == "") return;
+                if(ConnectionString() == "") return; // Cancels this method if the connection string is an empty string
 
                 connection = new MySqlConnection(ConnectionString());
                 connection.Open();
             }
             catch
             {
+                // If the connection failed, show an error screen and allow the user to continue when they have read and understood the message
                 Display.Clear();
                 GUI.Title("Connection - Failed");
 
@@ -108,22 +109,14 @@ namespace NEA_Project_Oubliette.Database
         }
 
         ///<summary>Attempts to close a connection to the database, if the connection is open in the first place</summary>
-        public static void Disconnect()
-        {
-            if(connection != null && connection.State == ConnectionState.Open)
-                connection.Close();
-        }
+        public static void Disconnect() { if(connection != null && connection.State == ConnectionState.Open) connection.Close(); }
 
         ///<summary>Attempts to execute a DDL command on the database</summary>
         public static void ExecuteDDL(string ddl, params object[] parameters)
         {
             ResetAll();
 
-            try
-            {
-                using(command = ParameteriseCommand(ddl, parameters))
-                    command.ExecuteNonQuery();
-            }
+            try { using(command = ParameteriseCommand(ddl, parameters)) command.ExecuteNonQuery(); }
             catch(MySqlException exception) { Debug.Error(exception); }
         }
 
@@ -132,11 +125,8 @@ namespace NEA_Project_Oubliette.Database
         {
             ResetAll();
 
-            try
-            {
-                using(command = ParameteriseCommand(sql, parameters))
-                    reader = command.ExecuteReader();
-            }
+            // Tries to parameterise and execute the SQL query, otherwise its error is reported
+            try { using(command = ParameteriseCommand(sql, parameters)) reader = command.ExecuteReader(); }
             catch(MySqlException exception) { Debug.Error(exception); }
         }
 
@@ -145,11 +135,7 @@ namespace NEA_Project_Oubliette.Database
         {
             ResetAll();
 
-            try
-            {
-                using(command = ParameteriseCommand(sql, parameters))
-                    return command.ExecuteScalar().ToString().ToInt();
-            }
+            try { using(command = ParameteriseCommand(sql, parameters)) return command.ExecuteScalar().ToString().ToInt(); }
             catch(MySqlException exception)
             {
                 Debug.Error(exception);

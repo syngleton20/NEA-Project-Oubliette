@@ -16,6 +16,7 @@ namespace NEA_Project_Oubliette.Maps
             char previousCharacter = data[0];
             int charCount = 1;
 
+            // Encodes each tile followed by the number of times it is consecutively repeated
             for(int i = 1; i < data.Length; i++)
             {
                 if(previousCharacter != data[i])
@@ -28,6 +29,7 @@ namespace NEA_Project_Oubliette.Maps
                 charCount++;
             }
 
+            // Encodes each entity separated by a '\'
             if(map.Collection.Array.Length > 0)
             {
                 for(int i = 0; i < map.Collection.Array.Length; i++)
@@ -37,8 +39,10 @@ namespace NEA_Project_Oubliette.Maps
                 }
             }
 
+            // Encodes the last tile
             serialized.Append(charCount > 1 ? $"{charCount}{previousCharacter}" : previousCharacter.ToString());
 
+            // Writes the tile data to the first line and the entity data to the second line
             string finalData = map.Name + '\n' + serialized.ToString();
             if(entities.Length > 0) finalData += '\n' + entities.ToString();
 
@@ -73,6 +77,7 @@ namespace NEA_Project_Oubliette.Maps
 
                 for(int i = 0; i < entityStrings.Length; i++)
                 {
+                    // Determines which type of entity to instantiate
                     switch(entityStrings[i].Split(' ')[0])
                     {
                         case "P":
