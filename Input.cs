@@ -223,7 +223,7 @@ namespace NEA_Project_Oubliette
                     Placement.Move(1 * (Input.IsShiftKeyDown ? 4 : 1), 0);
                     break;
 
-                case ConsoleKey.P:
+                case ConsoleKey.D0:
                     Display.Clear();
                     GUI.Title("Help");
 
@@ -293,6 +293,10 @@ namespace NEA_Project_Oubliette
 
                 case ConsoleKey.Q:
                     Placement.ToggleStamp();
+                    break;
+
+                case ConsoleKey.C:
+                    Placement.Eyedropper();
                     break;
 
                 case ConsoleKey.Spacebar:

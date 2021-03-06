@@ -77,7 +77,7 @@ namespace NEA_Project_Oubliette
                     Console.WriteLine();
 
                     Display.WriteAtCentre($"Score: {Player.Instance.Score} Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
-                    Display.WriteAtCentreBottom("Press P for help");
+                    Display.WriteAtCentreBottom("Press 0 for help");
 
                     if(Player.Instance.IsDead) GameOver();
                     else
@@ -116,7 +116,7 @@ namespace NEA_Project_Oubliette
                         editorInformation.Append("  Id: " + entity.Id);
 
                     Display.WriteAtCentre(editorInformation.ToString());
-                    Display.WriteAtCentreBottom("Press P for help");
+                    Display.WriteAtCentreBottom("Press 0 for help");
 
                     Input.GetEditorInput();
                 }
@@ -139,7 +139,7 @@ namespace NEA_Project_Oubliette
                     Console.WriteLine();
 
                     Display.WriteAtCentre($"Score: {Player.Instance.Score} Equipped Item: {(Player.Instance.EquippedItem != null ? Player.Instance.EquippedItem.Name : "Nothing")}  Strength: {Player.Instance.Strength}");
-                    Display.WriteAtCentreBottom("Press P for help");
+                    Display.WriteAtCentreBottom("Press 0 for help");
 
                     if(Player.Instance != null && Player.Instance.IsDead) GameOver();
                     else

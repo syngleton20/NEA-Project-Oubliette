@@ -211,5 +211,15 @@ namespace NEA_Project_Oubliette.Editing
             useStamp = !useStamp;
             if(useStamp && type == PlacementType.Tile) Place(); // Automatically places a tile if the stamp is toggled on and this placement is in tile placement mode
         }
+
+        ///<summary>Sets the current tile or entity to that which is currently on the same tile as this placement</summary>
+        public static void Eyedropper()
+        {
+            if(type == PlacementType.Entity)
+            {
+                if(Game.Current.CurrentMap.Collection.TryGetEntity(position, out Entity eyedropperEntity)) entity = eyedropperEntity.Save()[0];
+            }
+            else if(Game.Current.CurrentMap.TryGetTile(position, out Tile eyedropperTile)) tile = eyedropperTile.Ascii;
+        }
     }
 }

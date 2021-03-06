@@ -47,6 +47,9 @@ namespace NEA_Project_Oubliette
             Console.CursorLeft = lastCursorX;
         }
 
+        ///<summary>Assigns the lastCursorX to the current X location of the cursor for writing non-contiguous blocks of text</summary>
+        public static void SetLastCursorPosition() => lastCursorX = Console.CursorLeft;
+
         ///<summary>Writes text at the horiztonal centre of the console buffer</summary>
         public static void WriteAtCentre(object text)
         {
