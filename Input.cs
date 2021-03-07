@@ -136,7 +136,7 @@ namespace NEA_Project_Oubliette
                     if(Player.Instance != null) PlayerInventory();
                     break;
 
-                case ConsoleKey.P:
+                case ConsoleKey.D0:
                     Display.Clear();
                     GUI.Title("Help");
 
@@ -173,11 +173,11 @@ namespace NEA_Project_Oubliette
                             if(slotIndex < 0) break;
 
                             Game.Current = SaveManager.Load(slotIndex);
-                            Game.Current.Start();
+                            Game.Current?.Start();
                             break;
 
                         case 3:
-                            Game.Current.Stop();
+                            Game.Current?.Stop();
                             break;
 
                         case 4:
@@ -419,7 +419,7 @@ namespace NEA_Project_Oubliette
                     if(Player.Instance != null) PlayerInventory();
                     break;
 
-                case ConsoleKey.P:
+                case ConsoleKey.D0:
                     Display.Clear();
                     GUI.Title("Help");
 

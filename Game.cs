@@ -43,7 +43,24 @@ namespace NEA_Project_Oubliette
             Current = this; // Assigns to the singleton pattern, allowing access to this particular instance
 
             type = gameType;
-            currentMap = MapFormatter.Deserialize(FileHandler.ReadFile("maps/" + mapName));
+
+            try { currentMap = MapFormatter.Deserialize(FileHandler.ReadFile("maps/" + mapName)); }
+            catch(System.Exception)
+            {
+                Current = null;
+
+                Display.Clear();
+                GUI.Title("Error");
+
+                Display.WriteAtCentre("This map could not be loaded. It is either");
+                Display.WriteAtCentre("corrupted or its format is deprecated.");
+
+                Console.WriteLine();
+                GUI.Confirm();
+
+                Display.Clear();
+                return;
+            }
 
             MapName = mapName;
         }
@@ -51,9 +68,10 @@ namespace NEA_Project_Oubliette
         ///<summary>Begins the game loop, handling the drawing of maps and receiving user input</summary>
         public void Start()
         {
-            isPlaying = true;
-
+            if(CurrentMap == null) return;
             if(type == GameType.Editor) Placement.Reset();
+
+            isPlaying = true;
 
             while(isPlaying)
             {
@@ -244,7 +262,7 @@ namespace NEA_Project_Oubliette
         ///<summary>Safely disposes of this game instance, disposing of its map and all its entities</summary>
         public void Dispose()
         {
-            currentMap.Collection.Clear();
+            currentMap?.Collection.Clear();
             currentMap = null;
         }
     }

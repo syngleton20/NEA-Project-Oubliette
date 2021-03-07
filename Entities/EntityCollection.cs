@@ -40,6 +40,7 @@ namespace NEA_Project_Oubliette.Entities
             {
                 entity.OnDestroy();
                 entities.Remove(entity);
+                entity = null;
             }
         }
 
@@ -48,11 +49,8 @@ namespace NEA_Project_Oubliette.Entities
         {
             for(int i = 0; i < entities.Count; i++)
             {
-                if(Game.Current.CurrentMap.TryGetTile(entities[i].Position, out Tile tile))
-                {
-                    tile.Vacate();
-                    entities[i] = null;
-                }
+                // if(Game.Current.CurrentMap.TryGetTile(entities[i].Position, out Tile tile)) tile.Vacate();
+                Remove(entities[i]);
             }
 
             entities.Clear();

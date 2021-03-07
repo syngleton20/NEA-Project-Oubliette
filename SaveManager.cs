@@ -33,6 +33,8 @@ namespace NEA_Project_Oubliette
             string[] entityStrings = lines[1].Split('\\');
 
             Game game = new Game(GameType.Game, lines[0] + ".map");
+            if(game.CurrentMap == null) return null;
+
             game.CurrentMap.Collection.Clear();
 
             for (int i = 0; i < entityStrings.Length; i++)

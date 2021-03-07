@@ -10,7 +10,7 @@ namespace NEA_Project_Oubliette
             new TileProfile('#', "  ", false),
             new TileProfile('.', "░░", true, ConsoleColor.DarkGray, ConsoleColor.Black),
             new TileProfile('^', "░░", false, ConsoleColor.Black, ConsoleColor.DarkGray),
-            new TileProfile('`', "░░", true, ConsoleColor.DarkGreen, ConsoleColor.White),
+            new TileProfile('`', "░░", true, ConsoleColor.DarkGreen, ConsoleColor.Gray),
             new TileProfile('%', "░░", false, ConsoleColor.Black, ConsoleColor.DarkGreen),
             new TileProfile('&', "▒▒", false, ConsoleColor.Black, ConsoleColor.DarkGreen),
             new TileProfile('-', "▀▀", true, ConsoleColor.DarkCyan, ConsoleColor.DarkGray),

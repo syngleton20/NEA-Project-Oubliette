@@ -149,7 +149,9 @@ namespace NEA_Project_Oubliette.Entities
                 if(inventoryString != "" && parts.Length > 4)
                 {
                     inventory.Load(inventoryString);
-                    EquippedItem = inventory.GetItems()[parts[4].ToInt()];
+                    int equippedItemIndex = parts[4].ToInt();
+
+                    if(equippedItemIndex >= 0) EquippedItem = inventory.GetItems()[equippedItemIndex];
                 }
             }
         }

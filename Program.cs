@@ -26,7 +26,7 @@ namespace NEA_Project_Oubliette
                 {
                     case 0:
                         Game.Current = new Game(GameType.Game, "start.map");
-                        Game.Current.Start();
+                        Game.Current?.Start();
                         break;
 
                     case 1:
@@ -36,7 +36,7 @@ namespace NEA_Project_Oubliette
                         if(slotIndex < 0) break;
 
                         Game.Current = SaveManager.Load(slotIndex);
-                        Game.Current.Start();
+                        Game.Current?.Start();
                         break;
 
                     case 2:

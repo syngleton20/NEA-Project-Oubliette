@@ -206,7 +206,7 @@ namespace NEA_Project_Oubliette.Database
                 {
                     Game.Current?.Stop();
                     Game.Current = new Game(GameType.Game, $"downloads/{downloads[chosenMapIndex].Name}");
-                    Game.Current.Start();
+                    Game.Current?.Start();
                 }
                 catch
                 {
