@@ -392,8 +392,6 @@ namespace NEA_Project_Oubliette.Database
             bool hasRows = rowCount > 0;
             string hashedPassword = HashManager.HashPassword(password);
 
-            Debug.Warning(hashedPassword);
-
             if(!hasRows)
             {
                 DatabaseManager.ExecuteDDL("INSERT INTO User(Username, Password) VALUES (@Username, @Password)", username, hashedPassword);

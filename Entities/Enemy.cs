@@ -32,6 +32,8 @@ namespace NEA_Project_Oubliette.Entities
             if(hasSeenPlayer)
             {
                 // Deals damage to the player if they are within a close proximity of this enemy
+                if(Game.Current == null) return;
+
                 foreach(Tile tile in Game.Current.CurrentMap.GetNeighbouringTiles(position))
                     if(tile.IsOccupied)
                         if(tile.Occupant.GetType() == typeof(Player))

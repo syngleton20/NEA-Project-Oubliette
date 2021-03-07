@@ -247,8 +247,24 @@ namespace NEA_Project_Oubliette.Database
                     return;
                 }
 
-                Map map = MapFormatter.Deserialize(FileHandler.ReadFile($"maps/custom/{customMaps[chosenMapIndex].Name}"));
-                Upload(map);
+                try
+                {
+                    Map map = MapFormatter.Deserialize(FileHandler.ReadFile($"maps/custom/{customMaps[chosenMapIndex].Name}"));
+                    Upload(map);
+                }
+                catch (System.Exception)
+                {
+                    Display.Clear();
+                    GUI.Title("Error");
+
+                    Display.WriteAtCentre("This map could not be uploaded. It is either");
+                    Display.WriteAtCentre("corrupted or its format is deprecated.");
+
+                    Console.WriteLine();
+                    GUI.Confirm();
+
+                    Display.Clear();
+                }
             }
             else
             {

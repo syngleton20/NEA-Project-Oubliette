@@ -57,7 +57,6 @@ namespace NEA_Project_Oubliette.Editing
         ///<summary>Displays a menu for saving a map to a file</summary>
         public static void SaveAs()
         {
-            string illegalCharacters = "\\/.,!?<>:;*|\"\'`()[]{}$%#-–\n\t\b\r"; // Specifies characters which cannot appear in a map name in order to prevent errors
             bool isValidMapName = false;
 
             do
@@ -65,7 +64,7 @@ namespace NEA_Project_Oubliette.Editing
                 Display.Clear();
                 GUI.Title("Save Map As");
                 Display.WriteAtCentre("Map name must not contain any of the following:");
-                Display.WriteAtCentre(illegalCharacters);
+                Display.WriteAtCentre(GUI.ILLEGAL_CHARACTERS);
 
                 int lastY = Console.CursorTop;
                 Console.SetCursorPosition(0, Console.BufferHeight - 2);
@@ -78,18 +77,7 @@ namespace NEA_Project_Oubliette.Editing
                 currentMapName = GUI.TextField("Map Name: ", 20);
                 isValidMapName = true;
 
-                if(string.IsNullOrEmpty(currentMapName) || string.IsNullOrWhiteSpace(currentMapName)) return;
                 if(currentMapName.Length >= 20) isValidMapName = false;
-
-                // Checks each character in the currentMapName for characters in the illegalCharacters string
-                for(int i = 0; i < currentMapName.Length; i++)
-                {
-                    if(illegalCharacters.Contains(currentMapName[i]))
-                    {
-                        isValidMapName = false;
-                        break;
-                    }
-                }
             }
             while(!isValidMapName);
 
@@ -244,11 +232,10 @@ namespace NEA_Project_Oubliette.Editing
                 GUI.Title("Fill Area");
                 Display.WriteAtCentre("Enter a character to fill this area with.");
 
-                string input = GUI.TextField("Fill Character: ", 1);
-                if(string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input)) break;
+                string input = GUI.TextField("Fill Character: ", 1, allowIllegalCharacters: true); // The use of allowIllegalCharacters bypasses any illegal character restrictions so that tile codes can be entered
 
                 fillCharacter = input[0];
-                if(!TileSet.TryGetProfileFromAscii(fillCharacter, out TileProfile profile)) isValid = false;
+                if(!TileSet.TryGetProfileFromAscii(fillCharacter, out TileProfile profile)) isValid = false; // Disallows the use of invalid tile codes
             }
             while(!isValid);
 

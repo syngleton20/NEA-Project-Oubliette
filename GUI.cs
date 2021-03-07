@@ -6,6 +6,8 @@ namespace NEA_Project_Oubliette
     ///<summary>Provides visual interface tools to improve ease-of-use for users</summary>
     internal static class GUI
     {
+        public const string ILLEGAL_CHARACTERS = "\\/.,!?<>:;*|\"\'`()[]{}$%#-–\n\t\b\r"; // Specifies characters which cannot appear in a text field in order to prevent errors and potential SQL injection
+
         ///<summary>Writes a title followed by a horizontal separator</summary>
         public static void Title(string title)
         {
@@ -197,7 +199,7 @@ namespace NEA_Project_Oubliette
             return VerticalMenu("YES", "NO") == 0;
         }
 
-        public static string TextField(string label, int maxLength, string defaultValue = "", bool censorInput = false)
+        public static string TextField(string label, int maxLength, string defaultValue = "", bool censorInput = false, bool allowIllegalCharacters = false)
         {
             int startX = Console.CursorLeft, startY = Console.CursorTop, cursorPosition = defaultValue.Length;
             bool hasFinished = false;
@@ -285,11 +287,39 @@ namespace NEA_Project_Oubliette
 
                 Console.CursorVisible = false;
                 Console.SetCursorPosition(startX, startY);
+                Vector lastCursorPosition = Display.CursorPosition;
+
+                if(!allowIllegalCharacters)
+                {
+                    for(int i = 0; i < ILLEGAL_CHARACTERS.Length; i++)
+                    {
+                        if(text.ToString().Contains(ILLEGAL_CHARACTERS[i]))
+                        {
+                            hasFinished = false;
+
+                            Display.WriteAtCentreBottom("Your input contains invalid characters!");
+                            Console.SetCursorPosition(lastCursorPosition.X, lastCursorPosition.Y);
+                            break;
+                        }
+                        else
+                        {
+                            Display.WriteAtCentreBottom("                                       ");
+                            Console.SetCursorPosition(lastCursorPosition.X, lastCursorPosition.Y);
+                        }
+                    }
+                }
+
+                if(string.IsNullOrEmpty(text.ToString()) || string.IsNullOrWhiteSpace(text.ToString()))
+                {
+                    hasFinished = false;
+                    Display.WriteAtCentreBottom("        Please type something...       ");
+                    Console.SetCursorPosition(lastCursorPosition.X, lastCursorPosition.Y);
+                }
             }
             while(!hasFinished);
 
             Console.CursorVisible = false;
-            return text.ToString();
+            return text.ToString().Trim();
         }
     }
 }

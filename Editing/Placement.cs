@@ -152,7 +152,7 @@ namespace NEA_Project_Oubliette.Editing
                             GUI.Title("Add New Item");
                             data.Append('_' + GUI.TextField("Name: ", 20));
                             GUI.Title("Add New Item");
-                            data.Append('_' + GUI.TextField("Weight (kg): ", 4));
+                            data.Append('_' + GUI.TextField("Weight (kg): ", 4, allowIllegalCharacters: true));
 
                             switch(typeIndex)
                             {
